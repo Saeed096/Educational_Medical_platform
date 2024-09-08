@@ -5,6 +5,7 @@
         // pk 
         public int Id { get; set; }
         public IFormFile? Thumbnail { get; set; }
+        public float DurationInhours { get; set; }
         public string? Preview { get; set; }
         public List<Requirement>? Requirements { get; set; }
         public List<Objective>? Objectives { get; set; }

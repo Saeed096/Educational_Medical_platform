@@ -4,6 +4,7 @@
     {
         // p.k
         public int Id { get; set; }
+        public int LikesNumber { get; set; } = 0;
 
         public IFormFile? Image { get; set; } 
         public string Title { get; set; }
@@ -18,6 +19,7 @@
         public Category? Category { get; set; }
 
         public List<Question>? Questions { get; set; }
+        public List<Like> Likes { get; set; } = new List<Like>();  // empty list by default
 
     }
 }
