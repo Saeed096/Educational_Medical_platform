@@ -19,7 +19,7 @@
         public Category? Category { get; set; }
 
         public List<Question>? Questions { get; set; }
-        public List<Like> Likes { get; set; } = new List<Like>();  // empty list by default
+        public List<Blog_User_Likes>? Likes { get; set; }  // empty list by default
 
     }
 }

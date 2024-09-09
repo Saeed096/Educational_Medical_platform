@@ -2,10 +2,7 @@
 {
     public class CertificateDetails
     {
-        // p.k
-        public int Id { get; set; }
-
-        // fk
+        // compos p.k
         public int StudentId { get; set; }
         public int CourseId { get; set; }
 

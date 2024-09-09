@@ -8,12 +8,10 @@
         public string Title { get; set; }
         public IFormFile? Thumbnail { get; set; }
         public string? Description { get; set; }
-        public IFormFile? video { get; set; }
+        public IFormFile video { get; set; }
 
-
-        // FK
-        public int CourseContentId { get; set; }
-        public CourseContent CourseContent { get; set; }
+        public Course Course { get; set; }
+        public int CourseId { get; set; }
 
         // not valuable from saeed opinion
         //public string Size { get; set; }

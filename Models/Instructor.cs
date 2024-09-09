@@ -2,8 +2,9 @@
 
 namespace Educational_Medical_platform.Models
 {
-    public class Supervisor
+    public class Instructor
     {
+        public int Id { get; set; }
         public ApplicationUser User { get; set; }
 
     }

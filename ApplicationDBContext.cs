@@ -23,7 +23,7 @@ namespace Shoghlana.EF
         public DbSet<StandardTest> StandardTests { get; set; } 
         public DbSet<Student> Students { get; set; } 
         public DbSet<SubCategory> SubCategories { get; set; } 
-        public DbSet<Supervisor> Supervisors { get; set; } 
+        public DbSet<Instructor> Supervisors { get; set; } 
         public DbSet<Video> Videos { get; set; }
         public DbSet<StudentCourses> StudentCourses { get; set; }
 
