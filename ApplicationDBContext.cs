@@ -26,6 +26,8 @@ namespace Shoghlana.EF
         public DbSet<Instructor> Supervisors { get; set; } 
         public DbSet<Video> Videos { get; set; }
         public DbSet<StudentCourses> StudentCourses { get; set; }
+        public DbSet<Blog_User_Likes> BlogUserLikes { get; set; }
+        public DbSet<CertificateDetails> CertificateDetails { get; set; }
 
 
 
@@ -37,7 +39,18 @@ namespace Shoghlana.EF
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationDBContext).Assembly);
+
+            modelBuilder.Entity<Blog_User_Likes>()
+                .HasKey(b => new { b.UserId, b.BlogId });
+            
+            modelBuilder.Entity<CertificateDetails>()
+                .HasKey(c => new { c.StudentId, c.CourseId });
+            
+            modelBuilder.Entity<StudentCourses>()
+                .HasKey(s => new { s.StudentId, s.CourseId });
         }
+
+
 
         ///<summary>
         ///Enforce Validation on RunTime Before Sending Changes to DB 

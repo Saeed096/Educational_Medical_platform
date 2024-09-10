@@ -11,7 +11,7 @@
 
         public float? Degree { get; set; }
 
-        // to be handeled
+        // to be handeled 
 
         public int VideoNumber { get; set; } = 0;
         public CertificateDetails? CertificateDetails { get; set; }

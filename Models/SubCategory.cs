@@ -1,11 +1,17 @@
-﻿namespace Educational_Medical_platform.Models
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace Educational_Medical_platform.Models
 {
     public class SubCategory
     {
         // pk
+        [Key]
         public int Id { get; set; }
 
         // fk
+        [ForeignKey("Category")]
+
         public int CategoryId { get; set; }
         public Category Category { get; set; }
 
