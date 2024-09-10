@@ -10,6 +10,8 @@ namespace Educational_Medical_platform.Models
         public int Id { get; set; }
         public int LikesNumber { get; set; } = 0;
 
+        public string? ImageURL { get; set; }
+        [NotMapped]
         public IFormFile? Image { get; set; } 
         public string Title { get; set; }
         public string Content { get; set; }
