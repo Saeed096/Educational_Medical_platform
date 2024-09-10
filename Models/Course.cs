@@ -9,6 +9,8 @@ namespace Educational_Medical_platform.Models
         [Key]
         public int Id { get; set; } 
         public String Title { get; set; }
+        public string? ThumbnailURL { get; set; }
+        [NotMapped]
         public IFormFile? Thumbnail { get; set; }
         public float DurationInhours { get; set; } 
         public string? Preview { get; set; } 
