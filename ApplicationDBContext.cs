@@ -35,8 +35,6 @@ namespace Shoghlana.EF
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationDBContext).Assembly);
         }
 
-
-
         ///<summary>
         ///Enforce Validation on RunTime Before Sending Changes to DB 
         ///  This method will enforce validation on all entities, 
