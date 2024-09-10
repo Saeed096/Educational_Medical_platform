@@ -4,6 +4,7 @@
     {
         // 1ry key
         public int Id { get; set; }
+        public string Title { get; set; }
         public int Fullmark { get; set; }
 
         // can be ignored and handdled in front >> min foreach question 

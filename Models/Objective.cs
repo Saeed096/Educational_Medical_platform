@@ -2,6 +2,9 @@
 {
     public class Objective
     {
-        public Course Course { get; set; } 
+        public int Id { get; set; }
+        public string Description { get; set; }
+        public Course Course { get; set; }
+        public int CourseId { get; set; }
     }
 }

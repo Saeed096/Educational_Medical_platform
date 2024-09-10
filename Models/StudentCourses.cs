@@ -12,9 +12,8 @@
         public float? Degree { get; set; }
 
         // to be handeled
-        public int Progress { get; set; } = 0;
 
-        public int MyProperty { get; set; }
+        public int VideoNumber { get; set; } = 0;
         public CertificateDetails? CertificateDetails { get; set; }
     }
 }

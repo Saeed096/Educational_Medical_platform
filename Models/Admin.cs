@@ -4,6 +4,8 @@ namespace Educational_Medical_platform.Models
 {
     public class Admin
     {
-        public ApplicationUser User { get; set; } 
+        // P.k 
+        public int Id { get; set; }
+        public ApplicationUser User { get; set; }  
     }
 }
