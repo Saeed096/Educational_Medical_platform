@@ -29,20 +29,8 @@ namespace Educational_Medical_platform
 
             builder.Services.AddDbContext<ApplicationDBContext>(options =>
             {
-                options.UseSqlServer(builder.Configuration.GetConnectionString("CS"));
+                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnectionString"));
             });
-
-
-
-
-
-
-
-
-
-
-
-
 
 
             var app = builder.Build();

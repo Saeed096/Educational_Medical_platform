@@ -37,7 +37,7 @@ namespace Educational_Medical_platform.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Admins");
+                    b.ToTable("Admins", (string)null);
                 });
 
             modelBuilder.Entity("Educational_Medical_platform.Models.Answer", b =>
@@ -62,7 +62,7 @@ namespace Educational_Medical_platform.Migrations
 
                     b.HasIndex("QuestionId");
 
-                    b.ToTable("Answers");
+                    b.ToTable("Answers", (string)null);
                 });
 
             modelBuilder.Entity("Educational_Medical_platform.Models.Blog", b =>
@@ -99,7 +99,7 @@ namespace Educational_Medical_platform.Migrations
 
                     b.HasIndex("SubCategoryId");
 
-                    b.ToTable("Blogs");
+                    b.ToTable("Blogs", (string)null);
                 });
 
             modelBuilder.Entity("Educational_Medical_platform.Models.Blog_User_Likes", b =>
@@ -114,7 +114,7 @@ namespace Educational_Medical_platform.Migrations
 
                     b.HasIndex("BlogId");
 
-                    b.ToTable("BlogUserLikes");
+                    b.ToTable("BlogUserLikes", (string)null);
                 });
 
             modelBuilder.Entity("Educational_Medical_platform.Models.Book", b =>
@@ -151,7 +151,7 @@ namespace Educational_Medical_platform.Migrations
 
                     b.HasIndex("SubCategoryId");
 
-                    b.ToTable("Books");
+                    b.ToTable("Books", (string)null);
                 });
 
             modelBuilder.Entity("Educational_Medical_platform.Models.Category", b =>
@@ -164,7 +164,7 @@ namespace Educational_Medical_platform.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Categories");
+                    b.ToTable("Categories", (string)null);
                 });
 
             modelBuilder.Entity("Educational_Medical_platform.Models.CertificateDetails", b =>
@@ -185,7 +185,7 @@ namespace Educational_Medical_platform.Migrations
 
                     b.HasIndex("CourseId");
 
-                    b.ToTable("CertificateDetails");
+                    b.ToTable("CertificateDetails", (string)null);
                 });
 
             modelBuilder.Entity("Educational_Medical_platform.Models.Course", b =>
@@ -216,7 +216,7 @@ namespace Educational_Medical_platform.Migrations
 
                     b.HasIndex("SubCategoryId");
 
-                    b.ToTable("Courses");
+                    b.ToTable("Courses", (string)null);
                 });
 
             modelBuilder.Entity("Educational_Medical_platform.Models.Instructor", b =>
@@ -234,7 +234,7 @@ namespace Educational_Medical_platform.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Supervisors");
+                    b.ToTable("Supervisors", (string)null);
                 });
 
             modelBuilder.Entity("Educational_Medical_platform.Models.Objective", b =>
@@ -256,7 +256,7 @@ namespace Educational_Medical_platform.Migrations
 
                     b.HasIndex("CourseId");
 
-                    b.ToTable("Objectives");
+                    b.ToTable("Objectives", (string)null);
                 });
 
             modelBuilder.Entity("Educational_Medical_platform.Models.Question", b =>
@@ -289,7 +289,7 @@ namespace Educational_Medical_platform.Migrations
 
                     b.HasIndex("TestId");
 
-                    b.ToTable("Questions");
+                    b.ToTable("Questions", (string)null);
                 });
 
             modelBuilder.Entity("Educational_Medical_platform.Models.Requirement", b =>
@@ -311,7 +311,7 @@ namespace Educational_Medical_platform.Migrations
 
                     b.HasIndex("CourseId");
 
-                    b.ToTable("Requirements");
+                    b.ToTable("Requirements", (string)null);
                 });
 
             modelBuilder.Entity("Educational_Medical_platform.Models.StandardTest", b =>
@@ -334,7 +334,7 @@ namespace Educational_Medical_platform.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("StandardTests");
+                    b.ToTable("StandardTests", (string)null);
                 });
 
             modelBuilder.Entity("Educational_Medical_platform.Models.Student", b =>
@@ -355,7 +355,7 @@ namespace Educational_Medical_platform.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Students");
+                    b.ToTable("Students", (string)null);
                 });
 
             modelBuilder.Entity("Educational_Medical_platform.Models.StudentCourses", b =>
@@ -384,7 +384,7 @@ namespace Educational_Medical_platform.Migrations
 
                     b.HasIndex("CertificateDetailsStudentId", "CertificateDetailsCourseId");
 
-                    b.ToTable("StudentCourses");
+                    b.ToTable("StudentCourses", (string)null);
                 });
 
             modelBuilder.Entity("Educational_Medical_platform.Models.SubCategory", b =>
@@ -402,7 +402,7 @@ namespace Educational_Medical_platform.Migrations
 
                     b.HasIndex("CategoryId");
 
-                    b.ToTable("SubCategories");
+                    b.ToTable("SubCategories", (string)null);
                 });
 
             modelBuilder.Entity("Educational_Medical_platform.Models.Video", b =>
@@ -436,7 +436,7 @@ namespace Educational_Medical_platform.Migrations
 
                     b.HasIndex("CourseId");
 
-                    b.ToTable("Videos");
+                    b.ToTable("Videos", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
