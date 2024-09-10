@@ -6,6 +6,6 @@ namespace Shoghlana.Core.Models
 {
     public class ApplicationUser : IdentityUser
     {
-
+         
     }
 }
