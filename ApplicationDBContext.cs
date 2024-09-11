@@ -20,10 +20,10 @@ namespace Shoghlana.EF
         public DbSet<StandardTest> StandardTests { get; set; }
         public DbSet<Student> Students { get; set; }
         public DbSet<SubCategory> SubCategories { get; set; }
-        public DbSet<Instructor> Supervisors { get; set; }
+        public DbSet<Instructor> Instructors { get; set; }
         public DbSet<Video> Videos { get; set; }
-        public DbSet<StudentCourses> StudentCourses { get; set; }
-        public DbSet<Blog_User_Likes> BlogUserLikes { get; set; }
+        public DbSet<Student_Courses> Student_Courses { get; set; }
+        public DbSet<Blog_User_Likes> Blog_User_Likes { get; set; }
         public DbSet<CertificateDetails> CertificateDetails { get; set; }
 
         public ApplicationDBContext(DbContextOptions<ApplicationDBContext> options) : base(options) { }

@@ -9,7 +9,7 @@ namespace Shoghlana.EF.Configurations
         public void Configure(EntityTypeBuilder<ApplicationUser> builder)
         {
             builder.Property(u => u.UserName)
-                        .HasColumnType("nvarchar(256)");
+                        .HasColumnType("nvarchar(50)");
 
         }
     }

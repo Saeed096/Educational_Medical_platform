@@ -299,7 +299,9 @@ D:\Freelancing\Hisham Mousa\Ehab Naser\MedLearn\Educational_Medical_platform\bin
 D:\Freelancing\Hisham Mousa\Ehab Naser\MedLearn\Educational_Medical_platform\bin\Debug\net8.0\AutoMapper.dll
 D:\Freelancing\Hisham Mousa\Ehab Naser\MedLearn\Educational_Medical_platform\bin\Debug\net8.0\Azure.Core.dll
 D:\Freelancing\Hisham Mousa\Ehab Naser\MedLearn\Educational_Medical_platform\bin\Debug\net8.0\Azure.Identity.dll
+D:\Freelancing\Hisham Mousa\Ehab Naser\MedLearn\Educational_Medical_platform\bin\Debug\net8.0\BouncyCastle.Cryptography.dll
 D:\Freelancing\Hisham Mousa\Ehab Naser\MedLearn\Educational_Medical_platform\bin\Debug\net8.0\Humanizer.dll
+D:\Freelancing\Hisham Mousa\Ehab Naser\MedLearn\Educational_Medical_platform\bin\Debug\net8.0\MailKit.dll
 D:\Freelancing\Hisham Mousa\Ehab Naser\MedLearn\Educational_Medical_platform\bin\Debug\net8.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
 D:\Freelancing\Hisham Mousa\Ehab Naser\MedLearn\Educational_Medical_platform\bin\Debug\net8.0\Microsoft.AspNetCore.Cryptography.Internal.dll
 D:\Freelancing\Hisham Mousa\Ehab Naser\MedLearn\Educational_Medical_platform\bin\Debug\net8.0\Microsoft.AspNetCore.Cryptography.KeyDerivation.dll
@@ -330,6 +332,7 @@ D:\Freelancing\Hisham Mousa\Ehab Naser\MedLearn\Educational_Medical_platform\bin
 D:\Freelancing\Hisham Mousa\Ehab Naser\MedLearn\Educational_Medical_platform\bin\Debug\net8.0\Microsoft.OpenApi.dll
 D:\Freelancing\Hisham Mousa\Ehab Naser\MedLearn\Educational_Medical_platform\bin\Debug\net8.0\Microsoft.SqlServer.Server.dll
 D:\Freelancing\Hisham Mousa\Ehab Naser\MedLearn\Educational_Medical_platform\bin\Debug\net8.0\Microsoft.Win32.SystemEvents.dll
+D:\Freelancing\Hisham Mousa\Ehab Naser\MedLearn\Educational_Medical_platform\bin\Debug\net8.0\MimeKit.dll
 D:\Freelancing\Hisham Mousa\Ehab Naser\MedLearn\Educational_Medical_platform\bin\Debug\net8.0\Mono.TextTemplating.dll
 D:\Freelancing\Hisham Mousa\Ehab Naser\MedLearn\Educational_Medical_platform\bin\Debug\net8.0\Swashbuckle.AspNetCore.Swagger.dll
 D:\Freelancing\Hisham Mousa\Ehab Naser\MedLearn\Educational_Medical_platform\bin\Debug\net8.0\Swashbuckle.AspNetCore.SwaggerGen.dll
@@ -342,6 +345,7 @@ D:\Freelancing\Hisham Mousa\Ehab Naser\MedLearn\Educational_Medical_platform\bin
 D:\Freelancing\Hisham Mousa\Ehab Naser\MedLearn\Educational_Medical_platform\bin\Debug\net8.0\System.Composition.TypedParts.dll
 D:\Freelancing\Hisham Mousa\Ehab Naser\MedLearn\Educational_Medical_platform\bin\Debug\net8.0\System.Configuration.ConfigurationManager.dll
 D:\Freelancing\Hisham Mousa\Ehab Naser\MedLearn\Educational_Medical_platform\bin\Debug\net8.0\System.Drawing.Common.dll
+D:\Freelancing\Hisham Mousa\Ehab Naser\MedLearn\Educational_Medical_platform\bin\Debug\net8.0\System.Formats.Asn1.dll
 D:\Freelancing\Hisham Mousa\Ehab Naser\MedLearn\Educational_Medical_platform\bin\Debug\net8.0\System.IdentityModel.Tokens.Jwt.dll
 D:\Freelancing\Hisham Mousa\Ehab Naser\MedLearn\Educational_Medical_platform\bin\Debug\net8.0\System.Memory.Data.dll
 D:\Freelancing\Hisham Mousa\Ehab Naser\MedLearn\Educational_Medical_platform\bin\Debug\net8.0\System.Runtime.Caching.dll
