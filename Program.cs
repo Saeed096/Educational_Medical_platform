@@ -48,6 +48,7 @@ namespace Educational_Medical_platform
             builder.Services.AddScoped<IAdminRepository, AdminRepository>();
             builder.Services.AddScoped<IInstructorRepository, InstructorRepository>();
             builder.Services.AddScoped<IStudentRepository, StudentRepository>();
+
             //************************************************************************
 
             #region JWT
