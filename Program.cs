@@ -50,8 +50,10 @@ namespace Educational_Medical_platform
             builder.Services.AddScoped<IInstructorRepository, InstructorRepository>();
             builder.Services.AddScoped<IStudentRepository, StudentRepository>(); 
             builder.Services.AddScoped<IBlogRepository, BlogRepository>(); 
-            builder.Services.AddScoped<ICourseObjectiveRepository, CourseObjectiveRepository>();
-            builder.Services.AddScoped<ICourseRepository, CourseRepository>();
+            builder.Services.AddScoped<IBookRepository,BookRepository>();
+            builder.Services.AddScoped<ISubCategoryRepository, SubCategoryRepository>();
+            builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+
             #endregion
 
             //************************************************************************
