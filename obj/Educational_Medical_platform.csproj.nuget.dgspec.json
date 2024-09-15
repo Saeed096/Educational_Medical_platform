@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "D:\\Freelancing\\Hisham Mousa\\Ehab Naser\\MedLearn\\Educational_Medical_platform\\Educational_Medical_platform.csproj": {}
+    "D:\\Educational_Medical_platform\\Educational_Medical_platform.csproj": {}
   },
   "projects": {
-    "D:\\Freelancing\\Hisham Mousa\\Ehab Naser\\MedLearn\\Educational_Medical_platform\\Educational_Medical_platform.csproj": {
+    "D:\\Educational_Medical_platform\\Educational_Medical_platform.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\Freelancing\\Hisham Mousa\\Ehab Naser\\MedLearn\\Educational_Medical_platform\\Educational_Medical_platform.csproj",
+        "projectUniqueName": "D:\\Educational_Medical_platform\\Educational_Medical_platform.csproj",
         "projectName": "Educational_Medical_platform",
-        "projectPath": "D:\\Freelancing\\Hisham Mousa\\Ehab Naser\\MedLearn\\Educational_Medical_platform\\Educational_Medical_platform.csproj",
-        "packagesPath": "C:\\Users\\oahme\\.nuget\\packages\\",
-        "outputPath": "D:\\Freelancing\\Hisham Mousa\\Ehab Naser\\MedLearn\\Educational_Medical_platform\\obj\\",
+        "projectPath": "D:\\Educational_Medical_platform\\Educational_Medical_platform.csproj",
+        "packagesPath": "C:\\Users\\mahmoud\\.nuget\\packages\\",
+        "outputPath": "D:\\Educational_Medical_platform\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\oahme\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\mahmoud\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -109,7 +109,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.204/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.200/PortableRuntimeIdentifierGraph.json"
         }
       }
     }
