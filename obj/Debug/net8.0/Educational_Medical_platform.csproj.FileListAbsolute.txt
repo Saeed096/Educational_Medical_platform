@@ -439,3 +439,4 @@ D:\Freelancing\Hisham Mousa\Ehab Naser\MedLearn\Educational_Medical_platform\obj
 D:\Freelancing\Hisham Mousa\Ehab Naser\MedLearn\Educational_Medical_platform\obj\Debug\net8.0\Educational_Medical_platform.pdb
 D:\Freelancing\Hisham Mousa\Ehab Naser\MedLearn\Educational_Medical_platform\obj\Debug\net8.0\Educational_Medical_platform.genruntimeconfig.cache
 D:\Freelancing\Hisham Mousa\Ehab Naser\MedLearn\Educational_Medical_platform\obj\Debug\net8.0\ref\Educational_Medical_platform.dll
+D:\Freelancing\Hisham Mousa\Ehab Naser\MedLearn\Educational_Medical_platform\bin\Debug\net8.0\Educational_Medical_platform.staticwebassets.runtime.json

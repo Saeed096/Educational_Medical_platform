@@ -181,6 +181,7 @@ namespace Educational_Medical_platform
 
             app.UseAuthorization();
 
+            app.UseStaticFiles(); // Serves files from wwwroot
 
             app.MapControllers();
 

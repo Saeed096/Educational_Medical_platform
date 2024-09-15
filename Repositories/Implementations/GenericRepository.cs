@@ -259,5 +259,11 @@ namespace Shoghlana.EF.Repository
         {
             context.SaveChanges();
         }
+
+        public Task SaveAsync()
+        {
+           return context.SaveChangesAsync();
+        }
+
     }
 }
