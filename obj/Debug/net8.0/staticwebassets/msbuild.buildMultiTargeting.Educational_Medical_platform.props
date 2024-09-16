@@ -1,3 +1,0 @@
-﻿<Project>
-  <Import Project="..\build\Educational_Medical_platform.props" />
-</Project>
