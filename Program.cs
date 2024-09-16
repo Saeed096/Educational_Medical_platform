@@ -30,7 +30,7 @@ namespace Educational_Medical_platform
             {
                 options.AddPolicy("DefaultPolicy", policy =>
                 {
-                    policy.AllowAnyOrigin()
+                    policy.WithOrigins("http://localhost:3000") // Add the specific origin of your React app
                     .AllowAnyMethod()
                     .AllowAnyHeader();
                 });
@@ -179,6 +179,8 @@ namespace Educational_Medical_platform
             }
 
             app.UseCors("DefaultPolicy");
+
+            app.UseAuthentication(); // Ensure this is called before authorization
 
             app.UseAuthorization();
 

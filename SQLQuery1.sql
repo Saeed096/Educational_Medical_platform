@@ -12,3 +12,7 @@ use MedLearnHubDB
 --select * from SubCategories
 
 select * from blogs
+
+select * from AspNetUsers
+
+select * from Blog_User_Likes
