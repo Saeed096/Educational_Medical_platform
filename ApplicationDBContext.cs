@@ -1,7 +1,10 @@
 ﻿using Educational_Medical_platform.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
 using Shoghlana.Core.Models;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace Shoghlana.EF
@@ -14,17 +17,18 @@ namespace Shoghlana.EF
         public DbSet<Book> Books { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<Course> Courses { get; set; }
-        public DbSet<Objective> Objectives { get; set; }
+        public DbSet<Objective> Objectives { get; set; } 
         public DbSet<Question> Questions { get; set; }
-        public DbSet<Requirement> Requirements { get; set; }
-        public DbSet<StandardTest> StandardTests { get; set; }
-        public DbSet<Student> Students { get; set; }
-        public DbSet<SubCategory> SubCategories { get; set; }
-        public DbSet<Instructor> Instructors { get; set; }
+        public DbSet<Requirement> Requirements { get; set; } 
+        public DbSet<StandardTest> StandardTests { get; set; } 
+        public DbSet<Student> Students { get; set; } 
+        public DbSet<SubCategory> SubCategories { get; set; } 
+        public DbSet<Instructor> Supervisors { get; set; } 
         public DbSet<Video> Videos { get; set; }
-        public DbSet<Student_Courses> Student_Courses { get; set; }
-        public DbSet<Blog_User_Likes> Blog_User_Likes { get; set; }
-        public DbSet<CertificateDetails> CertificateDetails { get; set; }
+        public DbSet<Student_Courses> StudentCourses { get; set; }
+
+
+
 
         public ApplicationDBContext(DbContextOptions<ApplicationDBContext> options) : base(options) { }
 
@@ -53,10 +57,10 @@ namespace Shoghlana.EF
             foreach (var Entity in Entities)
             {
                 ValidationContext validationContext = new ValidationContext(Entity);
-                IsValid = Validator.TryValidateObject(Entity, validationContext, new List<ValidationResult>());
+               IsValid =  Validator.TryValidateObject(Entity, validationContext , new List<ValidationResult>()); 
                 //true: This parameter specifies whether to validate all properties (when true) or only required properties (when false). >> in case of using validate object()
             }
-            if (IsValid)
+            if(IsValid)
             {
                 return base.SaveChanges();
             }
