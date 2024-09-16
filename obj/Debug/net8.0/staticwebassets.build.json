@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "BA3q9BQL8ZkhTsKcSkubdBy44mqyVnAmlbNI7rPClmo=",
+  "Hash": "myM7oInoFFuAsXy/9npcx0K8ty5Nfjmu/o2GajOQyr0=",
   "Source": "Educational_Medical_platform",
   "BasePath": "_content/Educational_Medical_platform",
   "Mode": "Default",
@@ -72,25 +72,6 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\Images\\Blogs\\blog1.jpg"
-    },
-    {
-      "Identity": "D:\\Freelancing\\Hisham Mousa\\Ehab Naser\\MedLearn\\Educational_Medical_platform\\wwwroot\\Images\\Blogs\\dream linkedin_b8ed7ca7-b9c3-40a5-91ac-f939423d9064.jpg",
-      "SourceId": "Educational_Medical_platform",
-      "SourceType": "Discovered",
-      "ContentRoot": "D:\\Freelancing\\Hisham Mousa\\Ehab Naser\\MedLearn\\Educational_Medical_platform\\wwwroot\\",
-      "BasePath": "_content/Educational_Medical_platform",
-      "RelativePath": "Images/Blogs/dream linkedin_b8ed7ca7-b9c3-40a5-91ac-f939423d9064.jpg",
-      "AssetKind": "All",
-      "AssetMode": "All",
-      "AssetRole": "Primary",
-      "AssetMergeBehavior": "PreferTarget",
-      "AssetMergeSource": "",
-      "RelatedAsset": "",
-      "AssetTraitName": "",
-      "AssetTraitValue": "",
-      "CopyToOutputDirectory": "Never",
-      "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "wwwroot\\Images\\Blogs\\dream linkedin_b8ed7ca7-b9c3-40a5-91ac-f939423d9064.jpg"
     },
     {
       "Identity": "D:\\Freelancing\\Hisham Mousa\\Ehab Naser\\MedLearn\\Educational_Medical_platform\\wwwroot\\Images\\Blogs\\istockphoto-636135568-612x612_728a87e0-6e30-447c-8718-a1fc0b301b11.jpg",

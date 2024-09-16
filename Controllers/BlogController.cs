@@ -1,8 +1,10 @@
 ﻿using Educational_Medical_platform.DTO.Blog;
 using Educational_Medical_platform.Models;
 using Educational_Medical_platform.Repositories.Interfaces;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Shoghlana.Api.Response;
+using Shoghlana.Core.Models;
 
 namespace Educational_Medical_platform.Controllers
 {
@@ -11,12 +13,18 @@ namespace Educational_Medical_platform.Controllers
     public class BlogController : ControllerBase
     {
         private readonly IBlogRepository _blogRepository;
+        private readonly IBlog_User_LikesRepository _user_LikesRepository;
+        private readonly UserManager<ApplicationUser> _userManager;
         private readonly string _imagesPath;
 
         ///TODO : Don't Forget to make end point for assigning question to blog 
-        public BlogController(IBlogRepository blogRepository)
+        public BlogController(IBlogRepository blogRepository,
+            IBlog_User_LikesRepository user_LikesRepository,
+            UserManager<ApplicationUser> userManager)
         {
             _blogRepository = blogRepository;
+            _user_LikesRepository = user_LikesRepository;
+            _userManager = userManager;
             _imagesPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Images", "Blogs");
         }
 
@@ -323,6 +331,62 @@ namespace Educational_Medical_platform.Controllers
             {
                 IsSuccess = true,
                 Message = "Blog deleted successfully."
+            };
+        }
+
+        [HttpGet("/like/{userId}/{blogId:int}")]
+        public async Task<ActionResult<GeneralResponse>> Like(string userId, int blogId)
+        {
+            // Check if the user exists
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+            {
+                return new GeneralResponse
+                {
+                    IsSuccess = false,
+                    Message = $"User with ID : {userId} does not exist."
+                };
+            }
+
+            // Check if the blog exists
+            var blog = await _blogRepository.GetByIdAsync(blogId); // Assuming you have a method to get blog by ID
+            if (blog == null)
+            {
+                return new GeneralResponse
+                {
+                    IsSuccess = false,
+                    Message = $"Blog with ID : {blogId} does not exist."
+                };
+            }
+
+            // Check if the user has already liked the blog
+            var existingLike = _user_LikesRepository.FindAll(criteria: l => l.UserId == userId && l.BlogId == blogId).FirstOrDefault();
+            if (existingLike != null)
+            {
+                return new GeneralResponse
+                {
+                    IsSuccess = false,
+                    Message = $"User with ID : {userId} has already liked the Blog with ID : {blogId}."
+                };
+            }
+
+            // Create and add the like
+            Blog_User_Likes like = new Blog_User_Likes()
+            {
+                UserId = userId,
+                BlogId = blogId
+            };
+
+            _user_LikesRepository.Add(like);
+            await _user_LikesRepository.SaveAsync();
+
+            blog.LikesNumber++; 
+            await _blogRepository.SaveAsync();
+
+            return new GeneralResponse
+            {
+                IsSuccess = true,
+                Message = $"User with ID : {userId} liked the Blog with ID : {blogId} successfully."
             };
         }
 

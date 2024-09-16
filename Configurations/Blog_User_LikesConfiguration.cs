@@ -1,7 +1,6 @@
 ﻿using Educational_Medical_platform.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System.Reflection.Emit;
 
 namespace Educational_Medical_platform.Configurations
 {

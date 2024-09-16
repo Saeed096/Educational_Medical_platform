@@ -48,22 +48,6 @@
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       <OriginalItemSpec>$([System.IO.Path]::GetFullPath($(MSBuildThisFileDirectory)..\staticwebassets\Images\Blogs\blog1.jpg))</OriginalItemSpec>
     </StaticWebAsset>
-    <StaticWebAsset Include="$([System.IO.Path]::GetFullPath($(MSBuildThisFileDirectory)..\staticwebassets\Images\Blogs\dream linkedin_b8ed7ca7-b9c3-40a5-91ac-f939423d9064.jpg))">
-      <SourceType>Package</SourceType>
-      <SourceId>Educational_Medical_platform</SourceId>
-      <ContentRoot>$(MSBuildThisFileDirectory)..\staticwebassets\</ContentRoot>
-      <BasePath>_content/Educational_Medical_platform</BasePath>
-      <RelativePath>Images/Blogs/dream linkedin_b8ed7ca7-b9c3-40a5-91ac-f939423d9064.jpg</RelativePath>
-      <AssetKind>All</AssetKind>
-      <AssetMode>All</AssetMode>
-      <AssetRole>Primary</AssetRole>
-      <RelatedAsset></RelatedAsset>
-      <AssetTraitName></AssetTraitName>
-      <AssetTraitValue></AssetTraitValue>
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-      <OriginalItemSpec>$([System.IO.Path]::GetFullPath($(MSBuildThisFileDirectory)..\staticwebassets\Images\Blogs\dream linkedin_b8ed7ca7-b9c3-40a5-91ac-f939423d9064.jpg))</OriginalItemSpec>
-    </StaticWebAsset>
     <StaticWebAsset Include="$([System.IO.Path]::GetFullPath($(MSBuildThisFileDirectory)..\staticwebassets\Images\Blogs\istockphoto-636135568-612x612_728a87e0-6e30-447c-8718-a1fc0b301b11.jpg))">
       <SourceType>Package</SourceType>
       <SourceId>Educational_Medical_platform</SourceId>
