@@ -12,8 +12,8 @@ using Shoghlana.EF;
 namespace Educational_Medical_platform.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    [Migration("20240915063547_SeedingBlg")]
-    partial class SeedingBlg
+    [Migration("20240916042607_init")]
+    partial class init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -316,9 +316,6 @@ namespace Educational_Medical_platform.Migrations
                     b.Property<int?>("SubCategoryId")
                         .HasColumnType("int");
 
-                    b.Property<string>("ThumbnailURL")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -328,6 +325,29 @@ namespace Educational_Medical_platform.Migrations
                     b.HasIndex("SubCategoryId");
 
                     b.ToTable("Courses");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            DurationInhours = 10f,
+                            SubCategoryId = 1,
+                            Title = "physiology"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            DurationInhours = 20f,
+                            SubCategoryId = 1,
+                            Title = "anatomy"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            DurationInhours = 30f,
+                            SubCategoryId = 1,
+                            Title = "histology"
+                        });
                 });
 
             modelBuilder.Entity("Educational_Medical_platform.Models.Instructor", b =>
@@ -355,7 +375,7 @@ namespace Educational_Medical_platform.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Instructors");
+                    b.ToTable("Supervisors");
                 });
 
             modelBuilder.Entity("Educational_Medical_platform.Models.Objective", b =>
@@ -378,6 +398,26 @@ namespace Educational_Medical_platform.Migrations
                     b.HasIndex("CourseId");
 
                     b.ToTable("Objectives");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CourseId = 1,
+                            Description = "Enhancing medical skills"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            CourseId = 1,
+                            Description = "Enhancing physiology knowledge"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            CourseId = 1,
+                            Description = "increasing job opportunities"
+                        });
                 });
 
             modelBuilder.Entity("Educational_Medical_platform.Models.Question", b =>
@@ -433,6 +473,26 @@ namespace Educational_Medical_platform.Migrations
                     b.HasIndex("CourseId");
 
                     b.ToTable("Requirements");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CourseId = 1,
+                            Description = "being medical student"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            CourseId = 1,
+                            Description = "having laptop"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            CourseId = 2,
+                            Description = "buying premium package"
+                        });
                 });
 
             modelBuilder.Entity("Educational_Medical_platform.Models.StandardTest", b =>
@@ -515,7 +575,7 @@ namespace Educational_Medical_platform.Migrations
 
                     b.HasIndex("CertificateDetailsStudentId", "CertificateDetailsCourseId");
 
-                    b.ToTable("Student_Courses");
+                    b.ToTable("StudentCourses");
                 });
 
             modelBuilder.Entity("Educational_Medical_platform.Models.SubCategory", b =>
@@ -623,6 +683,32 @@ namespace Educational_Medical_platform.Migrations
                     b.HasIndex("CourseId");
 
                     b.ToTable("Videos");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CourseId = 1,
+                            Number = 1,
+                            Title = "new video",
+                            videoURL = "https://www.youtube.com/watch?v=4oThHBo2-Gs"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            CourseId = 2,
+                            Number = 1,
+                            Title = "old video",
+                            videoURL = "https://www.youtube.com/watch?v=mgEAimOoyHk"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            CourseId = 3,
+                            Number = 1,
+                            Title = "funny video",
+                            videoURL = "https://www.youtube.com/watch?v=zhCKr62s12w"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>

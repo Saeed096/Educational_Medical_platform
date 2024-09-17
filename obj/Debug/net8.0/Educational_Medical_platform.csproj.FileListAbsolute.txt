@@ -440,3 +440,9 @@ D:\Freelancing\Hisham Mousa\Ehab Naser\MedLearn\Educational_Medical_platform\obj
 D:\Freelancing\Hisham Mousa\Ehab Naser\MedLearn\Educational_Medical_platform\obj\Debug\net8.0\Educational_Medical_platform.genruntimeconfig.cache
 D:\Freelancing\Hisham Mousa\Ehab Naser\MedLearn\Educational_Medical_platform\obj\Debug\net8.0\ref\Educational_Medical_platform.dll
 D:\Freelancing\Hisham Mousa\Ehab Naser\MedLearn\Educational_Medical_platform\bin\Debug\net8.0\Educational_Medical_platform.staticwebassets.runtime.json
+E:\iti\freelance\Educational_medical_platform\Educational_Medical_platform\obj\Debug\net8.0\Educational_Medical_platform.sourcelink.json
+E:\iti\freelance\Educational_medical_platform\Educational_Medical_platform\bin\Debug\net8.0\Educational_Medical_platform.staticwebassets.runtime.json
+E:\iti\freelance\Educational_medical_platform\Educational_Medical_platform\bin\Debug\net8.0\BouncyCastle.Cryptography.dll
+E:\iti\freelance\Educational_medical_platform\Educational_Medical_platform\bin\Debug\net8.0\MailKit.dll
+E:\iti\freelance\Educational_medical_platform\Educational_Medical_platform\bin\Debug\net8.0\MimeKit.dll
+E:\iti\freelance\Educational_medical_platform\Educational_Medical_platform\bin\Debug\net8.0\System.Formats.Asn1.dll
