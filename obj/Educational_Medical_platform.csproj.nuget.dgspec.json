@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "D:\\Freelancing\\Hisham Mousa\\Ehab Naser\\MedLearn\\Educational_Medical_platform\\Educational_Medical_platform.csproj": {}
+    "E:\\iti\\freelance\\Educational_medical_platform\\Educational_Medical_platform\\Educational_Medical_platform.csproj": {}
   },
   "projects": {
-    "D:\\Freelancing\\Hisham Mousa\\Ehab Naser\\MedLearn\\Educational_Medical_platform\\Educational_Medical_platform.csproj": {
+    "E:\\iti\\freelance\\Educational_medical_platform\\Educational_Medical_platform\\Educational_Medical_platform.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\Freelancing\\Hisham Mousa\\Ehab Naser\\MedLearn\\Educational_Medical_platform\\Educational_Medical_platform.csproj",
+        "projectUniqueName": "E:\\iti\\freelance\\Educational_medical_platform\\Educational_Medical_platform\\Educational_Medical_platform.csproj",
         "projectName": "Educational_Medical_platform",
-        "projectPath": "D:\\Freelancing\\Hisham Mousa\\Ehab Naser\\MedLearn\\Educational_Medical_platform\\Educational_Medical_platform.csproj",
-        "packagesPath": "C:\\Users\\oahme\\.nuget\\packages\\",
-        "outputPath": "D:\\Freelancing\\Hisham Mousa\\Ehab Naser\\MedLearn\\Educational_Medical_platform\\obj\\",
+        "projectPath": "E:\\iti\\freelance\\Educational_medical_platform\\Educational_Medical_platform\\Educational_Medical_platform.csproj",
+        "packagesPath": "C:\\Users\\Mohammed Ali\\.nuget\\packages\\",
+        "outputPath": "E:\\iti\\freelance\\Educational_medical_platform\\Educational_Medical_platform\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\oahme\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Mohammed Ali\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -26,6 +26,7 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -38,11 +39,6 @@
           "warnAsError": [
             "NU1605"
           ]
-        },
-        "restoreAuditProperties": {
-          "enableAudit": "true",
-          "auditLevel": "low",
-          "auditMode": "direct"
         }
       },
       "frameworks": {
@@ -109,7 +105,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.204/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.101/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

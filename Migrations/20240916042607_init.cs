@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Educational_Medical_platform.Migrations
 {
     /// <inheritdoc />
-    public partial class Init : Migration
+    public partial class init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -209,26 +209,6 @@ namespace Educational_Medical_platform.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Instructors",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    FirstName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    LastName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Instructors", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Instructors_AspNetUsers_UserId",
-                        column: x => x.UserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id");
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Students",
                 columns: table => new
                 {
@@ -250,11 +230,32 @@ namespace Educational_Medical_platform.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Supervisors",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    FirstName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    LastName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Supervisors", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Supervisors_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "SubCategories",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     CategoryId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -276,8 +277,8 @@ namespace Educational_Medical_platform.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     LikesNumber = table.Column<int>(type: "int", nullable: false),
                     ImageURL = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Content = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Title = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    Content = table.Column<string>(type: "nvarchar(max)", maxLength: 5000, nullable: false),
                     SubCategoryId = table.Column<int>(type: "int", nullable: true),
                     CategoryId = table.Column<int>(type: "int", nullable: true)
                 },
@@ -331,7 +332,6 @@ namespace Educational_Medical_platform.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ThumbnailURL = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     DurationInhours = table.Column<float>(type: "real", nullable: false),
                     Preview = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     SubCategoryId = table.Column<int>(type: "int", nullable: true)
@@ -497,7 +497,7 @@ namespace Educational_Medical_platform.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Student_Courses",
+                name: "StudentCourses",
                 columns: table => new
                 {
                     StudentId = table.Column<int>(type: "int", nullable: false),
@@ -509,20 +509,20 @@ namespace Educational_Medical_platform.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Student_Courses", x => new { x.StudentId, x.CourseId });
+                    table.PrimaryKey("PK_StudentCourses", x => new { x.StudentId, x.CourseId });
                     table.ForeignKey(
-                        name: "FK_Student_Courses_CertificateDetails_CertificateDetailsStudentId_CertificateDetailsCourseId",
+                        name: "FK_StudentCourses_CertificateDetails_CertificateDetailsStudentId_CertificateDetailsCourseId",
                         columns: x => new { x.CertificateDetailsStudentId, x.CertificateDetailsCourseId },
                         principalTable: "CertificateDetails",
                         principalColumns: new[] { "StudentId", "CourseId" });
                     table.ForeignKey(
-                        name: "FK_Student_Courses_Courses_CourseId",
+                        name: "FK_StudentCourses_Courses_CourseId",
                         column: x => x.CourseId,
                         principalTable: "Courses",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.NoAction);
                     table.ForeignKey(
-                        name: "FK_Student_Courses_Students_StudentId",
+                        name: "FK_StudentCourses_Students_StudentId",
                         column: x => x.StudentId,
                         principalTable: "Students",
                         principalColumn: "Id",
@@ -555,9 +555,96 @@ namespace Educational_Medical_platform.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "23978a1d-7823-4030-bd5d-ef7a0e6412a2", "a9d59149-3197-4a56-9b53-18eff28439ff", "Student", "STUDENT" },
-                    { "952625cb-623b-4f8e-a426-c9e14ffe41bc", "1ad216ff-3853-4b5e-8f05-96f82ce3491f", "Admin", "ADMIN" },
-                    { "ea3203f7-8571-4e45-b109-e593235f3420", "b15d17f3-86a5-498e-9210-6160919c67ec", "Instructor", "INSTRUCTOR" }
+                    { "23978a1d-7823-4030-bd5d-ef7a0e6412a2", "df2d8409-ce61-4dac-ae75-b26fbbab27f2", "Student", "STUDENT" },
+                    { "952625cb-623b-4f8e-a426-c9e14ffe41bc", "9e9ef764-d672-42d8-99ee-93c2410d8ae0", "Admin", "ADMIN" },
+                    { "ea3203f7-8571-4e45-b109-e593235f3420", "df2d8409-ce61-4dac-ae75-b26fbbab27f2", "Instructor", "INSTRUCTOR" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Categories",
+                columns: new[] { "Id", "Name" },
+                values: new object[,]
+                {
+                    { 1, "Anatomy" },
+                    { 2, "Physiology" },
+                    { 3, "Pharmacology" },
+                    { 4, "Pathology" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Blogs",
+                columns: new[] { "Id", "CategoryId", "Content", "ImageURL", "LikesNumber", "SubCategoryId", "Title" },
+                values: new object[,]
+                {
+                    { 1, 1, "This blog covers the basics of human anatomy...", "/Images/Blogs/blog1.jpg", 10, null, "Introduction to Human Anatomy" },
+                    { 2, 1, "This blog explores comparative anatomy across species...", "/Images/Blogs/blog1.jpg", 15, null, "Advanced Comparative Anatomy" },
+                    { 3, 2, "Understanding the basics of cell physiology...", "/Images/Blogs/blog1.jpg", 20, null, "Fundamentals of Cell Physiology" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "SubCategories",
+                columns: new[] { "Id", "CategoryId", "Name" },
+                values: new object[,]
+                {
+                    { 1, 1, "Human Anatomy" },
+                    { 2, 1, "Comparative Anatomy" },
+                    { 3, 2, "Cell Physiology" },
+                    { 4, 2, "Systemic Physiology" },
+                    { 5, 3, "Clinical Pharmacology" },
+                    { 6, 3, "Pharmacokinetics" },
+                    { 7, 4, "General Pathology" },
+                    { 8, 4, "Systemic Pathology" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Blogs",
+                columns: new[] { "Id", "CategoryId", "Content", "ImageURL", "LikesNumber", "SubCategoryId", "Title" },
+                values: new object[,]
+                {
+                    { 4, 1, "This blog provides an overview of human anatomy...", "/Images/Blogs/blog1.jpg", 5, 1, "Human Anatomy Overview" },
+                    { 5, 2, "An introductory blog on systemic physiology...", "/Images/Blogs/blog1.jpg", 8, 4, "Systemic Physiology Basics" },
+                    { 6, 3, "Exploring clinical applications in pharmacology...", "/Images/Blogs/blog1.jpg", 12, 5, "Clinical Applications of Pharmacology" },
+                    { 7, 4, "A comprehensive overview of pathology...", "/Images/Blogs/blog1.jpg", 7, 7, "Pathology: An Overview" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Courses",
+                columns: new[] { "Id", "DurationInhours", "Preview", "SubCategoryId", "Title" },
+                values: new object[,]
+                {
+                    { 1, 10f, null, 1, "physiology" },
+                    { 2, 20f, null, 1, "anatomy" },
+                    { 3, 30f, null, 1, "histology" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Objectives",
+                columns: new[] { "Id", "CourseId", "Description" },
+                values: new object[,]
+                {
+                    { 1, 1, "Enhancing medical skills" },
+                    { 2, 1, "Enhancing physiology knowledge" },
+                    { 3, 1, "increasing job opportunities" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Requirements",
+                columns: new[] { "Id", "CourseId", "Description" },
+                values: new object[,]
+                {
+                    { 1, 1, "being medical student" },
+                    { 2, 1, "having laptop" },
+                    { 3, 2, "buying premium package" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Videos",
+                columns: new[] { "Id", "CourseId", "Description", "Number", "ThumbnailURL", "Title", "videoURL" },
+                values: new object[,]
+                {
+                    { 1, 1, null, 1, null, "new video", "https://www.youtube.com/watch?v=4oThHBo2-Gs" },
+                    { 2, 2, null, 1, null, "old video", "https://www.youtube.com/watch?v=mgEAimOoyHk" },
+                    { 3, 3, null, 1, null, "funny video", "https://www.youtube.com/watch?v=zhCKr62s12w" }
                 });
 
             migrationBuilder.CreateIndex(
@@ -645,11 +732,6 @@ namespace Educational_Medical_platform.Migrations
                 column: "SubCategoryId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Instructors_UserId",
-                table: "Instructors",
-                column: "UserId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Objectives_CourseId",
                 table: "Objectives",
                 column: "CourseId");
@@ -680,13 +762,13 @@ namespace Educational_Medical_platform.Migrations
                 column: "CourseId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Student_Courses_CertificateDetailsStudentId_CertificateDetailsCourseId",
-                table: "Student_Courses",
+                name: "IX_StudentCourses_CertificateDetailsStudentId_CertificateDetailsCourseId",
+                table: "StudentCourses",
                 columns: new[] { "CertificateDetailsStudentId", "CertificateDetailsCourseId" });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Student_Courses_CourseId",
-                table: "Student_Courses",
+                name: "IX_StudentCourses_CourseId",
+                table: "StudentCourses",
                 column: "CourseId");
 
             migrationBuilder.CreateIndex(
@@ -698,6 +780,11 @@ namespace Educational_Medical_platform.Migrations
                 name: "IX_SubCategories_CategoryId",
                 table: "SubCategories",
                 column: "CategoryId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Supervisors_UserId",
+                table: "Supervisors",
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Videos_CourseId",
@@ -736,16 +823,16 @@ namespace Educational_Medical_platform.Migrations
                 name: "Books");
 
             migrationBuilder.DropTable(
-                name: "Instructors");
-
-            migrationBuilder.DropTable(
                 name: "Objectives");
 
             migrationBuilder.DropTable(
                 name: "Requirements");
 
             migrationBuilder.DropTable(
-                name: "Student_Courses");
+                name: "StudentCourses");
+
+            migrationBuilder.DropTable(
+                name: "Supervisors");
 
             migrationBuilder.DropTable(
                 name: "Videos");
