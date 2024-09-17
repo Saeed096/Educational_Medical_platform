@@ -36,6 +36,7 @@ namespace Educational_Medical_platform
                 });
             });
 
+
             builder.Services.AddDbContext<ApplicationDBContext>(options =>
             {
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnectionString"));
