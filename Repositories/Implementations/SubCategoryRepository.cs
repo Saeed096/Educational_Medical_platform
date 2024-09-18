@@ -14,6 +14,11 @@ namespace Educational_Medical_platform.Repositories.Implementations
 
         }
 
+        public bool Exists(int id)
+        {
+            return context.SubCategories.Any(c => c.Id == id);
+        }
+
         public async Task<IEnumerable<SubCategoryDTO>> GetSubCategoriesByCategoryIdAsync(int categoryId)
         {
             return await context.SubCategories
@@ -24,7 +29,6 @@ namespace Educational_Medical_platform.Repositories.Implementations
                     CategoryId = sc.CategoryId
                 }).ToListAsync();
         }
-
 
         public async Task<SubCategoryDTO> UpdateSubCategoryAsync(int id, SubCategoryDTO subCategoryDTO)
         {

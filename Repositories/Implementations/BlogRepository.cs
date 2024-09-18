@@ -10,5 +10,10 @@ namespace Educational_Medical_platform.Repositories.Implementations
         public BlogRepository(ApplicationDBContext Context) : base(Context)
         {
         }
+
+        public bool Exists(int id)
+        {
+            return context.Blogs.Any(c => c.Id == id);
+        }
     }
 }
