@@ -106,7 +106,7 @@ namespace Educational_Medical_platform.Controllers
             };
         }
 
-        [HttpGet("/category/{id:int}")]
+        [HttpGet("category/{id:int}")]
         public ActionResult<GeneralResponse> GetByCategoryId(int id)
         {
             List<GetBlogsDTO>? blogsDTOs = _blogRepository.FindAll(includes: null, b => b.CategoryId == id).Select(b => new GetBlogsDTO()
@@ -144,7 +144,7 @@ namespace Educational_Medical_platform.Controllers
             };
         }
 
-        [HttpGet("/subcategory/{id:int}")]
+        [HttpGet("subcategory/{id:int}")]
         public ActionResult<GeneralResponse> GetBySubCategoryId(int id)
         {
             List<GetBlogsDTO>? blogsDTOs = _blogRepository.FindAll(includes: null, b => b.SubCategoryId == id).Select(b => new GetBlogsDTO()
@@ -355,7 +355,7 @@ namespace Educational_Medical_platform.Controllers
             };
         }
 
-        [HttpGet("/like/{userId}/{blogId:int}")]
+        [HttpGet("like/{userId}/{blogId:int}")]
         public async Task<ActionResult<GeneralResponse>> Like(string userId, int blogId)
         {
             // Check if the user exists
