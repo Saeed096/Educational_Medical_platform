@@ -444,3 +444,4 @@ D:\Educational_Medical_platform\bin\Debug\net8.0\MailKit.dll
 D:\Educational_Medical_platform\bin\Debug\net8.0\MimeKit.dll
 D:\Educational_Medical_platform\bin\Debug\net8.0\System.Formats.Asn1.dll
 D:\Educational_Medical_platform\bin\Debug\net8.0\Educational_Medical_platform.staticwebassets.runtime.json
+D:\Freelancing\Hisham Mousa\Ehab Naser\MedLearn\Educational_Medical_platform\bin\Debug\net8.0\Educational_Medical_platform.staticwebassets.runtime.json
