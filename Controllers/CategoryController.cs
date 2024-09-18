@@ -30,6 +30,7 @@ namespace Educational_Medical_platform.Controllers
 
                 List<CategoryDTO> categoriesDTO = categories.Select(category => new CategoryDTO
                 {
+                    Id=category.Id,
                     Name = category.Name,
                     //Books = category.Books,
                     //SubCategories = category.SubCategories,
@@ -119,19 +120,19 @@ namespace Educational_Medical_platform.Controllers
                       
                     };
 
-                    return Ok(new GeneralResponse
+                    return new GeneralResponse
                     {
                         IsSuccess = true,
                         Message = "Category added successfully",
                         Data = addedCategoryDTO
-                    });
+                    };
                 }
 
-                return BadRequest(new GeneralResponse
+                return new GeneralResponse
                 {
                     IsSuccess = false,
                     Message = "Invalid category data"
-                });
+                };
             }
             catch (Exception ex)
             {
