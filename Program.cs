@@ -30,7 +30,7 @@ namespace Educational_Medical_platform
             {
                 options.AddPolicy("DefaultPolicy", policy =>
                 {
-                    policy.AllowAnyOrigin()
+                    policy.WithOrigins("http://localhost:3000") // Add the specific origin of your React app
                     .AllowAnyMethod()
                     .AllowAnyHeader();
                 });
@@ -42,12 +42,19 @@ namespace Educational_Medical_platform
             });
 
 
+            #region Registering Services
             builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("MailSettings"));
 
             builder.Services.AddScoped<IEmailService, EmailService>();
             builder.Services.AddScoped<IAdminRepository, AdminRepository>();
             builder.Services.AddScoped<IInstructorRepository, InstructorRepository>();
-            builder.Services.AddScoped<IStudentRepository, StudentRepository>();
+            builder.Services.AddScoped<IStudentRepository, StudentRepository>(); 
+            builder.Services.AddScoped<IBlogRepository, BlogRepository>(); 
+            builder.Services.AddScoped<IBookRepository,BookRepository>();
+            builder.Services.AddScoped<ISubCategoryRepository, SubCategoryRepository>();
+            builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+
+            #endregion
 
             //************************************************************************
 
@@ -176,8 +183,11 @@ namespace Educational_Medical_platform
 
             app.UseCors("DefaultPolicy");
 
+            app.UseAuthentication(); // Ensure this is called before authorization
+
             app.UseAuthorization();
 
+            app.UseStaticFiles(); // Serves files from wwwroot
 
             app.MapControllers();
 

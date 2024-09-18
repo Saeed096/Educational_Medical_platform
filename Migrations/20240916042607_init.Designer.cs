@@ -12,8 +12,8 @@ using Shoghlana.EF;
 namespace Educational_Medical_platform.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    [Migration("20240911191649_Init")]
-    partial class Init
+    [Migration("20240916042607_init")]
+    partial class init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -91,6 +91,7 @@ namespace Educational_Medical_platform.Migrations
 
                     b.Property<string>("Content")
                         .IsRequired()
+                        .HasMaxLength(5000)
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ImageURL")
@@ -104,7 +105,8 @@ namespace Educational_Medical_platform.Migrations
 
                     b.Property<string>("Title")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.HasKey("Id");
 
@@ -113,6 +115,75 @@ namespace Educational_Medical_platform.Migrations
                     b.HasIndex("SubCategoryId");
 
                     b.ToTable("Blogs");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CategoryId = 1,
+                            Content = "This blog covers the basics of human anatomy...",
+                            ImageURL = "/Images/Blogs/blog1.jpg",
+                            LikesNumber = 10,
+                            Title = "Introduction to Human Anatomy"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            CategoryId = 1,
+                            Content = "This blog explores comparative anatomy across species...",
+                            ImageURL = "/Images/Blogs/blog1.jpg",
+                            LikesNumber = 15,
+                            Title = "Advanced Comparative Anatomy"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            CategoryId = 2,
+                            Content = "Understanding the basics of cell physiology...",
+                            ImageURL = "/Images/Blogs/blog1.jpg",
+                            LikesNumber = 20,
+                            Title = "Fundamentals of Cell Physiology"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            CategoryId = 1,
+                            Content = "This blog provides an overview of human anatomy...",
+                            ImageURL = "/Images/Blogs/blog1.jpg",
+                            LikesNumber = 5,
+                            SubCategoryId = 1,
+                            Title = "Human Anatomy Overview"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            CategoryId = 2,
+                            Content = "An introductory blog on systemic physiology...",
+                            ImageURL = "/Images/Blogs/blog1.jpg",
+                            LikesNumber = 8,
+                            SubCategoryId = 4,
+                            Title = "Systemic Physiology Basics"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            CategoryId = 3,
+                            Content = "Exploring clinical applications in pharmacology...",
+                            ImageURL = "/Images/Blogs/blog1.jpg",
+                            LikesNumber = 12,
+                            SubCategoryId = 5,
+                            Title = "Clinical Applications of Pharmacology"
+                        },
+                        new
+                        {
+                            Id = 7,
+                            CategoryId = 4,
+                            Content = "A comprehensive overview of pathology...",
+                            ImageURL = "/Images/Blogs/blog1.jpg",
+                            LikesNumber = 7,
+                            SubCategoryId = 7,
+                            Title = "Pathology: An Overview"
+                        });
                 });
 
             modelBuilder.Entity("Educational_Medical_platform.Models.Blog_User_Likes", b =>
@@ -183,6 +254,28 @@ namespace Educational_Medical_platform.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Categories");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "Anatomy"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "Physiology"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "Pharmacology"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Name = "Pathology"
+                        });
                 });
 
             modelBuilder.Entity("Educational_Medical_platform.Models.CertificateDetails", b =>
@@ -223,9 +316,6 @@ namespace Educational_Medical_platform.Migrations
                     b.Property<int?>("SubCategoryId")
                         .HasColumnType("int");
 
-                    b.Property<string>("ThumbnailURL")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -235,6 +325,29 @@ namespace Educational_Medical_platform.Migrations
                     b.HasIndex("SubCategoryId");
 
                     b.ToTable("Courses");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            DurationInhours = 10f,
+                            SubCategoryId = 1,
+                            Title = "physiology"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            DurationInhours = 20f,
+                            SubCategoryId = 1,
+                            Title = "anatomy"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            DurationInhours = 30f,
+                            SubCategoryId = 1,
+                            Title = "histology"
+                        });
                 });
 
             modelBuilder.Entity("Educational_Medical_platform.Models.Instructor", b =>
@@ -262,7 +375,7 @@ namespace Educational_Medical_platform.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Instructors");
+                    b.ToTable("Supervisors");
                 });
 
             modelBuilder.Entity("Educational_Medical_platform.Models.Objective", b =>
@@ -285,6 +398,26 @@ namespace Educational_Medical_platform.Migrations
                     b.HasIndex("CourseId");
 
                     b.ToTable("Objectives");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CourseId = 1,
+                            Description = "Enhancing medical skills"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            CourseId = 1,
+                            Description = "Enhancing physiology knowledge"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            CourseId = 1,
+                            Description = "increasing job opportunities"
+                        });
                 });
 
             modelBuilder.Entity("Educational_Medical_platform.Models.Question", b =>
@@ -340,6 +473,26 @@ namespace Educational_Medical_platform.Migrations
                     b.HasIndex("CourseId");
 
                     b.ToTable("Requirements");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CourseId = 1,
+                            Description = "being medical student"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            CourseId = 1,
+                            Description = "having laptop"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            CourseId = 2,
+                            Description = "buying premium package"
+                        });
                 });
 
             modelBuilder.Entity("Educational_Medical_platform.Models.StandardTest", b =>
@@ -422,7 +575,7 @@ namespace Educational_Medical_platform.Migrations
 
                     b.HasIndex("CertificateDetailsStudentId", "CertificateDetailsCourseId");
 
-                    b.ToTable("Student_Courses");
+                    b.ToTable("StudentCourses");
                 });
 
             modelBuilder.Entity("Educational_Medical_platform.Models.SubCategory", b =>
@@ -436,11 +589,66 @@ namespace Educational_Medical_platform.Migrations
                     b.Property<int>("CategoryId")
                         .HasColumnType("int");
 
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("CategoryId");
 
                     b.ToTable("SubCategories");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CategoryId = 1,
+                            Name = "Human Anatomy"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            CategoryId = 1,
+                            Name = "Comparative Anatomy"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            CategoryId = 2,
+                            Name = "Cell Physiology"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            CategoryId = 2,
+                            Name = "Systemic Physiology"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            CategoryId = 3,
+                            Name = "Clinical Pharmacology"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            CategoryId = 3,
+                            Name = "Pharmacokinetics"
+                        },
+                        new
+                        {
+                            Id = 7,
+                            CategoryId = 4,
+                            Name = "General Pathology"
+                        },
+                        new
+                        {
+                            Id = 8,
+                            CategoryId = 4,
+                            Name = "Systemic Pathology"
+                        });
                 });
 
             modelBuilder.Entity("Educational_Medical_platform.Models.Video", b =>
@@ -475,6 +683,32 @@ namespace Educational_Medical_platform.Migrations
                     b.HasIndex("CourseId");
 
                     b.ToTable("Videos");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CourseId = 1,
+                            Number = 1,
+                            Title = "new video",
+                            videoURL = "https://www.youtube.com/watch?v=4oThHBo2-Gs"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            CourseId = 2,
+                            Number = 1,
+                            Title = "old video",
+                            videoURL = "https://www.youtube.com/watch?v=mgEAimOoyHk"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            CourseId = 3,
+                            Number = 1,
+                            Title = "funny video",
+                            videoURL = "https://www.youtube.com/watch?v=zhCKr62s12w"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -507,21 +741,21 @@ namespace Educational_Medical_platform.Migrations
                         new
                         {
                             Id = "952625cb-623b-4f8e-a426-c9e14ffe41bc",
-                            ConcurrencyStamp = "1ad216ff-3853-4b5e-8f05-96f82ce3491f",
+                            ConcurrencyStamp = "9e9ef764-d672-42d8-99ee-93c2410d8ae0",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
                             Id = "23978a1d-7823-4030-bd5d-ef7a0e6412a2",
-                            ConcurrencyStamp = "a9d59149-3197-4a56-9b53-18eff28439ff",
+                            ConcurrencyStamp = "df2d8409-ce61-4dac-ae75-b26fbbab27f2",
                             Name = "Student",
                             NormalizedName = "STUDENT"
                         },
                         new
                         {
                             Id = "ea3203f7-8571-4e45-b109-e593235f3420",
-                            ConcurrencyStamp = "b15d17f3-86a5-498e-9210-6160919c67ec",
+                            ConcurrencyStamp = "df2d8409-ce61-4dac-ae75-b26fbbab27f2",
                             Name = "Instructor",
                             NormalizedName = "INSTRUCTOR"
                         });
