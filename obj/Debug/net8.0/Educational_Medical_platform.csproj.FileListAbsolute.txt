@@ -289,8 +289,14 @@ D:\Educational_Medical_platform\obj\Debug\net8.0\refint\Educational_Medical_plat
 D:\Educational_Medical_platform\obj\Debug\net8.0\Educational_Medical_platform.pdb
 D:\Educational_Medical_platform\obj\Debug\net8.0\Educational_Medical_platform.genruntimeconfig.cache
 D:\Educational_Medical_platform\obj\Debug\net8.0\ref\Educational_Medical_platform.dll
+D:\Educational_Medical_platform\bin\Debug\net8.0\BouncyCastle.Cryptography.dll
+D:\Educational_Medical_platform\bin\Debug\net8.0\MailKit.dll
+D:\Educational_Medical_platform\bin\Debug\net8.0\MimeKit.dll
+D:\Educational_Medical_platform\bin\Debug\net8.0\System.Formats.Asn1.dll
+D:\Educational_Medical_platform\bin\Debug\net8.0\Educational_Medical_platform.staticwebassets.runtime.json
 D:\Freelancing\Hisham Mousa\Ehab Naser\MedLearn\Educational_Medical_platform\bin\Debug\net8.0\appsettings.Development.json
 D:\Freelancing\Hisham Mousa\Ehab Naser\MedLearn\Educational_Medical_platform\bin\Debug\net8.0\appsettings.json
+D:\Freelancing\Hisham Mousa\Ehab Naser\MedLearn\Educational_Medical_platform\bin\Debug\net8.0\Educational_Medical_platform.staticwebassets.runtime.json
 D:\Freelancing\Hisham Mousa\Ehab Naser\MedLearn\Educational_Medical_platform\bin\Debug\net8.0\Educational_Medical_platform.exe
 D:\Freelancing\Hisham Mousa\Ehab Naser\MedLearn\Educational_Medical_platform\bin\Debug\net8.0\Educational_Medical_platform.deps.json
 D:\Freelancing\Hisham Mousa\Ehab Naser\MedLearn\Educational_Medical_platform\bin\Debug\net8.0\Educational_Medical_platform.runtimeconfig.json
@@ -439,9 +445,3 @@ D:\Freelancing\Hisham Mousa\Ehab Naser\MedLearn\Educational_Medical_platform\obj
 D:\Freelancing\Hisham Mousa\Ehab Naser\MedLearn\Educational_Medical_platform\obj\Debug\net8.0\Educational_Medical_platform.pdb
 D:\Freelancing\Hisham Mousa\Ehab Naser\MedLearn\Educational_Medical_platform\obj\Debug\net8.0\Educational_Medical_platform.genruntimeconfig.cache
 D:\Freelancing\Hisham Mousa\Ehab Naser\MedLearn\Educational_Medical_platform\obj\Debug\net8.0\ref\Educational_Medical_platform.dll
-D:\Educational_Medical_platform\bin\Debug\net8.0\BouncyCastle.Cryptography.dll
-D:\Educational_Medical_platform\bin\Debug\net8.0\MailKit.dll
-D:\Educational_Medical_platform\bin\Debug\net8.0\MimeKit.dll
-D:\Educational_Medical_platform\bin\Debug\net8.0\System.Formats.Asn1.dll
-D:\Educational_Medical_platform\bin\Debug\net8.0\Educational_Medical_platform.staticwebassets.runtime.json
-D:\Freelancing\Hisham Mousa\Ehab Naser\MedLearn\Educational_Medical_platform\bin\Debug\net8.0\Educational_Medical_platform.staticwebassets.runtime.json

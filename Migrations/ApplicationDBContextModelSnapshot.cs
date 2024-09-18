@@ -86,6 +86,10 @@ namespace Educational_Medical_platform.Migrations
                     b.Property<int?>("CategoryId")
                         .HasColumnType("int");
 
+                    b.Property<string>("Conclusion")
+                        .HasMaxLength(2000)
+                        .HasColumnType("nvarchar(2000)");
+
                     b.Property<string>("Content")
                         .IsRequired()
                         .HasMaxLength(5000)
@@ -93,6 +97,10 @@ namespace Educational_Medical_platform.Migrations
 
                     b.Property<string>("ImageURL")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Intro")
+                        .HasMaxLength(2000)
+                        .HasColumnType("nvarchar(2000)");
 
                     b.Property<int>("LikesNumber")
                         .HasColumnType("int");
@@ -118,8 +126,10 @@ namespace Educational_Medical_platform.Migrations
                         {
                             Id = 1,
                             CategoryId = 1,
+                            Conclusion = "Understanding human anatomy is essential for medical professionals and enthusiasts alike.",
                             Content = "This blog covers the basics of human anatomy...",
                             ImageURL = "/Images/Blogs/blog1.jpg",
+                            Intro = "Anatomy is the branch of biology concerned with the study of the structure of organisms and their parts.",
                             LikesNumber = 10,
                             Title = "Introduction to Human Anatomy"
                         },
@@ -127,8 +137,10 @@ namespace Educational_Medical_platform.Migrations
                         {
                             Id = 2,
                             CategoryId = 1,
+                            Conclusion = "The study of comparative anatomy is crucial for evolutionary biology and understanding the functional adaptations of organisms.",
                             Content = "This blog explores comparative anatomy across species...",
                             ImageURL = "/Images/Blogs/blog1.jpg",
+                            Intro = "Comparative anatomy allows us to understand the similarities and differences between different organisms.",
                             LikesNumber = 15,
                             Title = "Advanced Comparative Anatomy"
                         },
@@ -136,8 +148,10 @@ namespace Educational_Medical_platform.Migrations
                         {
                             Id = 3,
                             CategoryId = 2,
+                            Conclusion = "A deep understanding of cell physiology is vital for advancements in medical science.",
                             Content = "Understanding the basics of cell physiology...",
                             ImageURL = "/Images/Blogs/blog1.jpg",
+                            Intro = "Cell physiology is the study of the functions of cells and their components.",
                             LikesNumber = 20,
                             Title = "Fundamentals of Cell Physiology"
                         },
@@ -145,8 +159,10 @@ namespace Educational_Medical_platform.Migrations
                         {
                             Id = 4,
                             CategoryId = 1,
+                            Conclusion = "This overview serves as a foundational step towards more detailed studies of specific systems.",
                             Content = "This blog provides an overview of human anatomy...",
                             ImageURL = "/Images/Blogs/blog1.jpg",
+                            Intro = "An overview of human anatomy highlights the complexity and organization of the human body.",
                             LikesNumber = 5,
                             SubCategoryId = 1,
                             Title = "Human Anatomy Overview"
@@ -155,8 +171,10 @@ namespace Educational_Medical_platform.Migrations
                         {
                             Id = 5,
                             CategoryId = 2,
+                            Conclusion = "Grasping systemic physiology is crucial for understanding how the body maintains homeostasis.",
                             Content = "An introductory blog on systemic physiology...",
                             ImageURL = "/Images/Blogs/blog1.jpg",
+                            Intro = "Systemic physiology studies the functions of various systems within the body.",
                             LikesNumber = 8,
                             SubCategoryId = 4,
                             Title = "Systemic Physiology Basics"
@@ -165,8 +183,10 @@ namespace Educational_Medical_platform.Migrations
                         {
                             Id = 6,
                             CategoryId = 3,
+                            Conclusion = "Understanding these applications is essential for safe and effective patient care.",
                             Content = "Exploring clinical applications in pharmacology...",
                             ImageURL = "/Images/Blogs/blog1.jpg",
+                            Intro = "Pharmacology focuses on the interactions between drugs and living organisms.",
                             LikesNumber = 12,
                             SubCategoryId = 5,
                             Title = "Clinical Applications of Pharmacology"
@@ -175,8 +195,10 @@ namespace Educational_Medical_platform.Migrations
                         {
                             Id = 7,
                             CategoryId = 4,
+                            Conclusion = "A solid grasp of pathology is necessary for any healthcare professional.",
                             Content = "A comprehensive overview of pathology...",
                             ImageURL = "/Images/Blogs/blog1.jpg",
+                            Intro = "Pathology is the study of disease, its causes, and effects on the body.",
                             LikesNumber = 7,
                             SubCategoryId = 7,
                             Title = "Pathology: An Overview"

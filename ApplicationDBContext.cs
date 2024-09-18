@@ -26,8 +26,7 @@ namespace Shoghlana.EF
         public DbSet<Instructor> Supervisors { get; set; } 
         public DbSet<Video> Videos { get; set; }
         public DbSet<Student_Courses> StudentCourses { get; set; }
-
-
+        public DbSet<Blog_User_Likes> Blog_User_Likes { get; set; }
 
 
         public ApplicationDBContext(DbContextOptions<ApplicationDBContext> options) : base(options) { }
