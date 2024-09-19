@@ -9,7 +9,6 @@ namespace Educational_Medical_platform.Models
         [Key]
         public int Id { get; set; }
 
-        // fk
         [ForeignKey("Test")]
 
         public int? TestId { get; set; }
