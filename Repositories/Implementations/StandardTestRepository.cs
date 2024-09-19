@@ -1,22 +1,19 @@
 ﻿using Educational_Medical_platform.Models;
 using Educational_Medical_platform.Repositories.Interfaces;
-using Org.BouncyCastle.Utilities.Bzip2;
 using Shoghlana.EF;
 using Shoghlana.EF.Repository;
 
 namespace Educational_Medical_platform.Repositories.Implementations
 {
-    public class CourseRepository : GenericRepository<Course> , ICourseRepository
+    public class StandardTestRepository : GenericRepository<StandardTest>, IStandardTestRepository
     {
-        public CourseRepository(ApplicationDBContext Context) : base(Context)
+        public StandardTestRepository(ApplicationDBContext Context) : base(Context)
         {
-            
         }
 
         public bool Exists(int id)
         {
-            return context.Courses.Any(c => c.Id == id);
+            return context.StandardTests.Any(c => c.Id == id);
         }
-
     }
 }

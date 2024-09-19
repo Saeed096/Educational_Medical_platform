@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Shoghlana.Api.Response;
 using Shoghlana.Core.Models;
+using System.Reflection.Metadata;
 
 namespace Educational_Medical_platform.Controllers
 {
@@ -39,7 +40,10 @@ namespace Educational_Medical_platform.Controllers
                 CategoryId = b.CategoryId,
                 SubCategoryId = b.SubCategoryId,
 
+                Intro = b.Intro,
                 Content = b.Content,
+                Conclusion = b.Conclusion,
+
                 Image = b.Image,
                 ImageURL = b.ImageURL,
                 LikesNumber = b.LikesNumber,
@@ -86,7 +90,10 @@ namespace Educational_Medical_platform.Controllers
                 CategoryId = blog.CategoryId,
                 SubCategoryId = blog.SubCategoryId,
 
+                Intro = blog.Intro,
                 Content = blog.Content,
+                Conclusion = blog.Conclusion,
+
                 Image = blog.Image,
                 ImageURL = blog.ImageURL,
                 LikesNumber = blog.LikesNumber,
@@ -99,7 +106,7 @@ namespace Educational_Medical_platform.Controllers
             };
         }
 
-        [HttpGet("/category/{id:int}")]
+        [HttpGet("category/{id:int}")]
         public ActionResult<GeneralResponse> GetByCategoryId(int id)
         {
             List<GetBlogsDTO>? blogsDTOs = _blogRepository.FindAll(includes: null, b => b.CategoryId == id).Select(b => new GetBlogsDTO()
@@ -110,7 +117,10 @@ namespace Educational_Medical_platform.Controllers
                 CategoryId = b.CategoryId,
                 SubCategoryId = b.SubCategoryId,
 
+                Intro = b.Intro,
                 Content = b.Content,
+                Conclusion = b.Conclusion,
+
                 Image = b.Image,
                 ImageURL = b.ImageURL,
                 LikesNumber = b.LikesNumber,
@@ -134,7 +144,7 @@ namespace Educational_Medical_platform.Controllers
             };
         }
 
-        [HttpGet("/subcategory/{id:int}")]
+        [HttpGet("subcategory/{id:int}")]
         public ActionResult<GeneralResponse> GetBySubCategoryId(int id)
         {
             List<GetBlogsDTO>? blogsDTOs = _blogRepository.FindAll(includes: null, b => b.SubCategoryId == id).Select(b => new GetBlogsDTO()
@@ -145,7 +155,10 @@ namespace Educational_Medical_platform.Controllers
                 CategoryId = b.CategoryId,
                 SubCategoryId = b.SubCategoryId,
 
+                Intro = b.Intro,
                 Content = b.Content,
+                Conclusion = b.Conclusion,
+
                 Image = b.Image,
                 ImageURL = b.ImageURL,
                 LikesNumber = b.LikesNumber,
@@ -226,7 +239,11 @@ namespace Educational_Medical_platform.Controllers
             var blog = new Blog
             {
                 Title = createBlogDTO.Title,
+
+                Intro = createBlogDTO.Intro,
                 Content = createBlogDTO.Content,
+                Conclusion = createBlogDTO.Conclusion,
+
                 SubCategoryId = createBlogDTO.SubCategoryId,
                 CategoryId = createBlogDTO.CategoryId,
                 ImageURL = $"/Images/Blogs/{fileName}"
@@ -285,7 +302,11 @@ namespace Educational_Medical_platform.Controllers
             }
 
             blog.Title = updateBlogDTO.Title;
+
+            blog.Intro = updateBlogDTO.Intro;
             blog.Content = updateBlogDTO.Content;
+            blog.Conclusion = updateBlogDTO.Conclusion;
+
             blog.SubCategoryId = updateBlogDTO.SubCategoryId;
             blog.CategoryId = updateBlogDTO.CategoryId;
             //blog.ImageURL = fileName;
@@ -334,7 +355,7 @@ namespace Educational_Medical_platform.Controllers
             };
         }
 
-        [HttpGet("/like/{userId}/{blogId:int}")]
+        [HttpGet("like/{userId}/{blogId:int}")]
         public async Task<ActionResult<GeneralResponse>> Like(string userId, int blogId)
         {
             // Check if the user exists
@@ -380,7 +401,7 @@ namespace Educational_Medical_platform.Controllers
             _user_LikesRepository.Add(like);
             await _user_LikesRepository.SaveAsync();
 
-            blog.LikesNumber++; 
+            blog.LikesNumber++;
             await _blogRepository.SaveAsync();
 
             return new GeneralResponse

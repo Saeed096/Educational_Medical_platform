@@ -12,8 +12,8 @@ using Shoghlana.EF;
 namespace Educational_Medical_platform.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    [Migration("20240916042607_init")]
-    partial class init
+    [Migration("20240918190926_QuestionsAndAnswers")]
+    partial class QuestionsAndAnswers
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -76,6 +76,428 @@ namespace Educational_Medical_platform.Migrations
                     b.HasIndex("QuestionId");
 
                     b.ToTable("Answers");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Description = "Cell",
+                            IsCorrect = true,
+                            QuestionId = 1
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Description = "Tissue",
+                            IsCorrect = false,
+                            QuestionId = 1
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Description = "Organ",
+                            IsCorrect = false,
+                            QuestionId = 1
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Description = "Mitochondria",
+                            IsCorrect = true,
+                            QuestionId = 2
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Description = "Nucleus",
+                            IsCorrect = false,
+                            QuestionId = 2
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Description = "Ribosome",
+                            IsCorrect = false,
+                            QuestionId = 2
+                        },
+                        new
+                        {
+                            Id = 7,
+                            Description = "Protein synthesis",
+                            IsCorrect = true,
+                            QuestionId = 3
+                        },
+                        new
+                        {
+                            Id = 8,
+                            Description = "Energy production",
+                            IsCorrect = false,
+                            QuestionId = 3
+                        },
+                        new
+                        {
+                            Id = 9,
+                            Description = "DNA replication",
+                            IsCorrect = false,
+                            QuestionId = 3
+                        },
+                        new
+                        {
+                            Id = 10,
+                            Description = "Protects the cell",
+                            IsCorrect = true,
+                            QuestionId = 4
+                        },
+                        new
+                        {
+                            Id = 11,
+                            Description = "Stores DNA",
+                            IsCorrect = false,
+                            QuestionId = 4
+                        },
+                        new
+                        {
+                            Id = 12,
+                            Description = "Produces energy",
+                            IsCorrect = false,
+                            QuestionId = 4
+                        },
+                        new
+                        {
+                            Id = 13,
+                            Description = "Movement of water",
+                            IsCorrect = true,
+                            QuestionId = 5
+                        },
+                        new
+                        {
+                            Id = 14,
+                            Description = "Transport of nutrients",
+                            IsCorrect = false,
+                            QuestionId = 5
+                        },
+                        new
+                        {
+                            Id = 15,
+                            Description = "Protein synthesis",
+                            IsCorrect = false,
+                            QuestionId = 5
+                        },
+                        new
+                        {
+                            Id = 16,
+                            Description = "Breaks down food",
+                            IsCorrect = true,
+                            QuestionId = 6
+                        },
+                        new
+                        {
+                            Id = 17,
+                            Description = "Circulates blood",
+                            IsCorrect = false,
+                            QuestionId = 6
+                        },
+                        new
+                        {
+                            Id = 18,
+                            Description = "Transports oxygen",
+                            IsCorrect = false,
+                            QuestionId = 6
+                        },
+                        new
+                        {
+                            Id = 19,
+                            Description = "Through the walls of the intestines",
+                            IsCorrect = true,
+                            QuestionId = 7
+                        },
+                        new
+                        {
+                            Id = 20,
+                            Description = "Via the bloodstream",
+                            IsCorrect = false,
+                            QuestionId = 7
+                        },
+                        new
+                        {
+                            Id = 21,
+                            Description = "By chewing",
+                            IsCorrect = false,
+                            QuestionId = 7
+                        },
+                        new
+                        {
+                            Id = 22,
+                            Description = "Mouth, esophagus, stomach",
+                            IsCorrect = true,
+                            QuestionId = 8
+                        },
+                        new
+                        {
+                            Id = 23,
+                            Description = "Brain, heart, lungs",
+                            IsCorrect = false,
+                            QuestionId = 8
+                        },
+                        new
+                        {
+                            Id = 24,
+                            Description = "Skin, muscles, bones",
+                            IsCorrect = false,
+                            QuestionId = 8
+                        },
+                        new
+                        {
+                            Id = 25,
+                            Description = "They speed up chemical reactions",
+                            IsCorrect = true,
+                            QuestionId = 9
+                        },
+                        new
+                        {
+                            Id = 26,
+                            Description = "They are absorbed",
+                            IsCorrect = false,
+                            QuestionId = 9
+                        },
+                        new
+                        {
+                            Id = 27,
+                            Description = "They break down food",
+                            IsCorrect = false,
+                            QuestionId = 9
+                        },
+                        new
+                        {
+                            Id = 28,
+                            Description = "The wave-like motion that moves food",
+                            IsCorrect = true,
+                            QuestionId = 10
+                        },
+                        new
+                        {
+                            Id = 29,
+                            Description = "The absorption of nutrients",
+                            IsCorrect = false,
+                            QuestionId = 10
+                        },
+                        new
+                        {
+                            Id = 30,
+                            Description = "The secretion of enzymes",
+                            IsCorrect = false,
+                            QuestionId = 10
+                        },
+                        new
+                        {
+                            Id = 31,
+                            Description = "Organs and systems",
+                            IsCorrect = true,
+                            QuestionId = 11
+                        },
+                        new
+                        {
+                            Id = 32,
+                            Description = "Cells only",
+                            IsCorrect = false,
+                            QuestionId = 11
+                        },
+                        new
+                        {
+                            Id = 33,
+                            Description = "Muscles only",
+                            IsCorrect = false,
+                            QuestionId = 11
+                        },
+                        new
+                        {
+                            Id = 34,
+                            Description = "By contracting and relaxing",
+                            IsCorrect = true,
+                            QuestionId = 12
+                        },
+                        new
+                        {
+                            Id = 35,
+                            Description = "By sending signals",
+                            IsCorrect = false,
+                            QuestionId = 12
+                        },
+                        new
+                        {
+                            Id = 36,
+                            Description = "By absorbing nutrients",
+                            IsCorrect = false,
+                            QuestionId = 12
+                        },
+                        new
+                        {
+                            Id = 37,
+                            Description = "To understand the human body",
+                            IsCorrect = true,
+                            QuestionId = 13
+                        },
+                        new
+                        {
+                            Id = 38,
+                            Description = "To pass exams",
+                            IsCorrect = false,
+                            QuestionId = 13
+                        },
+                        new
+                        {
+                            Id = 39,
+                            Description = "To perform surgeries",
+                            IsCorrect = false,
+                            QuestionId = 13
+                        },
+                        new
+                        {
+                            Id = 40,
+                            Description = "Nervous, muscular, skeletal",
+                            IsCorrect = true,
+                            QuestionId = 14
+                        },
+                        new
+                        {
+                            Id = 41,
+                            Description = "Respiratory, circulatory",
+                            IsCorrect = false,
+                            QuestionId = 14
+                        },
+                        new
+                        {
+                            Id = 42,
+                            Description = "Digestive, excretory",
+                            IsCorrect = false,
+                            QuestionId = 14
+                        },
+                        new
+                        {
+                            Id = 43,
+                            Description = "Controls body functions",
+                            IsCorrect = true,
+                            QuestionId = 15
+                        },
+                        new
+                        {
+                            Id = 44,
+                            Description = "Transports nutrients",
+                            IsCorrect = false,
+                            QuestionId = 15
+                        },
+                        new
+                        {
+                            Id = 45,
+                            Description = "Provides energy",
+                            IsCorrect = false,
+                            QuestionId = 15
+                        },
+                        new
+                        {
+                            Id = 46,
+                            Description = "To carry oxygen",
+                            IsCorrect = true,
+                            QuestionId = 16
+                        },
+                        new
+                        {
+                            Id = 47,
+                            Description = "To fight infections",
+                            IsCorrect = false,
+                            QuestionId = 16
+                        },
+                        new
+                        {
+                            Id = 48,
+                            Description = "To clot blood",
+                            IsCorrect = false,
+                            QuestionId = 16
+                        },
+                        new
+                        {
+                            Id = 49,
+                            Description = "By recognizing pathogens",
+                            IsCorrect = true,
+                            QuestionId = 17
+                        },
+                        new
+                        {
+                            Id = 50,
+                            Description = "By producing energy",
+                            IsCorrect = false,
+                            QuestionId = 17
+                        },
+                        new
+                        {
+                            Id = 51,
+                            Description = "By storing nutrients",
+                            IsCorrect = false,
+                            QuestionId = 17
+                        },
+                        new
+                        {
+                            Id = 52,
+                            Description = "Interphase, mitosis, cytokinesis",
+                            IsCorrect = true,
+                            QuestionId = 18
+                        },
+                        new
+                        {
+                            Id = 53,
+                            Description = "Prophase, metaphase, anaphase",
+                            IsCorrect = false,
+                            QuestionId = 18
+                        },
+                        new
+                        {
+                            Id = 54,
+                            Description = "Meiosis only",
+                            IsCorrect = false,
+                            QuestionId = 18
+                        },
+                        new
+                        {
+                            Id = 55,
+                            Description = "Programmed cell death",
+                            IsCorrect = true,
+                            QuestionId = 19
+                        },
+                        new
+                        {
+                            Id = 56,
+                            Description = "Cell growth",
+                            IsCorrect = false,
+                            QuestionId = 19
+                        },
+                        new
+                        {
+                            Id = 57,
+                            Description = "Cell division",
+                            IsCorrect = false,
+                            QuestionId = 19
+                        },
+                        new
+                        {
+                            Id = 58,
+                            Description = "Carries genetic information",
+                            IsCorrect = true,
+                            QuestionId = 20
+                        },
+                        new
+                        {
+                            Id = 59,
+                            Description = "Produces energy",
+                            IsCorrect = false,
+                            QuestionId = 20
+                        },
+                        new
+                        {
+                            Id = 60,
+                            Description = "Fights diseases",
+                            IsCorrect = false,
+                            QuestionId = 20
+                        });
                 });
 
             modelBuilder.Entity("Educational_Medical_platform.Models.Blog", b =>
@@ -89,6 +511,10 @@ namespace Educational_Medical_platform.Migrations
                     b.Property<int?>("CategoryId")
                         .HasColumnType("int");
 
+                    b.Property<string>("Conclusion")
+                        .HasMaxLength(2000)
+                        .HasColumnType("nvarchar(2000)");
+
                     b.Property<string>("Content")
                         .IsRequired()
                         .HasMaxLength(5000)
@@ -96,6 +522,10 @@ namespace Educational_Medical_platform.Migrations
 
                     b.Property<string>("ImageURL")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Intro")
+                        .HasMaxLength(2000)
+                        .HasColumnType("nvarchar(2000)");
 
                     b.Property<int>("LikesNumber")
                         .HasColumnType("int");
@@ -121,8 +551,10 @@ namespace Educational_Medical_platform.Migrations
                         {
                             Id = 1,
                             CategoryId = 1,
+                            Conclusion = "Understanding human anatomy is essential for medical professionals and enthusiasts alike.",
                             Content = "This blog covers the basics of human anatomy...",
                             ImageURL = "/Images/Blogs/blog1.jpg",
+                            Intro = "Anatomy is the branch of biology concerned with the study of the structure of organisms and their parts.",
                             LikesNumber = 10,
                             Title = "Introduction to Human Anatomy"
                         },
@@ -130,8 +562,10 @@ namespace Educational_Medical_platform.Migrations
                         {
                             Id = 2,
                             CategoryId = 1,
+                            Conclusion = "The study of comparative anatomy is crucial for evolutionary biology and understanding the functional adaptations of organisms.",
                             Content = "This blog explores comparative anatomy across species...",
                             ImageURL = "/Images/Blogs/blog1.jpg",
+                            Intro = "Comparative anatomy allows us to understand the similarities and differences between different organisms.",
                             LikesNumber = 15,
                             Title = "Advanced Comparative Anatomy"
                         },
@@ -139,8 +573,10 @@ namespace Educational_Medical_platform.Migrations
                         {
                             Id = 3,
                             CategoryId = 2,
+                            Conclusion = "A deep understanding of cell physiology is vital for advancements in medical science.",
                             Content = "Understanding the basics of cell physiology...",
                             ImageURL = "/Images/Blogs/blog1.jpg",
+                            Intro = "Cell physiology is the study of the functions of cells and their components.",
                             LikesNumber = 20,
                             Title = "Fundamentals of Cell Physiology"
                         },
@@ -148,8 +584,10 @@ namespace Educational_Medical_platform.Migrations
                         {
                             Id = 4,
                             CategoryId = 1,
+                            Conclusion = "This overview serves as a foundational step towards more detailed studies of specific systems.",
                             Content = "This blog provides an overview of human anatomy...",
                             ImageURL = "/Images/Blogs/blog1.jpg",
+                            Intro = "An overview of human anatomy highlights the complexity and organization of the human body.",
                             LikesNumber = 5,
                             SubCategoryId = 1,
                             Title = "Human Anatomy Overview"
@@ -158,8 +596,10 @@ namespace Educational_Medical_platform.Migrations
                         {
                             Id = 5,
                             CategoryId = 2,
+                            Conclusion = "Grasping systemic physiology is crucial for understanding how the body maintains homeostasis.",
                             Content = "An introductory blog on systemic physiology...",
                             ImageURL = "/Images/Blogs/blog1.jpg",
+                            Intro = "Systemic physiology studies the functions of various systems within the body.",
                             LikesNumber = 8,
                             SubCategoryId = 4,
                             Title = "Systemic Physiology Basics"
@@ -168,8 +608,10 @@ namespace Educational_Medical_platform.Migrations
                         {
                             Id = 6,
                             CategoryId = 3,
+                            Conclusion = "Understanding these applications is essential for safe and effective patient care.",
                             Content = "Exploring clinical applications in pharmacology...",
                             ImageURL = "/Images/Blogs/blog1.jpg",
+                            Intro = "Pharmacology focuses on the interactions between drugs and living organisms.",
                             LikesNumber = 12,
                             SubCategoryId = 5,
                             Title = "Clinical Applications of Pharmacology"
@@ -178,8 +620,10 @@ namespace Educational_Medical_platform.Migrations
                         {
                             Id = 7,
                             CategoryId = 4,
+                            Conclusion = "A solid grasp of pathology is necessary for any healthcare professional.",
                             Content = "A comprehensive overview of pathology...",
                             ImageURL = "/Images/Blogs/blog1.jpg",
+                            Intro = "Pathology is the study of disease, its causes, and effects on the body.",
                             LikesNumber = 7,
                             SubCategoryId = 7,
                             Title = "Pathology: An Overview"
@@ -434,6 +878,11 @@ namespace Educational_Medical_platform.Migrations
                     b.Property<int?>("CourseId")
                         .HasColumnType("int");
 
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
                     b.Property<int?>("SubCategoryId")
                         .HasColumnType("int");
 
@@ -451,6 +900,128 @@ namespace Educational_Medical_platform.Migrations
                     b.HasIndex("TestId");
 
                     b.ToTable("Questions");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CourseId = 1,
+                            Description = "What is the basic unit of life?"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            CourseId = 1,
+                            Description = "Which organelle is known as the powerhouse of the cell?"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            CourseId = 2,
+                            Description = "What is the function of ribosomes?"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            CourseId = 2,
+                            Description = "What is the role of the cell membrane?"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            CourseId = 2,
+                            Description = "What is osmosis?"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Description = "What is the primary function of the digestive system?",
+                            SubCategoryId = 1
+                        },
+                        new
+                        {
+                            Id = 7,
+                            Description = "How does the body absorb nutrients?",
+                            SubCategoryId = 1
+                        },
+                        new
+                        {
+                            Id = 8,
+                            Description = "What are the main components of the digestive system?",
+                            SubCategoryId = 2
+                        },
+                        new
+                        {
+                            Id = 9,
+                            Description = "What is the role of enzymes in digestion?",
+                            SubCategoryId = 2
+                        },
+                        new
+                        {
+                            Id = 10,
+                            Description = "What is the process of peristalsis?",
+                            SubCategoryId = 3
+                        },
+                        new
+                        {
+                            Id = 11,
+                            BlogId = 1,
+                            Description = "What are the key structures of the human body?"
+                        },
+                        new
+                        {
+                            Id = 12,
+                            BlogId = 1,
+                            Description = "How does the muscular system work?"
+                        },
+                        new
+                        {
+                            Id = 13,
+                            BlogId = 2,
+                            Description = "What is the importance of studying anatomy?"
+                        },
+                        new
+                        {
+                            Id = 14,
+                            BlogId = 2,
+                            Description = "What are the different systems of the human body?"
+                        },
+                        new
+                        {
+                            Id = 15,
+                            BlogId = 3,
+                            Description = "What role does the nervous system play in body functions?"
+                        },
+                        new
+                        {
+                            Id = 16,
+                            Description = "What is the primary function of red blood cells?",
+                            TestId = 1
+                        },
+                        new
+                        {
+                            Id = 17,
+                            Description = "How does the immune system protect the body?",
+                            TestId = 1
+                        },
+                        new
+                        {
+                            Id = 18,
+                            Description = "What are the stages of the cell cycle?",
+                            TestId = 2
+                        },
+                        new
+                        {
+                            Id = 19,
+                            Description = "What is apoptosis?",
+                            TestId = 2
+                        },
+                        new
+                        {
+                            Id = 20,
+                            Description = "What role does DNA play in inheritance?",
+                            TestId = 2
+                        });
                 });
 
             modelBuilder.Entity("Educational_Medical_platform.Models.Requirement", b =>
@@ -516,6 +1087,29 @@ namespace Educational_Medical_platform.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("StandardTests");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            DurationInMinutes = 60,
+                            Fullmark = 100,
+                            Title = "Test1"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            DurationInMinutes = 100,
+                            Fullmark = 150,
+                            Title = "Test2"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            DurationInMinutes = 200,
+                            Fullmark = 300,
+                            Title = "Test3"
+                        });
                 });
 
             modelBuilder.Entity("Educational_Medical_platform.Models.Student", b =>

@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Educational_Medical_platform.Migrations
 {
     /// <inheritdoc />
-    public partial class init : Migration
+    public partial class Init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -278,7 +278,9 @@ namespace Educational_Medical_platform.Migrations
                     LikesNumber = table.Column<int>(type: "int", nullable: false),
                     ImageURL = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Title = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    Intro = table.Column<string>(type: "nvarchar(2000)", maxLength: 2000, nullable: true),
                     Content = table.Column<string>(type: "nvarchar(max)", maxLength: 5000, nullable: false),
+                    Conclusion = table.Column<string>(type: "nvarchar(2000)", maxLength: 2000, nullable: true),
                     SubCategoryId = table.Column<int>(type: "int", nullable: true),
                     CategoryId = table.Column<int>(type: "int", nullable: true)
                 },
@@ -573,12 +575,12 @@ namespace Educational_Medical_platform.Migrations
 
             migrationBuilder.InsertData(
                 table: "Blogs",
-                columns: new[] { "Id", "CategoryId", "Content", "ImageURL", "LikesNumber", "SubCategoryId", "Title" },
+                columns: new[] { "Id", "CategoryId", "Conclusion", "Content", "ImageURL", "Intro", "LikesNumber", "SubCategoryId", "Title" },
                 values: new object[,]
                 {
-                    { 1, 1, "This blog covers the basics of human anatomy...", "/Images/Blogs/blog1.jpg", 10, null, "Introduction to Human Anatomy" },
-                    { 2, 1, "This blog explores comparative anatomy across species...", "/Images/Blogs/blog1.jpg", 15, null, "Advanced Comparative Anatomy" },
-                    { 3, 2, "Understanding the basics of cell physiology...", "/Images/Blogs/blog1.jpg", 20, null, "Fundamentals of Cell Physiology" }
+                    { 1, 1, "Understanding human anatomy is essential for medical professionals and enthusiasts alike.", "This blog covers the basics of human anatomy...", "/Images/Blogs/blog1.jpg", "Anatomy is the branch of biology concerned with the study of the structure of organisms and their parts.", 10, null, "Introduction to Human Anatomy" },
+                    { 2, 1, "The study of comparative anatomy is crucial for evolutionary biology and understanding the functional adaptations of organisms.", "This blog explores comparative anatomy across species...", "/Images/Blogs/blog1.jpg", "Comparative anatomy allows us to understand the similarities and differences between different organisms.", 15, null, "Advanced Comparative Anatomy" },
+                    { 3, 2, "A deep understanding of cell physiology is vital for advancements in medical science.", "Understanding the basics of cell physiology...", "/Images/Blogs/blog1.jpg", "Cell physiology is the study of the functions of cells and their components.", 20, null, "Fundamentals of Cell Physiology" }
                 });
 
             migrationBuilder.InsertData(
@@ -598,13 +600,13 @@ namespace Educational_Medical_platform.Migrations
 
             migrationBuilder.InsertData(
                 table: "Blogs",
-                columns: new[] { "Id", "CategoryId", "Content", "ImageURL", "LikesNumber", "SubCategoryId", "Title" },
+                columns: new[] { "Id", "CategoryId", "Conclusion", "Content", "ImageURL", "Intro", "LikesNumber", "SubCategoryId", "Title" },
                 values: new object[,]
                 {
-                    { 4, 1, "This blog provides an overview of human anatomy...", "/Images/Blogs/blog1.jpg", 5, 1, "Human Anatomy Overview" },
-                    { 5, 2, "An introductory blog on systemic physiology...", "/Images/Blogs/blog1.jpg", 8, 4, "Systemic Physiology Basics" },
-                    { 6, 3, "Exploring clinical applications in pharmacology...", "/Images/Blogs/blog1.jpg", 12, 5, "Clinical Applications of Pharmacology" },
-                    { 7, 4, "A comprehensive overview of pathology...", "/Images/Blogs/blog1.jpg", 7, 7, "Pathology: An Overview" }
+                    { 4, 1, "This overview serves as a foundational step towards more detailed studies of specific systems.", "This blog provides an overview of human anatomy...", "/Images/Blogs/blog1.jpg", "An overview of human anatomy highlights the complexity and organization of the human body.", 5, 1, "Human Anatomy Overview" },
+                    { 5, 2, "Grasping systemic physiology is crucial for understanding how the body maintains homeostasis.", "An introductory blog on systemic physiology...", "/Images/Blogs/blog1.jpg", "Systemic physiology studies the functions of various systems within the body.", 8, 4, "Systemic Physiology Basics" },
+                    { 6, 3, "Understanding these applications is essential for safe and effective patient care.", "Exploring clinical applications in pharmacology...", "/Images/Blogs/blog1.jpg", "Pharmacology focuses on the interactions between drugs and living organisms.", 12, 5, "Clinical Applications of Pharmacology" },
+                    { 7, 4, "A solid grasp of pathology is necessary for any healthcare professional.", "A comprehensive overview of pathology...", "/Images/Blogs/blog1.jpg", "Pathology is the study of disease, its causes, and effects on the body.", 7, 7, "Pathology: An Overview" }
                 });
 
             migrationBuilder.InsertData(

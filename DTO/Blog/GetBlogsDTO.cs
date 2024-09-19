@@ -12,7 +12,11 @@
 
         public string Title { get; set; }
 
+        public string Intro { get; set; }
+
         public string Content { get; set; }
+
+        public string Conclusion { get; set; }
 
         public int? SubCategoryId { get; set; }
 

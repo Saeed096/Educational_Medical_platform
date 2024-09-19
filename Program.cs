@@ -53,6 +53,11 @@ namespace Educational_Medical_platform
             builder.Services.AddScoped<IBookRepository,BookRepository>();
             builder.Services.AddScoped<ISubCategoryRepository, SubCategoryRepository>();
             builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+            builder.Services.AddScoped<IBlog_User_LikesRepository, Blog_User_LikeRepository>();
+            builder.Services.AddScoped<IQuestionRepository, QuestionRepository>();
+            builder.Services.AddScoped<IAnswerRepository, AnswerRepository>();
+            builder.Services.AddScoped<IStandardTestRepository, StandardTestRepository>();
+            builder.Services.AddScoped<ICourseRepository, CourseRepository>();
 
             #endregion
 

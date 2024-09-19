@@ -9,7 +9,7 @@ namespace Shoghlana.Core.Interfaces
 
         //-------------------------------------------------------------------------
 
-        public T? Find(Expression<Func<T, bool>> criteria, string[] includes = null);
+        public T? Find(Expression<Func<T, bool>> criteria = null, string[] includes = null);
 
         public Task<T?> FindAsync(Expression<Func<T, bool>> criteria, string[] includes = null);
 
