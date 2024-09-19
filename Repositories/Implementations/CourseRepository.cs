@@ -12,5 +12,11 @@ namespace Educational_Medical_platform.Repositories.Implementations
         {
             
         }
+
+        public bool Exists(int id)
+        {
+            return context.Courses.Any(c => c.Id == id);
+        }
+
     }
 }
