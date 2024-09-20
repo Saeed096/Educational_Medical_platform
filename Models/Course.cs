@@ -18,8 +18,8 @@ namespace Educational_Medical_platform.Models
         public List<Video> Videos { get; set; }
         public List<Question>? Questions { get; set; }
         [ForeignKey("SubCategory")]
-        public int? SubCategoryId { get; set; }
-        public SubCategory? SubCategory { get; set; }
+        public int SubCategoryId { get; set; }
+        public SubCategory SubCategory { get; set; }
 
     }
 }

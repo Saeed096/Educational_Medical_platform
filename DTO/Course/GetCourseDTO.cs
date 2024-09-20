@@ -10,7 +10,6 @@ namespace Educational_Medical_platform.DTO.Course
     {
         public int Id { get; set; }
         public String Title { get; set; }
-        public IFormFile? Thumbnail { get; set; } 
         public string? ThumbnailURL { get; set; }
         public float DurationInhours { get; set; }
         public string? Preview { get; set; }
@@ -18,6 +17,6 @@ namespace Educational_Medical_platform.DTO.Course
         public List<GetObjectiveDTO>? Objectives { get; set; }
         public List<GetVideoDTO> Videos { get; set; }
         public List<GetQuestionDTO>? Questions { get; set; }
-        public int? SubCategoryId { get; set; }
+        public int SubCategoryId { get; set; }
     }
 }

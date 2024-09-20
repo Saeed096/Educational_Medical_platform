@@ -25,6 +25,7 @@ namespace Educational_Medical_platform
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+            builder.Services.AddAutoMapper(typeof(Program));
 
             builder.Services.AddCors(options =>
             {
@@ -52,6 +53,9 @@ namespace Educational_Medical_platform
             builder.Services.AddScoped<IBlogRepository, BlogRepository>(); 
             builder.Services.AddScoped<ICourseObjectiveRepository, CourseObjectiveRepository>();
             builder.Services.AddScoped<ICourseRepository, CourseRepository>();
+            builder.Services.AddScoped<IRequirementRepository, RequirementRepository>();
+            builder.Services.AddScoped<IVideoRepository, VideoRepository>();
+            builder.Services.AddScoped<IQuestionRepository, QuestionRepository>();
             #endregion
 
             //************************************************************************
