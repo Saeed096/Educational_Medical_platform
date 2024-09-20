@@ -62,7 +62,7 @@ namespace Educational_Medical_platform.Controllers
         }
 
 
-        [HttpGet("{id}")]
+        [HttpGet("{id:int}")]
         public ActionResult<GeneralResponse> GetStandardTestById(int id)
         {
             try
@@ -154,7 +154,7 @@ namespace Educational_Medical_platform.Controllers
         }
 
 
-        [HttpPut("{id}")]
+        [HttpPut("{id:int}")]
         public ActionResult<GeneralResponse> UpdateStandardTest(int id, [FromBody] StandardTestDTO standardTestDTO)
         {
             try
@@ -213,7 +213,7 @@ namespace Educational_Medical_platform.Controllers
         }
 
 
-        [HttpDelete("{id}")]
+        [HttpDelete("{id:int}")]
         public ActionResult<GeneralResponse> DeleteCategory(int id)
         {
             try
