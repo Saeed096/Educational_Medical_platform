@@ -9,7 +9,7 @@ namespace Educational_Medical_platform.Models
         public int Id { get; set; } 
         public String Title { get; set; }
         [NotMapped]
-        public IFormFile? Thumbnail { get; set; }
+        public IFormFile? Thumbnail { get; set; }   // why put it here , should only in add course dto?????????
         public string? ThumbnailURL { get; set; }
         public float DurationInhours { get; set; } 
         public string? Preview { get; set; } 
@@ -20,6 +20,11 @@ namespace Educational_Medical_platform.Models
         [ForeignKey("SubCategory")]
         public int SubCategoryId { get; set; }
         public SubCategory SubCategory { get; set; }
+
+
+        [ForeignKey("Instructor")]
+        public int InstructorId { get; set; }
+        public Instructor Instructor { get; set; }
 
     }
 }

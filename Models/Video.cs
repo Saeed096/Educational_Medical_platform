@@ -14,9 +14,9 @@ namespace Educational_Medical_platform.Models
         [NotMapped]
         public IFormFile? Thumbnail { get; set; }
         public string? Description { get; set; }
-        public string? videoURL { get; set; }
+        public string videoURL { get; set; }
         [NotMapped]
-        public IFormFile? video { get; set; }
+        public IFormFile video { get; set; }
 
         [ForeignKey("Course")]
 

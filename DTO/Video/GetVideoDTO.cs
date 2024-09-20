@@ -9,7 +9,7 @@ namespace Educational_Medical_platform.DTO.Video
         public string Title { get; set; }
         public string? ThumbnailURL { get; set; }
         public string? Description { get; set; }
-        public string? videoURL { get; set; }
+        public string videoURL { get; set; }
         public int CourseId { get; set; }
     }
 }

@@ -1,4 +1,4 @@
-﻿using Educational_Medical_platform.DTO.SubCategoryDTO;
+﻿using Educational_Medical_platform.DTO.Subcategory;
 using Educational_Medical_platform.Models;
 using Educational_Medical_platform.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -19,18 +19,18 @@ namespace Educational_Medical_platform.Repositories.Implementations
             return context.SubCategories.Any(c => c.Id == id);
         }
 
-        public async Task<IEnumerable<SubCategoryDTO>> GetSubCategoriesByCategoryIdAsync(int categoryId)
+        public async Task<IEnumerable<GetSubcategoryDTO>> GetSubCategoriesByCategoryIdAsync(int categoryId)
         {
             return await context.SubCategories
                 .Where(sc => sc.CategoryId == categoryId)
-                .Select(sc => new SubCategoryDTO
+                .Select(sc => new GetSubcategoryDTO
                 {
                     Name = sc.Name,
                     CategoryId = sc.CategoryId
                 }).ToListAsync();
         }
 
-        public async Task<SubCategoryDTO> UpdateSubCategoryAsync(int id, SubCategoryDTO subCategoryDTO)
+        public async Task<GetSubcategoryDTO> UpdateSubCategoryAsync(int id, GetSubcategoryDTO subCategoryDTO)
         {
             var subCategory = await context.SubCategories.FindAsync(id);
 
@@ -44,7 +44,7 @@ namespace Educational_Medical_platform.Repositories.Implementations
             context.SubCategories.Update(subCategory);
             await context.SaveChangesAsync();
 
-            return new SubCategoryDTO
+            return new GetSubcategoryDTO
             {
                 CategoryId = subCategory.CategoryId
             };

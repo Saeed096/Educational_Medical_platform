@@ -29,7 +29,6 @@ namespace Educational_Medical_platform.Controllers
             {
                 Id = o.Id,
                 CourseId = o.CourseId,
-                Course = o.Course,
                 Description = o.Description
             }).ToList();
 
@@ -61,7 +60,6 @@ namespace Educational_Medical_platform.Controllers
                 {
                     Id = id,
                     CourseId = objective.CourseId,
-                    Course = objective.Course,
                     Description = objective.Description
                 };
                 return new GeneralResponse()

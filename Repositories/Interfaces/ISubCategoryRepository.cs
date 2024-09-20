@@ -1,4 +1,4 @@
-﻿using Educational_Medical_platform.DTO.SubCategoryDTO;
+﻿using Educational_Medical_platform.DTO.Subcategory;
 using Educational_Medical_platform.Models;
 using Shoghlana.Core.Interfaces;
 
@@ -8,9 +8,9 @@ namespace Educational_Medical_platform.Repositories.Interfaces
     {
         bool Exists(int id);
 
-        Task<IEnumerable<SubCategoryDTO>> GetSubCategoriesByCategoryIdAsync(int categoryId);
+        Task<IEnumerable<GetSubcategoryDTO>> GetSubCategoriesByCategoryIdAsync(int categoryId);
 
-        Task<SubCategoryDTO> UpdateSubCategoryAsync(int id, SubCategoryDTO subCategoryDTO);
+        Task<GetSubcategoryDTO> UpdateSubCategoryAsync(int id, GetSubcategoryDTO subCategoryDTO);
 
     }
 }

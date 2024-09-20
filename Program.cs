@@ -56,6 +56,8 @@ namespace Educational_Medical_platform
             builder.Services.AddScoped<IRequirementRepository, RequirementRepository>();
             builder.Services.AddScoped<IVideoRepository, VideoRepository>();
             builder.Services.AddScoped<IQuestionRepository, QuestionRepository>();
+            builder.Services.AddScoped<ISubCategoryRepository, SubCategoryRepository>();
+            builder.Services.AddScoped<IAnswerRepository, AnswerRepository>();
             #endregion
 
             //************************************************************************

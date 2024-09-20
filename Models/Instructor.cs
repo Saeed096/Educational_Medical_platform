@@ -15,5 +15,9 @@ namespace Educational_Medical_platform.Models
         public string LastName { get; set; }
 
         public ApplicationUser User { get; set; }
+
+
+        // why validation here >> should be in dtos , register logic for ins validate on having 1 course at least????
+        public List<Course> Courses { get; set; }
     }
 }

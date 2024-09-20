@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Educational_Medical_platform")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+7e39aa75f7053dc906cb63b359436c5523d273a6")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+570bdf217838477307975c4edd7c7bd1a0998789")]
 [assembly: System.Reflection.AssemblyProductAttribute("Educational_Medical_platform")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Educational_Medical_platform")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

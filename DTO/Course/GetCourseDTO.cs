@@ -4,6 +4,7 @@ using Educational_Medical_platform.DTO.Requirement;
 using Educational_Medical_platform.DTO.Objective;
 using Educational_Medical_platform.DTO.Video;
 using Educational_Medical_platform.DTO.Question;
+using System.ComponentModel.DataAnnotations;
 namespace Educational_Medical_platform.DTO.Course
 {
     public class GetCourseDTO
@@ -18,5 +19,6 @@ namespace Educational_Medical_platform.DTO.Course
         public List<GetVideoDTO> Videos { get; set; }
         public List<GetQuestionDTO>? Questions { get; set; }
         public int SubCategoryId { get; set; }
+        public int InstructorId { get; set; }
     }
 }
