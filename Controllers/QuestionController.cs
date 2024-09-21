@@ -17,13 +17,15 @@ namespace Educational_Medical_platform.Controllers
         private readonly IStandardTestRepository _standardTestRepository;
         private readonly ICourseRepository _courseRepository;
         private readonly IAnswerRepository _answerRepository;
+        private readonly ICourseRepository _courseRepository1;
 
         public QuestionController(IQuestionRepository questionRepository,
             ISubCategoryRepository subCategoryRepository,
             IBlogRepository blogRepository,
             IStandardTestRepository standardTestRepository,
             ICourseRepository courseRepository,
-            IAnswerRepository answerRepository)
+            IAnswerRepository answerRepository ,
+            ICourseRepository courseRepository1)
         {
             _questionRepository = questionRepository;
             _subCategoryRepository = subCategoryRepository;
@@ -31,6 +33,7 @@ namespace Educational_Medical_platform.Controllers
             _standardTestRepository = standardTestRepository;
             _courseRepository = courseRepository;
             _answerRepository = answerRepository;
+            _courseRepository1 = courseRepository1;
         }
 
         //********************************************************************
@@ -367,7 +370,7 @@ namespace Educational_Medical_platform.Controllers
         }
 
         [HttpPost("test/{testId:int}")]
-        public async Task<ActionResult<GeneralResponse>> AddQuestionForTest(AddQuestionForTestDTO questionDTO, int testId)
+        public async Task<ActionResult<GeneralResponse>> AddQuestionForTest(AddQuestionDTO questionDTO, int testId)
         {
             if (!_standardTestRepository.Exists(testId))
             {
@@ -385,7 +388,61 @@ namespace Educational_Medical_platform.Controllers
                 Question question = new Question
                 {
                     Description = questionDTO.Description,
-                    TestId = questionDTO.TestId,
+                    TestId = testId,
+                };
+
+                _questionRepository.Add(question);
+                await _questionRepository.SaveAsync();
+
+                List<Answer> answers = questionDTO.Answers.Select(a => new Answer
+                {
+                    Description = a.Description,
+                    IsCorrect = a.IsCorrect,
+                    QuestionId = question.Id
+                }).ToList();
+
+                _answerRepository.AddRange(answers);
+                await _answerRepository.SaveAsync();
+
+                return new GeneralResponse
+                {
+                    IsSuccess = true,
+                    Message = "Question and its Answers have been successfully saved.",
+                    Status = 200,
+                };
+            }
+            catch (Exception ex)
+            {
+                return new GeneralResponse
+                {
+                    IsSuccess = false,
+                    Message = "An error occurred while saving the question and answers.",
+                    Status = 500
+                };
+            }
+
+        }
+
+        [HttpPost("course/{courseId:int}")]
+        public async Task<ActionResult<GeneralResponse>> AddQuestionForCourse(AddQuestionDTO questionDTO, int courseId)
+        {
+            if (!_courseRepository.Exists(courseId))
+            {
+                return new GeneralResponse()
+                {
+                    IsSuccess = false,
+                    Data = null,
+                    Message = $"No course found for ID: {courseId}",
+                    Status = 404
+                };
+            }
+
+            try
+            {
+                Question question = new Question
+                {
+                    Description = questionDTO.Description,
+                    CourseId = courseId,
                 };
 
                 _questionRepository.Add(question);
