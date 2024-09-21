@@ -17,21 +17,20 @@ namespace Educational_Medical_platform.Configurations
                     DurationInhours = 10,
                     SubCategoryId = 1
                 },
-                  new Course
-                  {
-                      Id = 2,
-                      Title = "anatomy",
-                      DurationInhours = 20,
-                      SubCategoryId = 1
-                  },
-
-                     new Course
-                     {
-                         Id = 3,
-                         Title = "histology",
-                         DurationInhours = 30,
-                         SubCategoryId = 1
-                     }
+                new Course
+                {
+                    Id = 2,
+                    Title = "anatomy",
+                    DurationInhours = 20,
+                    SubCategoryId = 1
+                },
+                new Course
+                {
+                    Id = 3,
+                    Title = "histology",
+                    DurationInhours = 30,
+                    SubCategoryId = 1
+                }
                 );
         }
     }

@@ -3,9 +3,8 @@ using Shoghlana.Core.Interfaces;
 
 namespace Educational_Medical_platform.Repositories.Interfaces
 {
-    public interface ICourseRepository : IGenericRepository<Course> 
+    public interface IStandardTestRepository : IGenericRepository<StandardTest>
     {
         public bool Exists(int id);
-       
     }
 }

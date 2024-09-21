@@ -30,7 +30,7 @@ namespace Educational_Medical_platform
             {
                 options.AddPolicy("DefaultPolicy", policy =>
                 {
-                    policy.WithOrigins("http://localhost:3000") // Add the specific origin of your React app
+                    policy.WithOrigins("http://localhost:3000", "http://localhost:5173") // Add multiple origins
                     .AllowAnyMethod()
                     .AllowAnyHeader();
                 });
@@ -54,6 +54,10 @@ namespace Educational_Medical_platform
             builder.Services.AddScoped<ISubCategoryRepository, SubCategoryRepository>();
             builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
             builder.Services.AddScoped<IBlog_User_LikesRepository, Blog_User_LikeRepository>();
+            builder.Services.AddScoped<IQuestionRepository, QuestionRepository>();
+            builder.Services.AddScoped<IAnswerRepository, AnswerRepository>();
+            builder.Services.AddScoped<IStandardTestRepository, StandardTestRepository>();
+            builder.Services.AddScoped<ICourseRepository, CourseRepository>();
 
             #endregion
 
