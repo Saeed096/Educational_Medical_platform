@@ -326,6 +326,30 @@ namespace Educational_Medical_platform.Controllers
                 };
             }
 
+            int correctAnswerCount = questionDTO.Answers.Count(answer => answer.IsCorrect);
+
+            if (correctAnswerCount == 0)
+            {
+                return new GeneralResponse
+                {
+                    IsSuccess = false,
+                    Data = null,
+                    Message = "There must be at least one correct answer.",
+                    Status = 400
+                };
+            }
+
+            if (correctAnswerCount > 1)
+            {
+                return new GeneralResponse
+                {
+                    IsSuccess = false,
+                    Data = null,
+                    Message = "There can't be more than one correct answer.",
+                    Status = 400
+                };
+            }
+
             try
             {
                 Question question = new Question
@@ -382,6 +406,30 @@ namespace Educational_Medical_platform.Controllers
                 };
             }
 
+            int correctAnswerCount = questionDTO.Answers.Count(answer => answer.IsCorrect);
+
+            if (correctAnswerCount == 0)
+            {
+                return new GeneralResponse
+                {
+                    IsSuccess = false,
+                    Data = null,
+                    Message = "There must be at least one correct answer.",
+                    Status = 400
+                };
+            }
+
+            if (correctAnswerCount > 1)
+            {
+                return new GeneralResponse
+                {
+                    IsSuccess = false,
+                    Data = null,
+                    Message = "There can't be more than one correct answer.",
+                    Status = 400
+                };
+            }
+
             try
             {
                 Question question = new Question
@@ -434,6 +482,30 @@ namespace Educational_Medical_platform.Controllers
                     Data = null,
                     Message = $"No course found for ID: {courseId}",
                     Status = 404
+                };
+            }
+
+            int correctAnswerCount = questionDTO.Answers.Count(answer => answer.IsCorrect);
+
+            if (correctAnswerCount == 0)
+            {
+                return new GeneralResponse
+                {
+                    IsSuccess = false,
+                    Data = null,
+                    Message = "There must be at least one correct answer.",
+                    Status = 400
+                };
+            }
+
+            if (correctAnswerCount > 1)
+            {
+                return new GeneralResponse
+                {
+                    IsSuccess = false,
+                    Data = null,
+                    Message = "There can't be more than one correct answer.",
+                    Status = 400
                 };
             }
 
