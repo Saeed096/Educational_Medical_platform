@@ -19,7 +19,7 @@
         /// In case of failer the consumer can easily know the reason by checking on the common failer satus codes(404 , 500 ... etc) => and make handler for each one
         /// It's way better than checking the string message to know the failer reason 
         /// </summary>
-        //public int Status { get; set; }
+        public int Status { get; set; }
 
         public string? Token { get; set; } =   null;
 

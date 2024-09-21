@@ -8,6 +8,8 @@ namespace Educational_Medical_platform.DTO.Question
 
         public int? TestId { get; set; }
 
+        public string Description { get; set; }
+
         //public StandardTest? Test { get; set; }
 
         public int? SubCategoryId { get; set; }  // nullable as this question may not be related to any question bank but related to course questions 
