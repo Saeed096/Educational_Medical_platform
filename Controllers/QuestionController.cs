@@ -17,15 +17,13 @@ namespace Educational_Medical_platform.Controllers
         private readonly IStandardTestRepository _standardTestRepository;
         private readonly ICourseRepository _courseRepository;
         private readonly IAnswerRepository _answerRepository;
-        private readonly ICourseRepository _courseRepository1;
 
         public QuestionController(IQuestionRepository questionRepository,
             ISubCategoryRepository subCategoryRepository,
             IBlogRepository blogRepository,
             IStandardTestRepository standardTestRepository,
             ICourseRepository courseRepository,
-            IAnswerRepository answerRepository ,
-            ICourseRepository courseRepository1)
+            IAnswerRepository answerRepository)
         {
             _questionRepository = questionRepository;
             _subCategoryRepository = subCategoryRepository;
@@ -33,7 +31,6 @@ namespace Educational_Medical_platform.Controllers
             _standardTestRepository = standardTestRepository;
             _courseRepository = courseRepository;
             _answerRepository = answerRepository;
-            _courseRepository1 = courseRepository1;
         }
 
         //********************************************************************
@@ -316,7 +313,7 @@ namespace Educational_Medical_platform.Controllers
         }
 
         [HttpPost("subcategory/{subcategoryId:int}")]
-        public async Task<ActionResult<GeneralResponse>> AddQuestionForSubCategory(AddQuestionForSubCategoryDTO questionDTO, int subcategoryId)
+        public async Task<ActionResult<GeneralResponse>> AddQuestionForSubCategory(AddQuestionDTO questionDTO, int subcategoryId)
         {
             if (!_subCategoryRepository.Exists(subcategoryId))
             {
@@ -325,7 +322,7 @@ namespace Educational_Medical_platform.Controllers
                     IsSuccess = false,
                     Data = null,
                     Message = $"No subcategory found for ID: {subcategoryId}",
-                    Status = 404  
+                    Status = 404
                 };
             }
 
@@ -334,7 +331,7 @@ namespace Educational_Medical_platform.Controllers
                 Question question = new Question
                 {
                     Description = questionDTO.Description,
-                    SubCategoryId = subcategoryId 
+                    SubCategoryId = subcategoryId
                 };
 
                 _questionRepository.Add(question);
@@ -353,7 +350,7 @@ namespace Educational_Medical_platform.Controllers
                 return new GeneralResponse
                 {
                     IsSuccess = true,
-                    Message = "Question and its Answers have been successfully saved.",
+                    Message = "Question and it's Answers have been successfully saved.",
                     Status = 200,
                 };
             }
@@ -363,7 +360,9 @@ namespace Educational_Medical_platform.Controllers
                 {
                     IsSuccess = false,
                     Message = "An error occurred while saving the question and answers.",
-                    Status = 500  
+                    Status = 500,
+                    Data = ex
+
                 };
             }
 
@@ -407,7 +406,7 @@ namespace Educational_Medical_platform.Controllers
                 return new GeneralResponse
                 {
                     IsSuccess = true,
-                    Message = "Question and its Answers have been successfully saved.",
+                    Message = "Question and it's Answers have been successfully saved.",
                     Status = 200,
                 };
             }
@@ -417,7 +416,8 @@ namespace Educational_Medical_platform.Controllers
                 {
                     IsSuccess = false,
                     Message = "An error occurred while saving the question and answers.",
-                    Status = 500
+                    Status = 500,
+                    Data = ex
                 };
             }
 
@@ -461,7 +461,7 @@ namespace Educational_Medical_platform.Controllers
                 return new GeneralResponse
                 {
                     IsSuccess = true,
-                    Message = "Question and its Answers have been successfully saved.",
+                    Message = "Question and it's Answers have been successfully saved.",
                     Status = 200,
                 };
             }
@@ -471,7 +471,8 @@ namespace Educational_Medical_platform.Controllers
                 {
                     IsSuccess = false,
                     Message = "An error occurred while saving the question and answers.",
-                    Status = 500
+                    Status = 500,
+                    Data = ex
                 };
             }
 
