@@ -313,7 +313,7 @@ namespace Educational_Medical_platform.Controllers
         }
 
         [HttpPost("subcategory/{subcategoryId:int}")]
-        public async Task<ActionResult<GeneralResponse>> AddQuestionForSubCategory([FromBody] AddQuestionForSubCategoryDTO questionDTO, int subcategoryId)
+        public async Task<ActionResult<GeneralResponse>> AddQuestionForSubCategory(AddQuestionForSubCategoryDTO questionDTO, int subcategoryId)
         {
             if (!_subCategoryRepository.Exists(subcategoryId))
             {
@@ -361,6 +361,60 @@ namespace Educational_Medical_platform.Controllers
                     IsSuccess = false,
                     Message = "An error occurred while saving the question and answers.",
                     Status = 500  
+                };
+            }
+
+        }
+
+        [HttpPost("test/{testId:int}")]
+        public async Task<ActionResult<GeneralResponse>> AddQuestionForTest(AddQuestionForTestDTO questionDTO, int testId)
+        {
+            if (!_standardTestRepository.Exists(testId))
+            {
+                return new GeneralResponse()
+                {
+                    IsSuccess = false,
+                    Data = null,
+                    Message = $"No Test found for ID: {testId}",
+                    Status = 404
+                };
+            }
+
+            try
+            {
+                Question question = new Question
+                {
+                    Description = questionDTO.Description,
+                    TestId = questionDTO.TestId,
+                };
+
+                _questionRepository.Add(question);
+                await _questionRepository.SaveAsync();
+
+                List<Answer> answers = questionDTO.Answers.Select(a => new Answer
+                {
+                    Description = a.Description,
+                    IsCorrect = a.IsCorrect,
+                    QuestionId = question.Id
+                }).ToList();
+
+                _answerRepository.AddRange(answers);
+                await _answerRepository.SaveAsync();
+
+                return new GeneralResponse
+                {
+                    IsSuccess = true,
+                    Message = "Question and its Answers have been successfully saved.",
+                    Status = 200,
+                };
+            }
+            catch (Exception ex)
+            {
+                return new GeneralResponse
+                {
+                    IsSuccess = false,
+                    Message = "An error occurred while saving the question and answers.",
+                    Status = 500
                 };
             }
 
