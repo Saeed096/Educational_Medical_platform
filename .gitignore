@@ -1,1 +1,41 @@
 .vs/
+
+
+# Ignore bin and obj directories
+bin/
+obj/
+
+# Ignore user-specific project settings
+*.user
+
+# Ignore build output files
+*.dll
+*.exe
+*.pdb
+
+# Ignore specific configuration files
+Educational_Medical_platform.csproj.user
+/.vs/Educational_Medical_platform/config/applicationhost.config
+/.vs/Educational_Medical_platform/DesignTimeBuild/.dtbcache.v2
+/.vs/Educational_Medical_platform/FileContentIndex/0754d4f4-1eb2-4bb2-9445-5ff408b1706b.vsidx
+/.vs/Educational_Medical_platform/FileContentIndex/2842f55b-cb8f-410e-bcae-b015a47f6a4c.vsidx
+/.vs/Educational_Medical_platform/FileContentIndex/a15a618d-abae-491a-9558-a4f4432c1bb4.vsidx
+/.vs/Educational_Medical_platform/FileContentIndex/a1aa44ad-64a0-4370-b4ea-c8dd24989947.vsidx
+/.vs/Educational_Medical_platform/FileContentIndex/b67efedb-2fab-4808-9f09-781229dfd38a.vsidx
+/.vs/Educational_Medical_platform/FileContentIndex/ebef98bc-51a3-4a7f-ba35-e98c0e14469c.vsidx
+/.vs/Educational_Medical_platform/v17/.futdcache.v2
+/.vs/Educational_Medical_platform/v17/.suo
+/.vs/Educational_Medical_platform/FileContentIndex/08120fa1-7caf-48cc-b0c9-81ea4ecf2494.vsidx
+/.vs/Educational_Medical_platform/v17/HierarchyCache.v1.txt
+/.vs/ProjectEvaluation/educational_medical_platform.metadata.v7.bin
+/.vs/ProjectEvaluation/educational_medical_platform.projects.v7.bin
+/.vs/Educational_Medical_platform/FileContentIndex/06068297-e7ab-4e3a-9bd9-86b0ecd26686.vsidx
+/obj/Debug/net8.0/Educational_Medical_platform.GeneratedMSBuildEditorConfig.editorconfig
+/.vs/Educational_Medical_platform/FileContentIndex/dbcb17d2-a24d-4bc2-b06c-dfdf6c8fe229.vsidx
+/obj/Debug/net8.0/Educational_Medical_platform.csproj.AssemblyReference.cache
+/.vs/Educational_Medical_platform/FileContentIndex/6c543fda-05c0-4834-9abe-415f68550bca.vsidx
+/.vs/Educational_Medical_platform/FileContentIndex/b40737f9-e206-441e-a0f4-4b7f588f0543.vsidx
+/.vs/Educational_Medical_platform/FileContentIndex/51a2fdf2-3c62-4d2c-b975-31b028b594c8.vsidx
+/.vs/Educational_Medical_platform/FileContentIndex/a59b0bbd-cd57-4cb3-aeb2-cf7bb1d6806e.vsidx
+/.vs/Educational_Medical_platform/FileContentIndex/3807c28e-d03a-424a-a46f-01f0f4fd0621.vsidx
+/.vs/Educational_Medical_platform/FileContentIndex/9c7537be-f1dd-4833-9e3f-2d92d8a53621.vsidx
