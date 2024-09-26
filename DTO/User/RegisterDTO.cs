@@ -18,10 +18,13 @@ namespace Educational_Medical_platform.DTO.User
         [Compare("Password", ErrorMessage = "Passwords don't match")]
         public string ConfirmPassword { get; set; }
 
+        [Required(ErrorMessage = "Email is required")]
         [RegularExpression(@"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$", ErrorMessage = "Invalid Email Address")]
+        [StringLength(254, ErrorMessage = "Email cannot be longer than 254 characters.")]
         public string Email { get; set; } = string.Empty;
 
-        [RegularExpression(@"^01\d{9}$", ErrorMessage = "Invalid Phone Number")]
+        [Required(ErrorMessage = "Phone number is required.")]
+        [RegularExpression(@"^\+?[1-9]\d{1,14}$", ErrorMessage = "Invalid Phone Number. Format: +[country code][number] (e.g., +1234567890).")]
         public string PhoneNumber { get; set; }
 
         [Required(ErrorMessage = "Role is required")]

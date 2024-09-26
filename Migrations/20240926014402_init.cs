@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Educational_Medical_platform.Migrations
 {
     /// <inheritdoc />
-    public partial class Init : Migration
+    public partial class init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -34,6 +34,7 @@ namespace Educational_Medical_platform.Migrations
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     FirstName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     LastName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    ImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     UserName = table.Column<string>(type: "nvarchar(50)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -100,7 +101,7 @@ namespace Educational_Medical_platform.Migrations
                         column: x => x.RoleId,
                         principalTable: "AspNetRoles",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -141,7 +142,7 @@ namespace Educational_Medical_platform.Migrations
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -161,7 +162,7 @@ namespace Educational_Medical_platform.Migrations
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -179,13 +180,13 @@ namespace Educational_Medical_platform.Migrations
                         column: x => x.RoleId,
                         principalTable: "AspNetRoles",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_AspNetUserRoles_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -205,7 +206,7 @@ namespace Educational_Medical_platform.Migrations
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -266,7 +267,7 @@ namespace Educational_Medical_platform.Migrations
                         column: x => x.CategoryId,
                         principalTable: "Categories",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -363,13 +364,13 @@ namespace Educational_Medical_platform.Migrations
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Blog_User_Likes_Blogs_BlogId",
                         column: x => x.BlogId,
                         principalTable: "Blogs",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -389,13 +390,13 @@ namespace Educational_Medical_platform.Migrations
                         column: x => x.CourseId,
                         principalTable: "Courses",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_CertificateDetails_Students_StudentId",
                         column: x => x.StudentId,
                         principalTable: "Students",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -415,7 +416,7 @@ namespace Educational_Medical_platform.Migrations
                         column: x => x.CourseId,
                         principalTable: "Courses",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -424,6 +425,7 @@ namespace Educational_Medical_platform.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    Description = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
                     TestId = table.Column<int>(type: "int", nullable: true),
                     SubCategoryId = table.Column<int>(type: "int", nullable: true),
                     CourseId = table.Column<int>(type: "int", nullable: true),
@@ -471,7 +473,7 @@ namespace Educational_Medical_platform.Migrations
                         column: x => x.CourseId,
                         principalTable: "Courses",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -495,7 +497,7 @@ namespace Educational_Medical_platform.Migrations
                         column: x => x.CourseId,
                         principalTable: "Courses",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -522,13 +524,13 @@ namespace Educational_Medical_platform.Migrations
                         column: x => x.CourseId,
                         principalTable: "Courses",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_StudentCourses_Students_StudentId",
                         column: x => x.StudentId,
                         principalTable: "Students",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -549,7 +551,7 @@ namespace Educational_Medical_platform.Migrations
                         column: x => x.QuestionId,
                         principalTable: "Questions",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.InsertData(
@@ -574,6 +576,16 @@ namespace Educational_Medical_platform.Migrations
                 });
 
             migrationBuilder.InsertData(
+                table: "StandardTests",
+                columns: new[] { "Id", "DurationInMinutes", "Fullmark", "Title" },
+                values: new object[,]
+                {
+                    { 1, 60, 100, "Test1" },
+                    { 2, 100, 150, "Test2" },
+                    { 3, 200, 300, "Test3" }
+                });
+
+            migrationBuilder.InsertData(
                 table: "Blogs",
                 columns: new[] { "Id", "CategoryId", "Conclusion", "Content", "ImageURL", "Intro", "LikesNumber", "SubCategoryId", "Title" },
                 values: new object[,]
@@ -581,6 +593,18 @@ namespace Educational_Medical_platform.Migrations
                     { 1, 1, "Understanding human anatomy is essential for medical professionals and enthusiasts alike.", "This blog covers the basics of human anatomy...", "/Images/Blogs/blog1.jpg", "Anatomy is the branch of biology concerned with the study of the structure of organisms and their parts.", 10, null, "Introduction to Human Anatomy" },
                     { 2, 1, "The study of comparative anatomy is crucial for evolutionary biology and understanding the functional adaptations of organisms.", "This blog explores comparative anatomy across species...", "/Images/Blogs/blog1.jpg", "Comparative anatomy allows us to understand the similarities and differences between different organisms.", 15, null, "Advanced Comparative Anatomy" },
                     { 3, 2, "A deep understanding of cell physiology is vital for advancements in medical science.", "Understanding the basics of cell physiology...", "/Images/Blogs/blog1.jpg", "Cell physiology is the study of the functions of cells and their components.", 20, null, "Fundamentals of Cell Physiology" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Questions",
+                columns: new[] { "Id", "BlogId", "CourseId", "Description", "SubCategoryId", "TestId" },
+                values: new object[,]
+                {
+                    { 16, null, null, "What is the primary function of red blood cells?", null, 1 },
+                    { 17, null, null, "How does the immune system protect the body?", null, 1 },
+                    { 18, null, null, "What are the stages of the cell cycle?", null, 2 },
+                    { 19, null, null, "What is apoptosis?", null, 2 },
+                    { 20, null, null, "What role does DNA play in inheritance?", null, 2 }
                 });
 
             migrationBuilder.InsertData(
@@ -596,6 +620,28 @@ namespace Educational_Medical_platform.Migrations
                     { 6, 3, "Pharmacokinetics" },
                     { 7, 4, "General Pathology" },
                     { 8, 4, "Systemic Pathology" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Answers",
+                columns: new[] { "Id", "Description", "IsCorrect", "QuestionId" },
+                values: new object[,]
+                {
+                    { 46, "To carry oxygen", true, 16 },
+                    { 47, "To fight infections", false, 16 },
+                    { 48, "To clot blood", false, 16 },
+                    { 49, "By recognizing pathogens", true, 17 },
+                    { 50, "By producing energy", false, 17 },
+                    { 51, "By storing nutrients", false, 17 },
+                    { 52, "Interphase, mitosis, cytokinesis", true, 18 },
+                    { 53, "Prophase, metaphase, anaphase", false, 18 },
+                    { 54, "Meiosis only", false, 18 },
+                    { 55, "Programmed cell death", true, 19 },
+                    { 56, "Cell growth", false, 19 },
+                    { 57, "Cell division", false, 19 },
+                    { 58, "Carries genetic information", true, 20 },
+                    { 59, "Produces energy", false, 20 },
+                    { 60, "Fights diseases", false, 20 }
                 });
 
             migrationBuilder.InsertData(
@@ -620,6 +666,60 @@ namespace Educational_Medical_platform.Migrations
                 });
 
             migrationBuilder.InsertData(
+                table: "Questions",
+                columns: new[] { "Id", "BlogId", "CourseId", "Description", "SubCategoryId", "TestId" },
+                values: new object[,]
+                {
+                    { 6, null, null, "What is the primary function of the digestive system?", 1, null },
+                    { 7, null, null, "How does the body absorb nutrients?", 1, null },
+                    { 8, null, null, "What are the main components of the digestive system?", 2, null },
+                    { 9, null, null, "What is the role of enzymes in digestion?", 2, null },
+                    { 10, null, null, "What is the process of peristalsis?", 3, null },
+                    { 11, 1, null, "What are the key structures of the human body?", null, null },
+                    { 12, 1, null, "How does the muscular system work?", null, null },
+                    { 13, 2, null, "What is the importance of studying anatomy?", null, null },
+                    { 14, 2, null, "What are the different systems of the human body?", null, null },
+                    { 15, 3, null, "What role does the nervous system play in body functions?", null, null }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Answers",
+                columns: new[] { "Id", "Description", "IsCorrect", "QuestionId" },
+                values: new object[,]
+                {
+                    { 16, "Breaks down food", true, 6 },
+                    { 17, "Circulates blood", false, 6 },
+                    { 18, "Transports oxygen", false, 6 },
+                    { 19, "Through the walls of the intestines", true, 7 },
+                    { 20, "Via the bloodstream", false, 7 },
+                    { 21, "By chewing", false, 7 },
+                    { 22, "Mouth, esophagus, stomach", true, 8 },
+                    { 23, "Brain, heart, lungs", false, 8 },
+                    { 24, "Skin, muscles, bones", false, 8 },
+                    { 25, "They speed up chemical reactions", true, 9 },
+                    { 26, "They are absorbed", false, 9 },
+                    { 27, "They break down food", false, 9 },
+                    { 28, "The wave-like motion that moves food", true, 10 },
+                    { 29, "The absorption of nutrients", false, 10 },
+                    { 30, "The secretion of enzymes", false, 10 },
+                    { 31, "Organs and systems", true, 11 },
+                    { 32, "Cells only", false, 11 },
+                    { 33, "Muscles only", false, 11 },
+                    { 34, "By contracting and relaxing", true, 12 },
+                    { 35, "By sending signals", false, 12 },
+                    { 36, "By absorbing nutrients", false, 12 },
+                    { 37, "To understand the human body", true, 13 },
+                    { 38, "To pass exams", false, 13 },
+                    { 39, "To perform surgeries", false, 13 },
+                    { 40, "Nervous, muscular, skeletal", true, 14 },
+                    { 41, "Respiratory, circulatory", false, 14 },
+                    { 42, "Digestive, excretory", false, 14 },
+                    { 43, "Controls body functions", true, 15 },
+                    { 44, "Transports nutrients", false, 15 },
+                    { 45, "Provides energy", false, 15 }
+                });
+
+            migrationBuilder.InsertData(
                 table: "Objectives",
                 columns: new[] { "Id", "CourseId", "Description" },
                 values: new object[,]
@@ -627,6 +727,18 @@ namespace Educational_Medical_platform.Migrations
                     { 1, 1, "Enhancing medical skills" },
                     { 2, 1, "Enhancing physiology knowledge" },
                     { 3, 1, "increasing job opportunities" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Questions",
+                columns: new[] { "Id", "BlogId", "CourseId", "Description", "SubCategoryId", "TestId" },
+                values: new object[,]
+                {
+                    { 1, null, 1, "What is the basic unit of life?", null, null },
+                    { 2, null, 1, "Which organelle is known as the powerhouse of the cell?", null, null },
+                    { 3, null, 2, "What is the function of ribosomes?", null, null },
+                    { 4, null, 2, "What is the role of the cell membrane?", null, null },
+                    { 5, null, 2, "What is osmosis?", null, null }
                 });
 
             migrationBuilder.InsertData(
@@ -647,6 +759,28 @@ namespace Educational_Medical_platform.Migrations
                     { 1, 1, null, 1, null, "new video", "https://www.youtube.com/watch?v=4oThHBo2-Gs" },
                     { 2, 2, null, 1, null, "old video", "https://www.youtube.com/watch?v=mgEAimOoyHk" },
                     { 3, 3, null, 1, null, "funny video", "https://www.youtube.com/watch?v=zhCKr62s12w" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Answers",
+                columns: new[] { "Id", "Description", "IsCorrect", "QuestionId" },
+                values: new object[,]
+                {
+                    { 1, "Cell", true, 1 },
+                    { 2, "Tissue", false, 1 },
+                    { 3, "Organ", false, 1 },
+                    { 4, "Mitochondria", true, 2 },
+                    { 5, "Nucleus", false, 2 },
+                    { 6, "Ribosome", false, 2 },
+                    { 7, "Protein synthesis", true, 3 },
+                    { 8, "Energy production", false, 3 },
+                    { 9, "DNA replication", false, 3 },
+                    { 10, "Protects the cell", true, 4 },
+                    { 11, "Stores DNA", false, 4 },
+                    { 12, "Produces energy", false, 4 },
+                    { 13, "Movement of water", true, 5 },
+                    { 14, "Transport of nutrients", false, 5 },
+                    { 15, "Protein synthesis", false, 5 }
                 });
 
             migrationBuilder.CreateIndex(

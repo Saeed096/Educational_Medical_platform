@@ -24,6 +24,8 @@ namespace Educational_Medical_platform.Controllers
         private readonly IInstructorRepository _instructorRepository;
         private readonly IStudentRepository _studentRepository;
         private readonly IConfiguration _configuration;
+        private readonly string _imagesPath;
+
 
         public UserController(
             UserManager<ApplicationUser> userManager,
@@ -39,6 +41,7 @@ namespace Educational_Medical_platform.Controllers
             _instructorRepository = instructorRepository;
             _studentRepository = studentRepository;
             _configuration = configuration;
+            _imagesPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Images", "Users");
         }
 
         [HttpPost("register")]
@@ -50,7 +53,8 @@ namespace Educational_Medical_platform.Controllers
                 {
                     IsSuccess = false,
                     Data = ModelState,
-                    Message = "Invalid Model State"
+                    Message = "Invalid Model State",
+                    Status = 106
                 };
             }
 
@@ -61,7 +65,8 @@ namespace Educational_Medical_platform.Controllers
                 return new GeneralResponse()
                 {
                     IsSuccess = false,
-                    Message = "Email is already in use."
+                    Message = "Email is already in use.",
+                    Status = 100
                 };
             }
 
@@ -82,7 +87,8 @@ namespace Educational_Medical_platform.Controllers
                 {
                     IsSuccess = false,
                     Data = createAccResult.Errors,
-                    Message = "Couldn't create Account due to Model State Errors"
+                    Message = "Couldn't create Account due to Model State Errors",
+                    Status = 101
                 };
             }
 
@@ -109,7 +115,8 @@ namespace Educational_Medical_platform.Controllers
                 {
                     IsSuccess = false,
                     Message = "Error Happened While Adding Roles to this User .",
-                    Data = addRoleResult.Errors
+                    Data = addRoleResult.Errors,
+                    Status = 102
                 };
             }
 
@@ -191,7 +198,8 @@ namespace Educational_Medical_platform.Controllers
                 {
                     IsSuccess = false,
                     Data = userDTO.Role,
-                    Message = "Invalid Role !"
+                    Message = "Invalid Role !",
+                    Status = 103
                 };
             }
         }
@@ -225,7 +233,7 @@ namespace Educational_Medical_platform.Controllers
                     if (result.Succeeded)
                     {
                         //string loginUrl = Url.Action("Login", "User", null, Request.Scheme);
-                        string loginUrl = "http://localhost:3000/Put the login URL in React here";
+                        string loginUrl = "http://localhost:3000/sign-in";
 
                         string htmlContent = $@"
                         <!DOCTYPE html>
@@ -285,7 +293,6 @@ namespace Educational_Medical_platform.Controllers
             return Content("<html><body><h1>Error</h1><p>Error confirming email after multiple retries.</p></body></html>", "text/html");
         }
 
-
         [HttpPost("login")]
         public async Task<ActionResult<GeneralResponse>> Login(LoginDTO userDTO)
         {
@@ -299,7 +306,8 @@ namespace Educational_Medical_platform.Controllers
                     {
                         IsSuccess = false,
                         Data = null,
-                        Message = "can't find this user name"
+                        Message = "Can't find this username",
+                        Status = 104
                     };
                 }
                 else if (!userFromDB.EmailConfirmed)
@@ -308,7 +316,8 @@ namespace Educational_Medical_platform.Controllers
                     {
                         IsSuccess = false,
                         Data = null,
-                        Message = "this user Email is not confirmed"
+                        Message = "This user email is not confirmed",
+                        Status = 105
                     };
                 }
 
@@ -316,41 +325,53 @@ namespace Educational_Medical_platform.Controllers
 
                 if (IsPasswordMatched)
                 {
-                    // create token steps : 
-                    List<Claim> myClaims = new List<Claim>();
-                    myClaims.Add(new Claim(ClaimTypes.Name, userFromDB.UserName ?? "Not Available"));
-                    myClaims.Add(new Claim(ClaimTypes.NameIdentifier, userFromDB.Id));
-                    //myClaims.Add(new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())); // if u want for the same user => his token be unique for each login => uncomment this
+                    // Create token steps
+                    List<Claim> myClaims = new List<Claim>
+                    {
+                        new Claim(ClaimTypes.Name, userFromDB.UserName ?? "Not Available"),
+                        new Claim(ClaimTypes.NameIdentifier, userFromDB.Id)
+                    };
 
-                    // claim roles
+                    // Claim roles
                     IList<string> roles = await _userManager.GetRolesAsync(userFromDB);
-
                     foreach (string role in roles)
                     {
                         myClaims.Add(new Claim(ClaimTypes.Role, role));
                     }
 
-                    //  security key 
+                    // Security key
                     SymmetricSecurityKey securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:SecretKey"]));
 
-                    // in the JWT header =>  credentials : key + ALgorithm
+                    // JWT header
                     SigningCredentials signingCredentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
-                    // in the JWT payload => JwtSecurityToken is a class that design the token
+                    // JWT payload
                     JwtSecurityToken jwtSecurityToken = new JwtSecurityToken
-                        (
-                        issuer: _configuration["JWT:ValidIss"], // the povider API who is responsible for creating the token
-                        audience: _configuration["JWT:ValidAud"],  // the consumer (React domain)
+                    (
+                        issuer: _configuration["JWT:ValidIss"],
+                        audience: _configuration["JWT:ValidAud"],
                         expires: DateTime.Now.AddHours(1),
                         claims: myClaims,
                         signingCredentials: signingCredentials
-                        );
+                    );
 
-                    //return the token
+                    // Prepare user data to return
+                    var userData = new
+                    {
+                        userFromDB.Id,
+                        userFromDB.FirstName,
+                        userFromDB.LastName,
+                        userFromDB.UserName,
+                        userFromDB.PhoneNumber,
+                        userFromDB.Email,
+                        userFromDB.ImageUrl
+                    };
+
+                    // Return the token and user data
                     return new GeneralResponse()
                     {
                         IsSuccess = true,
-                        Data = null,
+                        Data = userData, // Include user data in response
                         Token = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken),
                         Expired = jwtSecurityToken.ValidTo,
                         Message = "Token Created Successfully"
@@ -362,7 +383,8 @@ namespace Educational_Medical_platform.Controllers
                     {
                         IsSuccess = false,
                         Data = null,
-                        Message = "Wrong Password"
+                        Message = "Wrong Password",
+                        Status = 105
                     };
                 }
             }
@@ -372,7 +394,8 @@ namespace Educational_Medical_platform.Controllers
                 {
                     IsSuccess = false,
                     Data = ModelState,
-                    Message = "Invalid Model State"
+                    Message = "Invalid Model State",
+                    Status = 106
                 };
             }
         }
@@ -386,7 +409,8 @@ namespace Educational_Medical_platform.Controllers
                 {
                     IsSuccess = false,
                     Data = ModelState,
-                    Message = "Invalid Model State"
+                    Message = "Invalid Model State",
+                    Status = 106
                 };
             }
 
@@ -403,21 +427,58 @@ namespace Educational_Medical_platform.Controllers
 
             var token = await _userManager.GeneratePasswordResetTokenAsync(user);
             var encodedToken = HttpUtility.UrlEncode(token);
-            var resetLink = Url.Action("ResetPassword", "User", new { token = encodedToken, email = user.Email }, Request.Scheme);
+
+            // Construct the reset link pointing to your frontend
+            var resetLink = $"http://localhost:3000/Rest-pass?token={encodedToken}&email={forgotPasswordDTO.Email}";
 
             string mailBody = $@"
-                            <!DOCTYPE html>
-                            <html>
-                            <head>
-                                <title>Reset Your Password</title>
-                            </head>
-                            <body>
-                                <h1>Reset Your Password</h1>
-                                <p>We received a request to reset your password. Click the link below to reset it:</p>
-                                <a href='{resetLink}'>Reset Password</a>
-                                <p>If you did not request this password reset, please ignore this email.</p>
-                            </body>
-                            </html>";
+                                <!DOCTYPE html>
+                                <html lang='en'>
+                                <head>
+                                    <meta charset='UTF-8'>
+                                    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+                                    <title>Reset Your Password</title>
+                                    <link href='https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css' rel='stylesheet'>
+                                    <style>
+                                        body {{
+                                            background-color: #f7f7f7;
+                                            font-family: Arial, sans-serif;
+                                        }}
+                                        .container {{
+                                            max-width: 600px;
+                                            padding: 20px;
+                                            margin: 50px auto;
+                                            background-color: white;
+                                            border-radius: 10px;
+                                            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+                                        }}
+                                        .btn-reset {{
+                                            background-color: #007bff;
+                                            color: white;
+                                            padding: 10px 20px;
+                                            border-radius: 5px;
+                                            text-decoration: none;
+                                        }}
+                                        .btn-reset:hover {{
+                                            background-color: #0056b3;
+                                        }}
+                                    </style>
+                                </head>
+                                <body>
+                                    <div class='container'>
+                                        <h2>Password Reset Request</h2>
+                                        <p>Hello,</p>
+                                        <p>We received a request to reset the password for your account associated with this email address.</p>
+                                        <p>Click the button below to reset your password:</p>
+                                        <div style='text-align: center; margin: 20px 0;'>
+                                            <a href='{resetLink}' class='btn btn-reset'>Reset Password</a>
+                                        </div>
+                                        <p>If you didn't request this, you can ignore this email.</p>
+                                        <p>Best regards,</p>
+                                        <p>Your Team</p>
+                                    </div>
+                                </body>
+                                </html>";
 
             await _emailService.SendEmailAsync(forgotPasswordDTO.Email, "Password Reset Request", mailBody);
 
@@ -428,6 +489,7 @@ namespace Educational_Medical_platform.Controllers
             };
         }
 
+
         [HttpPost("reset-password")]
         public async Task<ActionResult<GeneralResponse>> ResetPassword(ResetPasswordDTO resetPasswordDTO)
         {
@@ -437,7 +499,8 @@ namespace Educational_Medical_platform.Controllers
                 {
                     IsSuccess = false,
                     Data = ModelState,
-                    Message = "Invalid Model State"
+                    Message = "Invalid Model State",
+                    Status = 106
                 };
             }
 
@@ -448,12 +511,14 @@ namespace Educational_Medical_platform.Controllers
                 return new GeneralResponse
                 {
                     IsSuccess = false,
-                    Message = "User with the provided email does not exist."
+                    Message = "User with the provided email does not exist.",
+                    Status = 107
                 };
             }
 
             // Decode the token twice if it was double-encoded in the URL
-            var decodedToken = HttpUtility.UrlDecode(HttpUtility.UrlDecode(resetPasswordDTO.Token));
+            //var decodedToken = HttpUtility.UrlDecode(HttpUtility.UrlDecode(resetPasswordDTO.Token));
+            var decodedToken = HttpUtility.UrlDecode(resetPasswordDTO.Token);
 
             var result = await _userManager.ResetPasswordAsync(user, decodedToken, resetPasswordDTO.NewPassword);
 
@@ -471,10 +536,100 @@ namespace Educational_Medical_platform.Controllers
                 {
                     IsSuccess = false,
                     Data = result.Errors,
-                    Message = "Error resetting password."
+                    Message = "Error resetting password.",
+                    Status = 108
                 };
             }
         }
 
+        [HttpPut("update/{userId}")]
+        public async Task<ActionResult<GeneralResponse>> UpdateUser(string userId, [FromForm] UpdateUserDTO updateUserDTO)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+
+            if (user == null)
+            {
+                return new GeneralResponse()
+                {
+                    IsSuccess = false,
+                    Message = "User not found.",
+                    Status = 109
+                };
+            }
+
+            // Update user properties
+            user.FirstName = updateUserDTO.FirstName;
+            user.LastName = updateUserDTO.LastName;
+            user.PhoneNumber = updateUserDTO.PhoneNumber;
+
+            if (!string.IsNullOrWhiteSpace(updateUserDTO.UserName))
+            {
+                user.UserName = updateUserDTO.UserName; // Update username
+            }
+
+            if (!string.IsNullOrWhiteSpace(updateUserDTO.NewPassword))
+            {
+                var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+                var result = await _userManager.ResetPasswordAsync(user, token, updateUserDTO.NewPassword);
+
+                if (!result.Succeeded)
+                {
+                    return new GeneralResponse()
+                    {
+                        IsSuccess = false,
+                        Data = result.Errors,
+                        Message = "Couldn't update password.",
+                        Status = 110
+                    };
+                }
+            }
+
+            string fileName = "";
+
+            if (updateUserDTO.Image != null)
+            {
+                // Validate image size (e.g., max 2MB)
+                if (updateUserDTO.Image.Length > 2 * 1024 * 1024)
+                {
+                    return new GeneralResponse()
+                    {
+                        IsSuccess = false,
+                        Message = "Image size exceeds the maximum allowed size of 2MB."
+                    };
+                }
+
+                // Generate a unique filename
+                fileName = $"{Path.GetFileNameWithoutExtension(updateUserDTO.Image.FileName)}_{Guid.NewGuid()}{Path.GetExtension(updateUserDTO.Image.FileName)}";
+                var filePath = Path.Combine(_imagesPath, fileName);
+
+                // Save the image
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await updateUserDTO.Image.CopyToAsync(stream);
+                }
+
+                user.ImageUrl = $"/Images/Users/{fileName}"; // Assuming you have an ImageURL property in ApplicationUser
+            }
+
+            var updateResult = await _userManager.UpdateAsync(user);
+
+            if (!updateResult.Succeeded)
+            {
+                return new GeneralResponse()
+                {
+                    IsSuccess = false,
+                    Data = updateResult.Errors,
+                    Message = "Couldn't update user information.",
+                    Status = 111
+                };
+            }
+
+            return new GeneralResponse()
+            {
+                IsSuccess = true,
+                Data = user,
+                Message = "User information updated successfully."
+            };
+        }
     }
 }
