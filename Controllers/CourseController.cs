@@ -97,7 +97,7 @@ namespace Educational_Medical_platform.Controllers
 
 
         [HttpGet("{courseId:int}")]
-        public ActionResult<GeneralResponse> GetAll(int courseId)
+        public ActionResult<GeneralResponse> GetByCourseId(int courseId)
         {
             Course? course = _courseRepository.Find(criteria: c => c.Id == courseId, includes: new[] { "Requirements", "Objectives" });
 
@@ -151,7 +151,7 @@ namespace Educational_Medical_platform.Controllers
         }
 
         [HttpGet("Instructor/{instructorId}")]
-        public async Task<ActionResult<GeneralResponse>> GetAll(string instructorId)
+        public async Task<ActionResult<GeneralResponse>> GetByInstructorId(string instructorId)
         {
             var instructor = await _userManager.FindByIdAsync(instructorId);
 
@@ -224,7 +224,7 @@ namespace Educational_Medical_platform.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<GeneralResponse>> AddCourse([FromBody] AddCourseDTO courseDTO)
+        public async Task<ActionResult<GeneralResponse>> AddCourse([FromForm]AddCourseDTO courseDTO)
         {
             // Check if the instructor exists
             var instructor = await _userManager.FindByIdAsync(courseDTO.InstructorID);
@@ -293,6 +293,8 @@ namespace Educational_Medical_platform.Controllers
 
             GetCourseDTO getCourseDTO = new GetCourseDTO
             {
+                Id = newCourse.Id,
+                Title = courseDTO.Title,
                 DurationInhours = courseDTO.DurationInhours,
                 Preview = courseDTO.Preview,
                 InstructorId = courseDTO.InstructorID,
@@ -314,7 +316,7 @@ namespace Educational_Medical_platform.Controllers
             {
                 IsSuccess = true,
                 Message = "Course created successfully.",
-                Data = courseDTO
+                Data = getCourseDTO
             };
         }
 

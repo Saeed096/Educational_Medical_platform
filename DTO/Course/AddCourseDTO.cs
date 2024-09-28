@@ -1,5 +1,6 @@
 ﻿using Educational_Medical_platform.DTO.Course.Objectives;
 using Educational_Medical_platform.DTO.Course.Requirments;
+using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 
 namespace Educational_Medical_platform.DTO.Course
@@ -23,8 +24,10 @@ namespace Educational_Medical_platform.DTO.Course
         [Required(ErrorMessage = "SubCategoryId is required")]
         public int SubCategoryId { get; set; }
 
+        [FromForm]
         public List<AddCourseRequirmentDTO>? Requirements { get; set; }
 
+        [FromForm]
         public List<AddCourseObjectiveDTO>? Objectives { get; set; }
     }
 }
