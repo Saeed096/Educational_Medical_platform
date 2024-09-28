@@ -10,5 +10,11 @@ namespace Educational_Medical_platform.Repositories.Implementations
         public CategoryRepository(ApplicationDBContext Context) : base(Context)
         {
         }
+
+        public bool Exists(int id)
+        {
+            return context.Categories.Any(c => c.Id == id);
+        }
+
     }
 }

@@ -1,9 +1,6 @@
 ﻿using Educational_Medical_platform.DTO.BookDTO;
 using Educational_Medical_platform.Models;
-using Educational_Medical_platform.Repositories.Implementations;
 using Educational_Medical_platform.Repositories.Interfaces;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Shoghlana.Api.Response;
 
@@ -117,8 +114,6 @@ namespace Educational_Medical_platform.Controllers
             }
         }
 
-
-
         [HttpPost]
         public ActionResult<GeneralResponse> AddBook([FromForm] BookDTO bookDTO)
         {
@@ -166,7 +161,6 @@ namespace Educational_Medical_platform.Controllers
                         Data = addedBookDTO
                     };
 
-
                 }
 
                 else
@@ -188,7 +182,6 @@ namespace Educational_Medical_platform.Controllers
                 };
             }
         }
-
 
         [HttpPut("{id}")]
         public ActionResult<GeneralResponse> UpdateBook(int id, [FromForm] BookDTO bookDTO)
@@ -307,8 +300,5 @@ namespace Educational_Medical_platform.Controllers
                 };
             }
         }
-
-
-
     }
 }
