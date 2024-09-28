@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Educational_Medical_platform.DTO.Course;
 using Educational_Medical_platform.DTO.Objective;
 using Educational_Medical_platform.DTO.Question;
 using Educational_Medical_platform.DTO.Requirement;
@@ -23,6 +24,8 @@ namespace Educational_Medical_platform.Helpers
             CreateMap<Video , GetVideoDTO>();
             CreateMap<AddRequirementDTO , Requirement>();
             CreateMap<Requirement , AddRequirementDTO>();
+            CreateMap<List<Requirement> , List<AddRequirementDTO>>();
+            CreateMap<List<AddRequirementDTO> , List<Requirement>>();
             CreateMap<AddObjectiveDTO , Objective>();
             CreateMap<Objective, AddObjectiveDTO>();
             CreateMap<AddVideoDTO , Video>();
@@ -31,6 +34,9 @@ namespace Educational_Medical_platform.Helpers
             CreateMap<List<AddVideoDTO>, List<Video>>();
             CreateMap<Question, AddQuestionDTO>();
             CreateMap<AddQuestionDTO, Question>();
+            CreateMap<List<Course>, List<GetCourseDTO>>();
+            CreateMap<List<GetCourseDTO>, List<Course>>();
+
         }
     }
 }

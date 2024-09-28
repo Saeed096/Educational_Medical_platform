@@ -54,6 +54,10 @@ namespace Educational_Medical_platform.Controllers
 
             if (Courses is not null && Courses.Any())
             {
+
+                List<GetCourseDTO> CourseDTOs = new List<GetCourseDTO>();
+                _mapper.Map(Courses, CourseDTOs);
+
                 return new GeneralResponse
                 {
                     IsSuccess = true,
@@ -250,26 +254,26 @@ namespace Educational_Medical_platform.Controllers
                     {
                         Video video = new Video();
 
-                        if(videoDTO.Thumbnail is not null)
-                        {
-                            // Generate a unique filename
-                            fileName = $"{Path.GetFileNameWithoutExtension(videoDTO.Thumbnail.FileName)}_{Guid.NewGuid()}{Path.GetExtension(videoDTO.Thumbnail.FileName)}";
-                            filePath = Path.Combine(_imagesPath, fileName);
+                    if (videoDTO.Thumbnail is not null)
+                    {
+                        // Generate a unique filename
+                        fileName = $"{Path.GetFileNameWithoutExtension(videoDTO.Thumbnail.FileName)}_{Guid.NewGuid()}{Path.GetExtension(videoDTO.Thumbnail.FileName)}";
+                        filePath = Path.Combine(_imagesPath, fileName);
 
-                            // Save the image
-                            using (var stream = new FileStream(filePath, FileMode.Create))
-                            {
-                                await videoDTO.Thumbnail.CopyToAsync(stream);
-                            }
-                            _mapper.Map(videoDTO, video);
-                            video.ThumbnailURL = filePath;
-                        }
-                        else
+                        // Save the image
+                        using (var stream = new FileStream(filePath, FileMode.Create))
                         {
-                            _mapper.Map(videoDTO, video);
+                            await videoDTO.Thumbnail.CopyToAsync(stream);
                         }
+                        _mapper.Map(videoDTO, video);
+                        video.ThumbnailURL = filePath;
+                    }
+                    else
+                    {
+                        _mapper.Map(videoDTO, video);
+                    }
 
-                        if(videoDTO.video is not null)
+                    if (videoDTO is not null)
                         {
                             // Generate a unique filename
                             fileName = $"{Path.GetFileNameWithoutExtension(videoDTO.video.FileName)}_{Guid.NewGuid()}{Path.GetExtension(videoDTO.video.FileName)}";
@@ -363,6 +367,8 @@ namespace Educational_Medical_platform.Controllers
                     Message = "Course added successfully :)"
                 };
             }
+
+      
 
         }
     }
