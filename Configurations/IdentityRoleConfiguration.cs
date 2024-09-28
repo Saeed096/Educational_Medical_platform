@@ -27,6 +27,13 @@ internal class IdentityRoleConfiguration : IEntityTypeConfiguration<IdentityRole
                 Name = "Instructor",
                 NormalizedName = "INSTRUCTOR",
                 ConcurrencyStamp = "df2d8409-ce61-4dac-ae75-b26fbbab27f2"
+            },
+            new IdentityRole
+            {
+                Id = "ea3206f7-8571-4e45-b209-e593236f3420",
+                Name = "User",
+                NormalizedName = "USER",
+                ConcurrencyStamp = "df2d8409-cg61-4aac-ae65-b26fbbab77f2"
             }
         );
     }

@@ -12,8 +12,8 @@ using Shoghlana.EF;
 namespace Educational_Medical_platform.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    [Migration("20240926014402_init")]
-    partial class init
+    [Migration("20240928095654_Init")]
+    partial class Init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,34 +24,6 @@ namespace Educational_Medical_platform.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
-
-            modelBuilder.Entity("Educational_Medical_platform.Models.Admin", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("FirstName")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("LastName")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Admins");
-                });
 
             modelBuilder.Entity("Educational_Medical_platform.Models.Answer", b =>
                 {
@@ -508,6 +480,10 @@ namespace Educational_Medical_platform.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("AuthorId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<int?>("CategoryId")
                         .HasColumnType("int");
 
@@ -540,6 +516,8 @@ namespace Educational_Medical_platform.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("AuthorId");
+
                     b.HasIndex("CategoryId");
 
                     b.HasIndex("SubCategoryId");
@@ -550,6 +528,7 @@ namespace Educational_Medical_platform.Migrations
                         new
                         {
                             Id = 1,
+                            AuthorId = "2b222b22-2222-2222-2222-222222222222",
                             CategoryId = 1,
                             Conclusion = "Understanding human anatomy is essential for medical professionals and enthusiasts alike.",
                             Content = "This blog covers the basics of human anatomy...",
@@ -561,6 +540,7 @@ namespace Educational_Medical_platform.Migrations
                         new
                         {
                             Id = 2,
+                            AuthorId = "2b222b22-2222-2222-2222-222222222222",
                             CategoryId = 1,
                             Conclusion = "The study of comparative anatomy is crucial for evolutionary biology and understanding the functional adaptations of organisms.",
                             Content = "This blog explores comparative anatomy across species...",
@@ -572,6 +552,7 @@ namespace Educational_Medical_platform.Migrations
                         new
                         {
                             Id = 3,
+                            AuthorId = "2b222b22-2222-2222-2222-222222222222",
                             CategoryId = 2,
                             Conclusion = "A deep understanding of cell physiology is vital for advancements in medical science.",
                             Content = "Understanding the basics of cell physiology...",
@@ -583,6 +564,7 @@ namespace Educational_Medical_platform.Migrations
                         new
                         {
                             Id = 4,
+                            AuthorId = "2b222b22-2222-2222-2222-222222222222",
                             CategoryId = 1,
                             Conclusion = "This overview serves as a foundational step towards more detailed studies of specific systems.",
                             Content = "This blog provides an overview of human anatomy...",
@@ -595,6 +577,7 @@ namespace Educational_Medical_platform.Migrations
                         new
                         {
                             Id = 5,
+                            AuthorId = "3c333c33-3333-3333-3333-333333333333",
                             CategoryId = 2,
                             Conclusion = "Grasping systemic physiology is crucial for understanding how the body maintains homeostasis.",
                             Content = "An introductory blog on systemic physiology...",
@@ -607,6 +590,7 @@ namespace Educational_Medical_platform.Migrations
                         new
                         {
                             Id = 6,
+                            AuthorId = "3c333c33-3333-3333-3333-333333333333",
                             CategoryId = 3,
                             Conclusion = "Understanding these applications is essential for safe and effective patient care.",
                             Content = "Exploring clinical applications in pharmacology...",
@@ -619,6 +603,7 @@ namespace Educational_Medical_platform.Migrations
                         new
                         {
                             Id = 7,
+                            AuthorId = "3c333c33-3333-3333-3333-333333333333",
                             CategoryId = 4,
                             Conclusion = "A solid grasp of pathology is necessary for any healthcare professional.",
                             Content = "A comprehensive overview of pathology...",
@@ -722,27 +707,6 @@ namespace Educational_Medical_platform.Migrations
                         });
                 });
 
-            modelBuilder.Entity("Educational_Medical_platform.Models.CertificateDetails", b =>
-                {
-                    b.Property<int>("StudentId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("CourseId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("CertifiedHours")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("StudentId", "CourseId");
-
-                    b.HasIndex("CourseId");
-
-                    b.ToTable("CertificateDetails");
-                });
-
             modelBuilder.Entity("Educational_Medical_platform.Models.Course", b =>
                 {
                     b.Property<int>("Id")
@@ -753,6 +717,10 @@ namespace Educational_Medical_platform.Migrations
 
                     b.Property<float>("DurationInhours")
                         .HasColumnType("real");
+
+                    b.Property<string>("InstructorId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Preview")
                         .HasColumnType("nvarchar(max)");
@@ -766,6 +734,8 @@ namespace Educational_Medical_platform.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("InstructorId");
+
                     b.HasIndex("SubCategoryId");
 
                     b.ToTable("Courses");
@@ -775,6 +745,7 @@ namespace Educational_Medical_platform.Migrations
                         {
                             Id = 1,
                             DurationInhours = 10f,
+                            InstructorId = "2b222b22-2222-2222-2222-222222222222",
                             SubCategoryId = 1,
                             Title = "physiology"
                         },
@@ -782,6 +753,7 @@ namespace Educational_Medical_platform.Migrations
                         {
                             Id = 2,
                             DurationInhours = 20f,
+                            InstructorId = "2b222b22-2222-2222-2222-222222222222",
                             SubCategoryId = 1,
                             Title = "anatomy"
                         },
@@ -789,37 +761,10 @@ namespace Educational_Medical_platform.Migrations
                         {
                             Id = 3,
                             DurationInhours = 30f,
+                            InstructorId = "3c333c33-3333-3333-3333-333333333333",
                             SubCategoryId = 1,
                             Title = "histology"
                         });
-                });
-
-            modelBuilder.Entity("Educational_Medical_platform.Models.Instructor", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("FirstName")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("LastName")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Supervisors");
                 });
 
             modelBuilder.Entity("Educational_Medical_platform.Models.Objective", b =>
@@ -1112,66 +1057,6 @@ namespace Educational_Medical_platform.Migrations
                         });
                 });
 
-            modelBuilder.Entity("Educational_Medical_platform.Models.Student", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("FirstName")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<bool>("IsSubscribed")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("LastName")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Students");
-                });
-
-            modelBuilder.Entity("Educational_Medical_platform.Models.Student_Courses", b =>
-                {
-                    b.Property<int>("StudentId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("CourseId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("CertificateDetailsCourseId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("CertificateDetailsStudentId")
-                        .HasColumnType("int");
-
-                    b.Property<float?>("Degree")
-                        .HasColumnType("real");
-
-                    b.Property<int>("VideoNumber")
-                        .HasColumnType("int");
-
-                    b.HasKey("StudentId", "CourseId");
-
-                    b.HasIndex("CourseId");
-
-                    b.HasIndex("CertificateDetailsStudentId", "CertificateDetailsCourseId");
-
-                    b.ToTable("StudentCourses");
-                });
-
             modelBuilder.Entity("Educational_Medical_platform.Models.SubCategory", b =>
                 {
                     b.Property<int>("Id")
@@ -1243,6 +1128,33 @@ namespace Educational_Medical_platform.Migrations
                             CategoryId = 4,
                             Name = "Systemic Pathology"
                         });
+                });
+
+            modelBuilder.Entity("Educational_Medical_platform.Models.User_Enrolled_Courses", b =>
+                {
+                    b.Property<string>("StudentId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("CourseId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CertifiedHours")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2");
+
+                    b.Property<float?>("Degree")
+                        .HasColumnType("real");
+
+                    b.Property<int>("VideoNumber")
+                        .HasColumnType("int");
+
+                    b.HasKey("StudentId", "CourseId");
+
+                    b.HasIndex("CourseId");
+
+                    b.ToTable("UserEnrolledCourses");
                 });
 
             modelBuilder.Entity("Educational_Medical_platform.Models.Video", b =>
@@ -1352,6 +1264,13 @@ namespace Educational_Medical_platform.Migrations
                             ConcurrencyStamp = "df2d8409-ce61-4dac-ae75-b26fbbab27f2",
                             Name = "Instructor",
                             NormalizedName = "INSTRUCTOR"
+                        },
+                        new
+                        {
+                            Id = "ea3206f7-8571-4e45-b209-e593236f3420",
+                            ConcurrencyStamp = "df2d8409-cg61-4aac-ae65-b26fbbab77f2",
+                            Name = "User",
+                            NormalizedName = "USER"
                         });
                 });
 
@@ -1440,6 +1359,23 @@ namespace Educational_Medical_platform.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("AspNetUserRoles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            UserId = "1a111a11-1111-1111-1111-111111111111",
+                            RoleId = "952625cb-623b-4f8e-a426-c9e14ffe41bc"
+                        },
+                        new
+                        {
+                            UserId = "2b222b22-2222-2222-2222-222222222222",
+                            RoleId = "ea3206f7-8571-4e45-b209-e593236f3420"
+                        },
+                        new
+                        {
+                            UserId = "3c333c33-3333-3333-3333-333333333333",
+                            RoleId = "ea3206f7-8571-4e45-b209-e593236f3420"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
@@ -1537,15 +1473,62 @@ namespace Educational_Medical_platform.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers", (string)null);
-                });
 
-            modelBuilder.Entity("Educational_Medical_platform.Models.Admin", b =>
-                {
-                    b.HasOne("Shoghlana.Core.Models.ApplicationUser", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId");
-
-                    b.Navigation("User");
+                    b.HasData(
+                        new
+                        {
+                            Id = "1a111a11-1111-1111-1111-111111111111",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "a46769b7-e8ff-490a-b2e3-3e57776ec8f3",
+                            Email = "Ehab_Naser@example.com",
+                            EmailConfirmed = true,
+                            FirstName = "Ehab",
+                            LastName = "Naser",
+                            LockoutEnabled = false,
+                            NormalizedEmail = "EHAB_NASER@EXAMPLE.COM",
+                            NormalizedUserName = "EHAB_NASER",
+                            PasswordHash = "AQAAAAIAAYagAAAAEElQrDPcq62rZhb8krXBamMVEFPCxh/k4RNlDfvDnNFfiCGcddlRW8TP+wext3CwCg==",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "44b862f5-266f-4ca9-b816-d42abadcfc1c",
+                            TwoFactorEnabled = false,
+                            UserName = "Ehab_Naser"
+                        },
+                        new
+                        {
+                            Id = "2b222b22-2222-2222-2222-222222222222",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "d818d7bf-2f6f-42e7-9098-ead33c150677",
+                            Email = "Mohamed_Galal@example.com",
+                            EmailConfirmed = true,
+                            FirstName = "Mohamed",
+                            LastName = "Galal",
+                            LockoutEnabled = false,
+                            NormalizedEmail = "MOHAMED_GALAL@EXAMPLE.COM",
+                            NormalizedUserName = "MOHAMED_GALAL",
+                            PasswordHash = "AQAAAAIAAYagAAAAECu2SV7nnxK04xmwRnwHJ2TGYyj6NHCrSgHqBWOtvDKOkvH/BLT1dtvydGnjRkEl3g==",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "6282b736-4934-4fef-bd6a-de3a6ff04505",
+                            TwoFactorEnabled = false,
+                            UserName = "Mohamed_Galal"
+                        },
+                        new
+                        {
+                            Id = "3c333c33-3333-3333-3333-333333333333",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "c26304ef-3740-4c4a-8b9f-3176a2e0bf0d",
+                            Email = "Alaa_Test@example.com",
+                            EmailConfirmed = true,
+                            FirstName = "Alaa",
+                            LastName = "Test",
+                            LockoutEnabled = false,
+                            NormalizedEmail = "ALAA_TEST@EXAMPLE.COM",
+                            NormalizedUserName = "ALAA_TEST",
+                            PasswordHash = "AQAAAAIAAYagAAAAEPU8yXGq3w2BRi7FgK8UazCSTS9uY4U4DWIaEZxkjO4hzZoXVjN1nSy6sDTX7R6BqA==",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "e13a7907-0329-40f1-a490-1fc0b38dc390",
+                            TwoFactorEnabled = false,
+                            UserName = "Alaa_Test"
+                        });
                 });
 
             modelBuilder.Entity("Educational_Medical_platform.Models.Answer", b =>
@@ -1561,6 +1544,12 @@ namespace Educational_Medical_platform.Migrations
 
             modelBuilder.Entity("Educational_Medical_platform.Models.Blog", b =>
                 {
+                    b.HasOne("Shoghlana.Core.Models.ApplicationUser", "Author")
+                        .WithMany("Blogs")
+                        .HasForeignKey("AuthorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Educational_Medical_platform.Models.Category", "Category")
                         .WithMany("Blogs")
                         .HasForeignKey("CategoryId");
@@ -1568,6 +1557,8 @@ namespace Educational_Medical_platform.Migrations
                     b.HasOne("Educational_Medical_platform.Models.SubCategory", "SubCategory")
                         .WithMany("Blogs")
                         .HasForeignKey("SubCategoryId");
+
+                    b.Navigation("Author");
 
                     b.Navigation("Category");
 
@@ -1608,41 +1599,21 @@ namespace Educational_Medical_platform.Migrations
                     b.Navigation("SubCategory");
                 });
 
-            modelBuilder.Entity("Educational_Medical_platform.Models.CertificateDetails", b =>
-                {
-                    b.HasOne("Educational_Medical_platform.Models.Course", "Course")
-                        .WithMany()
-                        .HasForeignKey("CourseId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Educational_Medical_platform.Models.Student", "Student")
-                        .WithMany()
-                        .HasForeignKey("StudentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Course");
-
-                    b.Navigation("Student");
-                });
-
             modelBuilder.Entity("Educational_Medical_platform.Models.Course", b =>
                 {
+                    b.HasOne("Shoghlana.Core.Models.ApplicationUser", "Instructor")
+                        .WithMany("CoursesCreated")
+                        .HasForeignKey("InstructorId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("Educational_Medical_platform.Models.SubCategory", "SubCategory")
                         .WithMany("Courses")
                         .HasForeignKey("SubCategoryId");
 
+                    b.Navigation("Instructor");
+
                     b.Navigation("SubCategory");
-                });
-
-            modelBuilder.Entity("Educational_Medical_platform.Models.Instructor", b =>
-                {
-                    b.HasOne("Shoghlana.Core.Models.ApplicationUser", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Educational_Medical_platform.Models.Objective", b =>
@@ -1694,40 +1665,6 @@ namespace Educational_Medical_platform.Migrations
                     b.Navigation("Course");
                 });
 
-            modelBuilder.Entity("Educational_Medical_platform.Models.Student", b =>
-                {
-                    b.HasOne("Shoghlana.Core.Models.ApplicationUser", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("Educational_Medical_platform.Models.Student_Courses", b =>
-                {
-                    b.HasOne("Educational_Medical_platform.Models.Course", "Course")
-                        .WithMany()
-                        .HasForeignKey("CourseId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Educational_Medical_platform.Models.Student", "Student")
-                        .WithMany()
-                        .HasForeignKey("StudentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Educational_Medical_platform.Models.CertificateDetails", "CertificateDetails")
-                        .WithMany()
-                        .HasForeignKey("CertificateDetailsStudentId", "CertificateDetailsCourseId");
-
-                    b.Navigation("CertificateDetails");
-
-                    b.Navigation("Course");
-
-                    b.Navigation("Student");
-                });
-
             modelBuilder.Entity("Educational_Medical_platform.Models.SubCategory", b =>
                 {
                     b.HasOne("Educational_Medical_platform.Models.Category", "Category")
@@ -1737,6 +1674,25 @@ namespace Educational_Medical_platform.Migrations
                         .IsRequired();
 
                     b.Navigation("Category");
+                });
+
+            modelBuilder.Entity("Educational_Medical_platform.Models.User_Enrolled_Courses", b =>
+                {
+                    b.HasOne("Educational_Medical_platform.Models.Course", "Course")
+                        .WithMany("EnrolledUsers")
+                        .HasForeignKey("CourseId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("Shoghlana.Core.Models.ApplicationUser", "Student")
+                        .WithMany("EnrolledCourses")
+                        .HasForeignKey("StudentId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("Course");
+
+                    b.Navigation("Student");
                 });
 
             modelBuilder.Entity("Educational_Medical_platform.Models.Video", b =>
@@ -1819,6 +1775,8 @@ namespace Educational_Medical_platform.Migrations
 
             modelBuilder.Entity("Educational_Medical_platform.Models.Course", b =>
                 {
+                    b.Navigation("EnrolledUsers");
+
                     b.Navigation("Objectives");
 
                     b.Navigation("Questions");
@@ -1847,6 +1805,15 @@ namespace Educational_Medical_platform.Migrations
                     b.Navigation("Courses");
 
                     b.Navigation("QuestionBank");
+                });
+
+            modelBuilder.Entity("Shoghlana.Core.Models.ApplicationUser", b =>
+                {
+                    b.Navigation("Blogs");
+
+                    b.Navigation("CoursesCreated");
+
+                    b.Navigation("EnrolledCourses");
                 });
 #pragma warning restore 612, 618
         }

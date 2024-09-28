@@ -94,18 +94,20 @@ namespace Educational_Medical_platform.Controllers
 
             IdentityResult addRoleResult = new IdentityResult();
 
-            if (userDTO.Role == Role.Student)
-            {
-                addRoleResult = await _userManager.AddToRoleAsync(applicationUser, "Student");
-            }
-            else if (userDTO.Role == Role.Instructor)
-            {
-                addRoleResult = await _userManager.AddToRoleAsync(applicationUser, "Instructor");
-            }
-            else if (userDTO.Role == Role.Admin)
-            {
-                addRoleResult = await _userManager.AddToRoleAsync(applicationUser, "Admin");
-            }
+            addRoleResult = await _userManager.AddToRoleAsync(applicationUser , "USER");
+
+            //if (userDTO.Role == Role.Student)
+            //{
+            //    addRoleResult = await _userManager.AddToRoleAsync(applicationUser, "Student");
+            //}
+            //else if (userDTO.Role == Role.Instructor)
+            //{
+            //    addRoleResult = await _userManager.AddToRoleAsync(applicationUser, "Instructor");
+            //}
+            //else if (userDTO.Role == Role.Admin)
+            //{
+            //    addRoleResult = await _userManager.AddToRoleAsync(applicationUser, "Admin");
+            //}
 
             if (!addRoleResult.Succeeded)
             {
@@ -131,79 +133,86 @@ namespace Educational_Medical_platform.Controllers
             _emailService.SendEmailAsync(userDTO.Email, "Email Confiramtion", mailBody);
 
 
-            if (userDTO.Role == Role.Student)
+            return new GeneralResponse()
             {
-                Student student = new Student()
-                {
-                    FirstName = userDTO.FirstName,
-                    LastName = userDTO.LastName,
-                    User = applicationUser,
-                    IsSubscribed = false
-                };
+                IsSuccess = true,
+                Data = applicationUser.Id,
+                Message = "User Account Created and Confiramtion mail has been sent successfully"
+            };
 
-                _studentRepository.Add(student);
 
-                _studentRepository.save();
+            //if (userDTO.Role == Role.Student)
+            //{
+            //    Student student = new Student()
+            //    {
+            //        FirstName = userDTO.FirstName,
+            //        LastName = userDTO.LastName,
+            //        User = applicationUser,
+            //        IsSubscribed = false
+            //    };
 
-                return new GeneralResponse()
-                {
-                    IsSuccess = true,
-                    Data = student.Id,
-                    Message = "Student Account Created and Confiramtion mail has been sent successfully"
-                };
-            }
-            else if (userDTO.Role == Role.Instructor)
-            {
-                Instructor instructor = new Instructor()
-                {
-                    FirstName = userDTO.FirstName,
-                    LastName = userDTO.LastName,
-                    User = applicationUser
-                };
+            //    _studentRepository.Add(student);
 
-                _instructorRepository.Add(instructor);
+            //    _studentRepository.save();
 
-                _instructorRepository.save();
+            //    return new GeneralResponse()
+            //    {
+            //        IsSuccess = true,
+            //        Data = student.Id,
+            //        Message = "Student Account Created and Confiramtion mail has been sent successfully"
+            //    };
+            //}
+            //else if (userDTO.Role == Role.Instructor)
+            //{
+            //    Instructor instructor = new Instructor()
+            //    {
+            //        FirstName = userDTO.FirstName,
+            //        LastName = userDTO.LastName,
+            //        User = applicationUser
+            //    };
 
-                return new GeneralResponse()
-                {
-                    IsSuccess = true,
-                    Data = instructor.Id,
-                    Message = "instructor Account Created and Confiramtion mail has been sent successfully"
-                };
-            }
-            else if (userDTO.Role == Role.Admin)
-            {
-                Admin admin = new Admin()
-                {
-                    FirstName = userDTO.FirstName,
-                    LastName = userDTO.LastName,
-                    User = applicationUser
-                };
+            //    _instructorRepository.Add(instructor);
 
-                var s = _adminRepository.Add(admin);
+            //    _instructorRepository.save();
 
-                _adminRepository.save();
+            //    return new GeneralResponse()
+            //    {
+            //        IsSuccess = true,
+            //        Data = instructor.Id,
+            //        Message = "instructor Account Created and Confiramtion mail has been sent successfully"
+            //    };
+            //}
+            //else if (userDTO.Role == Role.Admin)
+            //{
+            //    Admin admin = new Admin()
+            //    {
+            //        FirstName = userDTO.FirstName,
+            //        LastName = userDTO.LastName,
+            //        User = applicationUser
+            //    };
 
-                return new GeneralResponse()
-                {
-                    IsSuccess = true,
-                    Data = admin.Id,
-                    Message = "admin Account Created and Confiramtion mail has been sent successfully"
-                };
-            }
-            else
-            {
-                return new GeneralResponse()
-                {
-                    IsSuccess = false,
-                    Data = userDTO.Role,
-                    Message = "Invalid Role !",
-                    Status = 103
-                };
-            }
+            //    var s = _adminRepository.Add(admin);
+
+            //    _adminRepository.save();
+
+            //    return new GeneralResponse()
+            //    {
+            //        IsSuccess = true,
+            //        Data = admin.Id,
+            //        Message = "admin Account Created and Confiramtion mail has been sent successfully"
+            //    };
+            //}
+            //else
+            //{
+            //    return new GeneralResponse()
+            //    {
+            //        IsSuccess = false,
+            //        Data = userDTO.Role,
+            //        Message = "Invalid Role !",
+            //        Status = 103
+            //    };
+            //}
         }
-
 
         [HttpGet("confirm-email")]
         public async Task<IActionResult> ConfirmEmail(string userId, string token)
@@ -488,7 +497,6 @@ namespace Educational_Medical_platform.Controllers
                 Message = "Password reset email has been sent."
             };
         }
-
 
         [HttpPost("reset-password")]
         public async Task<ActionResult<GeneralResponse>> ResetPassword(ResetPasswordDTO resetPasswordDTO)

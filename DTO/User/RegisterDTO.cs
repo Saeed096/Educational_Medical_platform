@@ -27,7 +27,7 @@ namespace Educational_Medical_platform.DTO.User
         [RegularExpression(@"^\+?[1-9]\d{1,14}$", ErrorMessage = "Invalid Phone Number. Format: +[country code][number] (e.g., +1234567890).")]
         public string PhoneNumber { get; set; }
 
-        [Required(ErrorMessage = "Role is required")]
-        public Role Role { get; set; }
+        //[Required(ErrorMessage = "Role is required")]
+        //public Role Role { get; set; }
     }
 }
