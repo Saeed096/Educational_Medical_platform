@@ -9,18 +9,25 @@ namespace Shoghlana.EF
     public class ApplicationDBContext : IdentityDbContext<ApplicationUser>
     {
         //public DbSet<Admin> Admins { get; set; }
-        public DbSet<Answer> Answers { get; set; }
-        public DbSet<Blog> Blogs { get; set; }
-        public DbSet<Book> Books { get; set; }
-        public DbSet<Category> Categories { get; set; }
-        public DbSet<Course> Courses { get; set; }
-        public DbSet<Objective> Objectives { get; set; } 
         public DbSet<Question> Questions { get; set; }
-        public DbSet<Requirement> Requirements { get; set; } 
+        public DbSet<Answer> Answers { get; set; }
+
+        public DbSet<Blog> Blogs { get; set; }
+
+        public DbSet<Book> Books { get; set; }
+
+        public DbSet<Category> Categories { get; set; }
+        public DbSet<SubCategory> SubCategories { get; set; }
+
+        public DbSet<Course> Courses { get; set; }
+        public DbSet<Objective> Objectives { get; set; }
+        public DbSet<Requirement> Requirements { get; set; }
+
         public DbSet<StandardTest> StandardTests { get; set; } 
+
         //public DbSet<Student> Students { get; set; } 
-        public DbSet<SubCategory> SubCategories { get; set; } 
         //public DbSet<Instructor> Supervisors { get; set; } 
+
         public DbSet<Video> Videos { get; set; }
         public DbSet<User_Enrolled_Courses> UserEnrolledCourses { get; set; }
         public DbSet<Blog_User_Likes> Blog_User_Likes { get; set; }

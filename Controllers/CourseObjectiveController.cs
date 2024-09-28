@@ -29,7 +29,7 @@ namespace Educational_Medical_platform.Controllers
             {
                 Id = o.Id,
                 CourseId = o.CourseId,
-                Course = o.Course,
+                //Course = o.Course,
                 Description = o.Description
             }).ToList();
 
@@ -61,7 +61,7 @@ namespace Educational_Medical_platform.Controllers
                 {
                     Id = id,
                     CourseId = objective.CourseId,
-                    Course = objective.Course,
+                    //Course = objective.Course,
                     Description = objective.Description
                 };
                 return new GeneralResponse()
@@ -79,8 +79,6 @@ namespace Educational_Medical_platform.Controllers
                 Message = "No objective found for this id."
             };
         }
-
-
 
         [HttpPut]
         public ActionResult<GeneralResponse> Edit([FromForm] UpdateObjectiveDTO objective)

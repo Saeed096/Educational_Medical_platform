@@ -57,7 +57,10 @@ namespace Educational_Medical_platform
             builder.Services.AddScoped<IQuestionRepository, QuestionRepository>();
             builder.Services.AddScoped<IAnswerRepository, AnswerRepository>();
             builder.Services.AddScoped<IStandardTestRepository, StandardTestRepository>();
+
             builder.Services.AddScoped<ICourseRepository, CourseRepository>();
+            builder.Services.AddScoped<ICourseRequirementsRepository, CourseRequirementsRepository>();
+            builder.Services.AddScoped<ICourseObjectiveRepository, CourseObjectiveRepository>();
 
             #endregion
 
@@ -140,8 +143,8 @@ namespace Educational_Medical_platform
                 swagger.SwaggerDoc("v1", new OpenApiInfo
                 {
                     Version = "v1",
-                    Title = "ASP.NET 5 Web API",
-                    Description = " ITI Projrcy"
+                    Title = "ASP.NET Core 8 Web API",
+                    Description = "MedLearn Hub"
                 });
 
                 // To Enable authorization using Swagger (JWT)

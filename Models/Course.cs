@@ -14,6 +14,8 @@ namespace Educational_Medical_platform.Models
         [NotMapped]
         public IFormFile? Thumbnail { get; set; }
 
+        public string? ThumbnailURL { get; set; }
+
         public float DurationInhours { get; set; }
 
         public string? Preview { get; set; }

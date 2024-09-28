@@ -10,9 +10,11 @@ namespace Educational_Medical_platform.Models
 
         public string Description { get; set; }
 
+        public string Reason { get; set; }
+
         public bool IsCorrect { get; set; }
 
-        [ForeignKey("Question")]
+        [ForeignKey(nameof(Question))]
         public int QuestionId { get; set; }
 
         public Question Question { get; set; }
