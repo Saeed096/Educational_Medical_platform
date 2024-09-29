@@ -14,7 +14,7 @@ namespace Educational_Medical_platform.Repositories.Implementations
 
         }
 
-        public bool Exists(int id)
+        public bool Exists(int? id)
         {
             return context.SubCategories.Any(c => c.Id == id);
         }

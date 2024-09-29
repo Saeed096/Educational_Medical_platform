@@ -8,19 +8,26 @@ namespace Educational_Medical_platform.Models
         // 1ry key
         [Key]
         public int Id { get; set; }
+
         public int Number { get; set; }    // no of video in this course videos 
+
         public string Title { get; set; }
-        public string? ThumbnailURL { get; set; }
-        [NotMapped]
-        public IFormFile? Thumbnail { get; set; }
+
+        //public string? ThumbnailURL { get; set; }
+
+        //[NotMapped]
+        //public IFormFile? Thumbnail { get; set; }
+
         public string? Description { get; set; }
+
         public string? videoURL { get; set; }
+
         [NotMapped]
         public IFormFile? video { get; set; }
 
-        [ForeignKey("Course")]
-
+        [ForeignKey(nameof(Course))]
         public int CourseId { get; set; }
+
         public Course Course { get; set; }
 
         // not valuable from saeed opinion

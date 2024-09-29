@@ -34,7 +34,7 @@ namespace Educational_Medical_platform.DTO.Course
 
         public List<GetCourseObjectiveDTO>? Objectives { get; set; }
 
-        //public List<Video> Videos { get; set; }
+        public List<GetVideoDTO>? Videos { get; set; }
 
         //public List<Question>? Questions { get; set; }
 

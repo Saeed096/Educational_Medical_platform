@@ -29,6 +29,7 @@ namespace Shoghlana.EF
         //public DbSet<Instructor> Supervisors { get; set; } 
 
         public DbSet<Video> Videos { get; set; }
+
         public DbSet<User_Enrolled_Courses> UserEnrolledCourses { get; set; }
         public DbSet<Blog_User_Likes> Blog_User_Likes { get; set; }
 

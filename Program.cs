@@ -2,6 +2,7 @@ using Educational_Medical_platform.Helpers;
 using Educational_Medical_platform.Repositories.Implementations;
 using Educational_Medical_platform.Repositories.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -61,6 +62,7 @@ namespace Educational_Medical_platform
             builder.Services.AddScoped<ICourseRepository, CourseRepository>();
             builder.Services.AddScoped<ICourseRequirementsRepository, CourseRequirementsRepository>();
             builder.Services.AddScoped<ICourseObjectiveRepository, CourseObjectiveRepository>();
+            builder.Services.AddScoped<IVideoRepository, VideoRepository>();
 
             #endregion
 
@@ -176,6 +178,17 @@ namespace Educational_Medical_platform
             builder.Services.Configure<DataProtectionTokenProviderOptions>(options =>
                 options.TokenLifespan = TimeSpan.FromHours(3)); // Example: 3 hours
 
+            builder.WebHost.ConfigureKestrel(options =>
+            {
+                // Set the maximum request body size to 1 GB
+                options.Limits.MaxRequestBodySize = 1 * 1024 * 1024 * 1024 ; // 1 GB in bytes
+            });
+
+            // Configure form options to handle large file uploads
+            builder.Services.Configure<FormOptions>(options =>
+            {
+                options.MultipartBodyLengthLimit = 1 * 1024 * 1024 * 1024; // 1 GB in bytes
+            });
 
             #endregion
 
