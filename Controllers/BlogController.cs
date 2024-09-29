@@ -1,10 +1,12 @@
 ﻿using Educational_Medical_platform.DTO.Blog;
 using Educational_Medical_platform.Models;
+using Educational_Medical_platform.Repositories.Implementations;
 using Educational_Medical_platform.Repositories.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Shoghlana.Api.Response;
 using Shoghlana.Core.Models;
+using System.Linq.Expressions;
 using System.Reflection.Metadata;
 
 namespace Educational_Medical_platform.Controllers
@@ -16,16 +18,30 @@ namespace Educational_Medical_platform.Controllers
         private readonly IBlogRepository _blogRepository;
         private readonly IBlog_User_LikesRepository _user_LikesRepository;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly ICategoryRepository _categoryRepository;
+        private readonly ISubCategoryRepository _subCategoryRepository;
+        private readonly IQuestionRepository _questionRepository;
+        private readonly IAnswerRepository _answerRepository;
         private readonly string _imagesPath;
 
         ///TODO : Don't Forget to make end point for assigning question to blog 
         public BlogController(IBlogRepository blogRepository,
             IBlog_User_LikesRepository user_LikesRepository,
-            UserManager<ApplicationUser> userManager)
+            UserManager<ApplicationUser> userManager,
+            ICategoryRepository categoryRepository,
+            ISubCategoryRepository subCategoryRepository,
+            IQuestionRepository questionRepository ,
+            IAnswerRepository answerRepository)
+
+
         {
             _blogRepository = blogRepository;
             _user_LikesRepository = user_LikesRepository;
             _userManager = userManager;
+            _categoryRepository = categoryRepository;
+            _subCategoryRepository = subCategoryRepository;
+            _questionRepository = questionRepository;
+            _answerRepository = answerRepository;
             _imagesPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Images", "Blogs");
         }
 
@@ -39,6 +55,7 @@ namespace Educational_Medical_platform.Controllers
 
                 CategoryId = b.CategoryId,
                 SubCategoryId = b.SubCategoryId,
+                AuthorId = b.AuthorId,
 
                 Intro = b.Intro,
                 Content = b.Content,
@@ -89,6 +106,8 @@ namespace Educational_Medical_platform.Controllers
 
                 CategoryId = blog.CategoryId,
                 SubCategoryId = blog.SubCategoryId,
+                AuthorId = blog.AuthorId,
+
 
                 Intro = blog.Intro,
                 Content = blog.Content,
@@ -116,6 +135,8 @@ namespace Educational_Medical_platform.Controllers
 
                 CategoryId = b.CategoryId,
                 SubCategoryId = b.SubCategoryId,
+                AuthorId = b.AuthorId,
+
 
                 Intro = b.Intro,
                 Content = b.Content,
@@ -144,6 +165,46 @@ namespace Educational_Medical_platform.Controllers
             };
         }
 
+        [HttpGet("Author/{id}")]
+        public ActionResult<GeneralResponse> GetByAuthorId(string id)
+        {
+            List<GetBlogsDTO>? blogsDTOs = _blogRepository.FindAll(includes: null, b => b.AuthorId == id).Select(b => new GetBlogsDTO()
+            {
+                Id = b.Id,
+                Title = b.Title,
+
+                CategoryId = b.CategoryId,
+                SubCategoryId = b.SubCategoryId,
+                AuthorId = b.AuthorId,
+
+
+                Intro = b.Intro,
+                Content = b.Content,
+                Conclusion = b.Conclusion,
+
+                Image = b.Image,
+                ImageURL = b.ImageURL,
+                LikesNumber = b.LikesNumber,
+
+            }).ToList();
+
+            if (blogsDTOs is null || !blogsDTOs.Any())
+            {
+                return new GeneralResponse()
+                {
+                    IsSuccess = false,
+                    Data = null,
+                    Message = $"No blog found for this AuthorID : {id}"
+                };
+            }
+
+            return new GeneralResponse()
+            {
+                IsSuccess = true,
+                Data = blogsDTOs,
+            };
+        }
+
         [HttpGet("subcategory/{id:int}")]
         public ActionResult<GeneralResponse> GetBySubCategoryId(int id)
         {
@@ -154,6 +215,8 @@ namespace Educational_Medical_platform.Controllers
 
                 CategoryId = b.CategoryId,
                 SubCategoryId = b.SubCategoryId,
+                AuthorId = b.AuthorId,
+
 
                 Intro = b.Intro,
                 Content = b.Content,
@@ -185,6 +248,18 @@ namespace Educational_Medical_platform.Controllers
         [HttpPost]
         public async Task<ActionResult<GeneralResponse>> Add([FromForm] AddBlogDTO createBlogDTO)
         {
+            var user = await _userManager.FindByIdAsync(createBlogDTO.AuthorId);
+
+            if (user is null)
+            {
+                return new GeneralResponse()
+                {
+                    IsSuccess = false,
+                    Status = 404,
+                    Message = $"No User Found with this ID : {createBlogDTO.AuthorId}"
+                };
+            }
+
             string fileName = "";
 
             if (createBlogDTO.Image != null)
@@ -212,39 +287,55 @@ namespace Educational_Medical_platform.Controllers
                 createBlogDTO.Image = null; // Remove the image from DTO after saving
             }
 
-            /// TODO : Uncomment when maher Finshes CategoryRepo & SubCategoryRepo
             #region Check if Category & SubCategory exists
-            //// Check if Category exists
-            //if (createBlogDTO.CategoryId != null && !_categoryRepository.Exists(createBlogDTO.CategoryId.Value))
-            //{
-            //    return new GeneralResponse()
-            //    {
-            //        IsSuccess = false,
-            //        Message = $"Category with ID {createBlogDTO.CategoryId} does not exist."
-            //    };
-            //}
 
-            //// Check if SubCategory exists
-            //if (createBlogDTO.SubCategoryId != null && !_subCategoryRepository.Exists(createBlogDTO.SubCategoryId.Value))
-            //{
-            //    return new GeneralResponse()
-            //    {
-            //        IsSuccess = false,
-            //        Message = $"SubCategory with ID {createBlogDTO.SubCategoryId} does not exist."
-            //    };
-            //} 
+            // Check if Category exists
+            if (createBlogDTO.CategoryId != 0 && !_categoryRepository.Exists(createBlogDTO.CategoryId))
+            {
+                return new GeneralResponse()
+                {
+                    IsSuccess = false,
+                    Message = $"Category with ID {createBlogDTO.CategoryId} does not exist."
+                };
+            }
+
+            if (createBlogDTO.SubCategoryId != null)
+            {
+                // Check if SubCategory exists
+                if (createBlogDTO.SubCategoryId != null && !_subCategoryRepository.Exists(createBlogDTO.SubCategoryId.Value))
+                {
+                    return new GeneralResponse()
+                    {
+                        IsSuccess = false,
+                        Message = $"SubCategory with ID {createBlogDTO.SubCategoryId} does not exist."
+                    };
+                }
+
+                // Check if SubCategory is related to the category
+                var subcategory = _subCategoryRepository.GetById((int)createBlogDTO.SubCategoryId);
+
+                if (subcategory.CategoryId != createBlogDTO.CategoryId)
+                {
+                    return new GeneralResponse()
+                    {
+                        IsSuccess = false,
+                        Message = $"SubCategory with ID {createBlogDTO.SubCategoryId} does not exist in the Categoru with ID :{createBlogDTO.CategoryId}"
+                    };
+                }
+            }
+
             #endregion
-            /// TODO : Dont forget to check alo if the subcategoryId exists in the category
 
             var blog = new Blog
             {
                 Title = createBlogDTO.Title,
+                AuthorId = createBlogDTO.AuthorId,
 
                 Intro = createBlogDTO.Intro,
                 Content = createBlogDTO.Content,
                 Conclusion = createBlogDTO.Conclusion,
 
-                SubCategoryId = createBlogDTO.SubCategoryId,
+                SubCategoryId = createBlogDTO.SubCategoryId ?? null,
                 CategoryId = createBlogDTO.CategoryId,
                 ImageURL = $"/Images/Blogs/{fileName}"
             };
@@ -252,10 +343,24 @@ namespace Educational_Medical_platform.Controllers
             _blogRepository.Add(blog);
             await _blogRepository.SaveAsync();
 
+            GetBlogsDTO blogDTO = new GetBlogsDTO()
+            {
+                Title = createBlogDTO.Title,
+                AuthorId = createBlogDTO.AuthorId,
+
+                Intro = createBlogDTO.Intro,
+                Content = createBlogDTO.Content,
+                Conclusion = createBlogDTO.Conclusion,
+
+                SubCategoryId = createBlogDTO.SubCategoryId ?? null,
+                CategoryId = createBlogDTO.CategoryId,
+                ImageURL = $"/Images/Blogs/{fileName}"
+            };
+
             return new GeneralResponse()
             {
                 IsSuccess = true,
-                Data = blog,
+                Data = blogDTO,
                 Message = "Blog added successfully."
             };
         }
@@ -275,6 +380,46 @@ namespace Educational_Medical_platform.Controllers
                     Message = "Blog not found."
                 };
             }
+
+            #region Check if Category & SubCategory exists
+
+            // Check if Category exists
+            if (updateBlogDTO.CategoryId != 0 && !_categoryRepository.Exists(updateBlogDTO.CategoryId))
+            {
+                return new GeneralResponse()
+                {
+                    IsSuccess = false,
+                    Message = $"Category with ID {updateBlogDTO.CategoryId} does not exist."
+                };
+            }
+
+            if (updateBlogDTO.SubCategoryId != null)
+            {
+                // Check if SubCategory exists
+                if (updateBlogDTO.SubCategoryId != null && !_subCategoryRepository.Exists(updateBlogDTO.SubCategoryId.Value))
+                {
+                    return new GeneralResponse()
+                    {
+                        IsSuccess = false,
+                        Message = $"SubCategory with ID {updateBlogDTO.SubCategoryId} does not exist."
+                    };
+                }
+
+                // Check if SubCategory is related to the category
+                var subcategory = _subCategoryRepository.GetById((int)updateBlogDTO.SubCategoryId);
+
+                if (subcategory.CategoryId != updateBlogDTO.CategoryId)
+                {
+                    return new GeneralResponse()
+                    {
+                        IsSuccess = false,
+                        Message = $"SubCategory with ID {updateBlogDTO.SubCategoryId} does not exist in the Categoru with ID :{updateBlogDTO.CategoryId}"
+                    };
+                }
+            }
+
+            #endregion
+
 
             if (updateBlogDTO.Image != null)
             {
@@ -307,17 +452,29 @@ namespace Educational_Medical_platform.Controllers
             blog.Content = updateBlogDTO.Content;
             blog.Conclusion = updateBlogDTO.Conclusion;
 
-            blog.SubCategoryId = updateBlogDTO.SubCategoryId;
+            blog.SubCategoryId = updateBlogDTO.SubCategoryId ?? null;
             blog.CategoryId = updateBlogDTO.CategoryId;
             //blog.ImageURL = fileName;
 
             _blogRepository.Update(blog);
             await _blogRepository.SaveAsync();
 
+            GetBlogsDTO blogDTO = new GetBlogsDTO()
+            {
+                Title = updateBlogDTO.Title,
+
+                Intro = updateBlogDTO.Intro,
+                Content = updateBlogDTO.Content,
+                Conclusion = updateBlogDTO.Conclusion,
+
+                SubCategoryId = updateBlogDTO.SubCategoryId ?? null,
+                CategoryId = updateBlogDTO.CategoryId,
+            };
+
             return new GeneralResponse()
             {
                 IsSuccess = true,
-                Data = blog,
+                Data = blogDTO,
                 Message = "Blog updated successfully."
             };
         }
@@ -336,6 +493,26 @@ namespace Educational_Medical_platform.Controllers
                 };
             }
 
+            // Delete related questions
+            var questions =  _questionRepository.FindAll(criteria: q => q.BlogId == id, includes: new[] { "Answers" }); // Get related questions
+
+            if (questions != null && questions.Any())
+            {
+                foreach (var question in questions)
+                {
+                    // Delete all related answers for each question
+                    _answerRepository.DeleteRange(question.Answers);
+                }
+
+                // Save the answer deletions before deleting questions
+                await _answerRepository.SaveAsync();
+
+                // Now delete all the questions
+                _questionRepository.DeleteRange(questions);
+                await _questionRepository.SaveAsync();
+            }
+
+
             if (!string.IsNullOrEmpty(blog.ImageURL))
             {
                 var imagePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", blog.ImageURL.TrimStart('/'));
@@ -351,7 +528,7 @@ namespace Educational_Medical_platform.Controllers
             return new GeneralResponse()
             {
                 IsSuccess = true,
-                Message = "Blog deleted successfully."
+                Message = "Blog and all of it's questions deleted successfully."
             };
         }
 

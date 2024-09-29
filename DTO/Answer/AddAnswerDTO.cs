@@ -9,6 +9,9 @@ namespace Educational_Medical_platform.DTO.Answer
         public string Description { get; set; }
 
         [Required]
+        public string Reason { get; set; }
+
+        [Required]
         public bool IsCorrect { get; set; }
     }
 }

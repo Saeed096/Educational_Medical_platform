@@ -53,6 +53,7 @@ namespace Educational_Medical_platform.Controllers
                     Id = answer.Id,
                     QuestionId = answer.QuestionId,
                     Description = answer.Description,
+                    Reason = answer.Reason,
                     IsCorrect = answer.IsCorrect,
                 }).ToList(),
             }).ToList();
@@ -103,6 +104,7 @@ namespace Educational_Medical_platform.Controllers
                     Id = answer.Id,
                     QuestionId = answer.QuestionId,
                     Description = answer.Description,
+                    Reason = answer.Reason,
                     IsCorrect = answer.IsCorrect,
                 }).ToList(),
             };
@@ -142,6 +144,7 @@ namespace Educational_Medical_platform.Controllers
                     Id = answer.Id,
                     QuestionId = answer.QuestionId,
                     Description = answer.Description,
+                    Reason = answer.Reason,
                     IsCorrect = answer.IsCorrect,
                 }).ToList(),
             }).ToList();
@@ -192,6 +195,7 @@ namespace Educational_Medical_platform.Controllers
                     Id = answer.Id,
                     QuestionId = answer.QuestionId,
                     Description = answer.Description,
+                    Reason = answer.Reason,
                     IsCorrect = answer.IsCorrect,
                 }).ToList(),
             }).ToList();
@@ -241,6 +245,7 @@ namespace Educational_Medical_platform.Controllers
                     Id = answer.Id,
                     QuestionId = answer.QuestionId,
                     Description = answer.Description,
+                    Reason = answer.Reason,
                     IsCorrect = answer.IsCorrect,
                 }).ToList(),
             }).ToList();
@@ -291,6 +296,7 @@ namespace Educational_Medical_platform.Controllers
                     Id = answer.Id,
                     QuestionId = answer.QuestionId,
                     Description = answer.Description,
+                    Reason = answer.Reason,
                     IsCorrect = answer.IsCorrect,
                 }).ToList(),
             }).ToList();
@@ -364,6 +370,7 @@ namespace Educational_Medical_platform.Controllers
                 List<Answer> answers = questionDTO.Answers.Select(a => new Answer
                 {
                     Description = a.Description,
+                    Reason = a.Reason,
                     IsCorrect = a.IsCorrect,
                     QuestionId = question.Id
                 }).ToList();
@@ -444,6 +451,7 @@ namespace Educational_Medical_platform.Controllers
                 List<Answer> answers = questionDTO.Answers.Select(a => new Answer
                 {
                     Description = a.Description,
+                    Reason = a.Reason,
                     IsCorrect = a.IsCorrect,
                     QuestionId = question.Id
                 }).ToList();
@@ -523,6 +531,7 @@ namespace Educational_Medical_platform.Controllers
                 List<Answer> answers = questionDTO.Answers.Select(a => new Answer
                 {
                     Description = a.Description,
+                    Reason = a.Reason,
                     IsCorrect = a.IsCorrect,
                     QuestionId = question.Id
                 }).ToList();

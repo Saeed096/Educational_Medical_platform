@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Shoghlana.Core.Models;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Educational_Medical_platform.Models
@@ -27,15 +28,28 @@ namespace Educational_Medical_platform.Models
         [StringLength(maximumLength: 2000, MinimumLength = 100, ErrorMessage = "Conclusion Must be within (100-2000) chars")]
         public string? Conclusion { get; set; }
 
-        [ForeignKey("SubCategory")]
+        //--------------------------------------
+
+        [ForeignKey(nameof(Author))]
+        public string AuthorId { get; set; }
+
+        public ApplicationUser Author { get; set; }
+
+        //--------------------------------------
+
+        [ForeignKey(nameof(SubCategory))]
         public int? SubCategoryId { get; set; }
 
         public SubCategory? SubCategory { get; set; }
 
-        [ForeignKey("Category")]
-        public int? CategoryId { get; set; }
+        //--------------------------------------
 
-        public Category? Category { get; set; }
+        [ForeignKey(nameof(Category))]
+        public int CategoryId { get; set; }
+
+        public Category Category { get; set; }
+
+        //--------------------------------------
 
         public List<Question>? Questions { get; set; }
 

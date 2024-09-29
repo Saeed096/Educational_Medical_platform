@@ -12,8 +12,8 @@ using Shoghlana.EF;
 namespace Educational_Medical_platform.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    [Migration("20240918190926_QuestionsAndAnswers")]
-    partial class QuestionsAndAnswers
+    [Migration("20240928115306_AnswerReason")]
+    partial class AnswerReason
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,34 +24,6 @@ namespace Educational_Medical_platform.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
-
-            modelBuilder.Entity("Educational_Medical_platform.Models.Admin", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("FirstName")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("LastName")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Admins");
-                });
 
             modelBuilder.Entity("Educational_Medical_platform.Models.Answer", b =>
                 {
@@ -71,6 +43,10 @@ namespace Educational_Medical_platform.Migrations
                     b.Property<int>("QuestionId")
                         .HasColumnType("int");
 
+                    b.Property<string>("Reason")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("QuestionId");
@@ -83,420 +59,480 @@ namespace Educational_Medical_platform.Migrations
                             Id = 1,
                             Description = "Cell",
                             IsCorrect = true,
-                            QuestionId = 1
+                            QuestionId = 1,
+                            Reason = "Cells are the basic building blocks of life."
                         },
                         new
                         {
                             Id = 2,
                             Description = "Tissue",
                             IsCorrect = false,
-                            QuestionId = 1
+                            QuestionId = 1,
+                            Reason = "Tissues are made up of cells, but they are not the smallest unit of life."
                         },
                         new
                         {
                             Id = 3,
                             Description = "Organ",
                             IsCorrect = false,
-                            QuestionId = 1
+                            QuestionId = 1,
+                            Reason = "Organs are composed of tissues, which consist of cells."
                         },
                         new
                         {
                             Id = 4,
                             Description = "Mitochondria",
                             IsCorrect = true,
-                            QuestionId = 2
+                            QuestionId = 2,
+                            Reason = "Mitochondria are known as the powerhouse of the cell."
                         },
                         new
                         {
                             Id = 5,
                             Description = "Nucleus",
                             IsCorrect = false,
-                            QuestionId = 2
+                            QuestionId = 2,
+                            Reason = "The nucleus contains the cell's genetic material, but does not produce energy."
                         },
                         new
                         {
                             Id = 6,
                             Description = "Ribosome",
                             IsCorrect = false,
-                            QuestionId = 2
+                            QuestionId = 2,
+                            Reason = "Ribosomes are responsible for protein synthesis, not energy production."
                         },
                         new
                         {
                             Id = 7,
                             Description = "Protein synthesis",
                             IsCorrect = true,
-                            QuestionId = 3
+                            QuestionId = 3,
+                            Reason = "This is the primary function of ribosomes in the cell."
                         },
                         new
                         {
                             Id = 8,
                             Description = "Energy production",
                             IsCorrect = false,
-                            QuestionId = 3
+                            QuestionId = 3,
+                            Reason = "Energy production occurs in the mitochondria, not during protein synthesis."
                         },
                         new
                         {
                             Id = 9,
                             Description = "DNA replication",
                             IsCorrect = false,
-                            QuestionId = 3
+                            QuestionId = 3,
+                            Reason = "DNA replication is a separate process from protein synthesis."
                         },
                         new
                         {
                             Id = 10,
                             Description = "Protects the cell",
                             IsCorrect = true,
-                            QuestionId = 4
+                            QuestionId = 4,
+                            Reason = "The cell membrane protects the cell from its environment."
                         },
                         new
                         {
                             Id = 11,
                             Description = "Stores DNA",
                             IsCorrect = false,
-                            QuestionId = 4
+                            QuestionId = 4,
+                            Reason = "DNA is stored in the nucleus, not the cell membrane."
                         },
                         new
                         {
                             Id = 12,
                             Description = "Produces energy",
                             IsCorrect = false,
-                            QuestionId = 4
+                            QuestionId = 4,
+                            Reason = "Energy production occurs in mitochondria, not the cell membrane."
                         },
                         new
                         {
                             Id = 13,
                             Description = "Movement of water",
                             IsCorrect = true,
-                            QuestionId = 5
+                            QuestionId = 5,
+                            Reason = "Osmosis is the movement of water across a membrane."
                         },
                         new
                         {
                             Id = 14,
                             Description = "Transport of nutrients",
                             IsCorrect = false,
-                            QuestionId = 5
+                            QuestionId = 5,
+                            Reason = "Nutrient transport occurs via active and passive transport mechanisms, not osmosis."
                         },
                         new
                         {
                             Id = 15,
                             Description = "Protein synthesis",
                             IsCorrect = false,
-                            QuestionId = 5
+                            QuestionId = 5,
+                            Reason = "Protein synthesis involves ribosomes, not the movement of water."
                         },
                         new
                         {
                             Id = 16,
                             Description = "Breaks down food",
                             IsCorrect = true,
-                            QuestionId = 6
+                            QuestionId = 6,
+                            Reason = "The digestive system's primary role is to break down food."
                         },
                         new
                         {
                             Id = 17,
                             Description = "Circulates blood",
                             IsCorrect = false,
-                            QuestionId = 6
+                            QuestionId = 6,
+                            Reason = "Blood circulation is the role of the circulatory system."
                         },
                         new
                         {
                             Id = 18,
                             Description = "Transports oxygen",
                             IsCorrect = false,
-                            QuestionId = 6
+                            QuestionId = 6,
+                            Reason = "Oxygen transport is handled by the respiratory system."
                         },
                         new
                         {
                             Id = 19,
                             Description = "Through the walls of the intestines",
                             IsCorrect = true,
-                            QuestionId = 7
+                            QuestionId = 7,
+                            Reason = "Nutrients are absorbed through the intestinal walls into the bloodstream."
                         },
                         new
                         {
                             Id = 20,
                             Description = "Via the bloodstream",
                             IsCorrect = false,
-                            QuestionId = 7
+                            QuestionId = 7,
+                            Reason = "The bloodstream transports nutrients after they are absorbed."
                         },
                         new
                         {
                             Id = 21,
                             Description = "By chewing",
                             IsCorrect = false,
-                            QuestionId = 7
+                            QuestionId = 7,
+                            Reason = "Chewing is part of the mechanical digestion process, not nutrient absorption."
                         },
                         new
                         {
                             Id = 22,
                             Description = "Mouth, esophagus, stomach",
                             IsCorrect = true,
-                            QuestionId = 8
+                            QuestionId = 8,
+                            Reason = "These are the primary organs involved in the digestive process."
                         },
                         new
                         {
                             Id = 23,
                             Description = "Brain, heart, lungs",
                             IsCorrect = false,
-                            QuestionId = 8
+                            QuestionId = 8,
+                            Reason = "These organs are not directly involved in digestion."
                         },
                         new
                         {
                             Id = 24,
                             Description = "Skin, muscles, bones",
                             IsCorrect = false,
-                            QuestionId = 8
+                            QuestionId = 8,
+                            Reason = "These are not part of the digestive system."
                         },
                         new
                         {
                             Id = 25,
                             Description = "They speed up chemical reactions",
                             IsCorrect = true,
-                            QuestionId = 9
+                            QuestionId = 9,
+                            Reason = "Enzymes are biological catalysts that accelerate chemical reactions."
                         },
                         new
                         {
                             Id = 26,
                             Description = "They are absorbed",
                             IsCorrect = false,
-                            QuestionId = 9
+                            QuestionId = 9,
+                            Reason = "Enzymes are not absorbed; they assist in reactions."
                         },
                         new
                         {
                             Id = 27,
                             Description = "They break down food",
                             IsCorrect = false,
-                            QuestionId = 9
+                            QuestionId = 9,
+                            Reason = "While enzymes help in breaking down food, they do not do so independently."
                         },
                         new
                         {
                             Id = 28,
                             Description = "The wave-like motion that moves food",
                             IsCorrect = true,
-                            QuestionId = 10
+                            QuestionId = 10,
+                            Reason = "Peristalsis is the wave-like motion that moves food through the digestive tract."
                         },
                         new
                         {
                             Id = 29,
                             Description = "The absorption of nutrients",
                             IsCorrect = false,
-                            QuestionId = 10
+                            QuestionId = 10,
+                            Reason = "Nutrient absorption occurs after food is moved through the digestive tract."
                         },
                         new
                         {
                             Id = 30,
                             Description = "The secretion of enzymes",
                             IsCorrect = false,
-                            QuestionId = 10
+                            QuestionId = 10,
+                            Reason = "Enzyme secretion assists in digestion but is not the motion that moves food."
                         },
                         new
                         {
                             Id = 31,
                             Description = "Organs and systems",
                             IsCorrect = true,
-                            QuestionId = 11
+                            QuestionId = 11,
+                            Reason = "These are the correct components when discussing body structures."
                         },
                         new
                         {
                             Id = 32,
                             Description = "Cells only",
                             IsCorrect = false,
-                            QuestionId = 11
+                            QuestionId = 11,
+                            Reason = "Cells are part of organs and systems, not the only component."
                         },
                         new
                         {
                             Id = 33,
                             Description = "Muscles only",
                             IsCorrect = false,
-                            QuestionId = 11
+                            QuestionId = 11,
+                            Reason = "Muscles are just one type of tissue, which is part of organs and systems."
                         },
                         new
                         {
                             Id = 34,
                             Description = "By contracting and relaxing",
                             IsCorrect = true,
-                            QuestionId = 12
+                            QuestionId = 12,
+                            Reason = "Muscles work by contracting and relaxing to produce movement."
                         },
                         new
                         {
                             Id = 35,
                             Description = "By sending signals",
                             IsCorrect = false,
-                            QuestionId = 12
+                            QuestionId = 12,
+                            Reason = "While signaling is important, it does not describe how muscles function directly."
                         },
                         new
                         {
                             Id = 36,
                             Description = "By absorbing nutrients",
                             IsCorrect = false,
-                            QuestionId = 12
+                            QuestionId = 12,
+                            Reason = "Muscles do not absorb nutrients; this is a function of the digestive system."
                         },
                         new
                         {
                             Id = 37,
                             Description = "To understand the human body",
                             IsCorrect = true,
-                            QuestionId = 13
+                            QuestionId = 13,
+                            Reason = "Anatomy is studied to understand the structure and function of the body."
                         },
                         new
                         {
                             Id = 38,
                             Description = "To pass exams",
                             IsCorrect = false,
-                            QuestionId = 13
+                            QuestionId = 13,
+                            Reason = "While exams may test knowledge, they are not the purpose of studying anatomy."
                         },
                         new
                         {
                             Id = 39,
                             Description = "To perform surgeries",
                             IsCorrect = false,
-                            QuestionId = 13
+                            QuestionId = 13,
+                            Reason = "While anatomy knowledge is important for surgeries, it is not the sole purpose of the study."
                         },
                         new
                         {
                             Id = 40,
                             Description = "Nervous, muscular, skeletal",
                             IsCorrect = true,
-                            QuestionId = 14
+                            QuestionId = 14,
+                            Reason = "These are major body systems."
                         },
                         new
                         {
                             Id = 41,
                             Description = "Respiratory, circulatory",
                             IsCorrect = false,
-                            QuestionId = 14
+                            QuestionId = 14,
+                            Reason = "While important, they do not encompass all major systems."
                         },
                         new
                         {
                             Id = 42,
                             Description = "Digestive, excretory",
                             IsCorrect = false,
-                            QuestionId = 14
+                            QuestionId = 14,
+                            Reason = "These systems are essential but are not all-inclusive of body systems."
                         },
                         new
                         {
                             Id = 43,
                             Description = "Controls body functions",
                             IsCorrect = true,
-                            QuestionId = 15
+                            QuestionId = 15,
+                            Reason = "The nervous system regulates bodily functions."
                         },
                         new
                         {
                             Id = 44,
                             Description = "Transports nutrients",
                             IsCorrect = false,
-                            QuestionId = 15
+                            QuestionId = 15,
+                            Reason = "Nutrient transport is handled by the circulatory system."
                         },
                         new
                         {
                             Id = 45,
                             Description = "Provides energy",
                             IsCorrect = false,
-                            QuestionId = 15
+                            QuestionId = 15,
+                            Reason = "Energy provision is not a primary role of the nervous system."
                         },
                         new
                         {
                             Id = 46,
                             Description = "To carry oxygen",
                             IsCorrect = true,
-                            QuestionId = 16
+                            QuestionId = 16,
+                            Reason = "Hemoglobin in red blood cells carries oxygen."
                         },
                         new
                         {
                             Id = 47,
                             Description = "To fight infections",
                             IsCorrect = false,
-                            QuestionId = 16
+                            QuestionId = 16,
+                            Reason = "Fighting infections is primarily the role of the immune system."
                         },
                         new
                         {
                             Id = 48,
                             Description = "To clot blood",
                             IsCorrect = false,
-                            QuestionId = 16
+                            QuestionId = 16,
+                            Reason = "Blood clotting is done by platelets and certain plasma proteins."
                         },
                         new
                         {
                             Id = 49,
                             Description = "By recognizing pathogens",
                             IsCorrect = true,
-                            QuestionId = 17
+                            QuestionId = 17,
+                            Reason = "The immune system identifies and targets pathogens."
                         },
                         new
                         {
                             Id = 50,
                             Description = "By producing energy",
                             IsCorrect = false,
-                            QuestionId = 17
+                            QuestionId = 17,
+                            Reason = "Energy production is not a function of the immune system."
                         },
                         new
                         {
                             Id = 51,
                             Description = "By storing nutrients",
                             IsCorrect = false,
-                            QuestionId = 17
+                            QuestionId = 17,
+                            Reason = "Nutrient storage is a function of the liver and other organs."
                         },
                         new
                         {
                             Id = 52,
                             Description = "Interphase, mitosis, cytokinesis",
                             IsCorrect = true,
-                            QuestionId = 18
+                            QuestionId = 18,
+                            Reason = "These are the stages of the cell cycle."
                         },
                         new
                         {
                             Id = 53,
                             Description = "Prophase, metaphase, anaphase",
                             IsCorrect = false,
-                            QuestionId = 18
+                            QuestionId = 18,
+                            Reason = "These terms refer to stages of mitosis, not the entire cell cycle."
                         },
                         new
                         {
                             Id = 54,
                             Description = "Meiosis only",
                             IsCorrect = false,
-                            QuestionId = 18
+                            QuestionId = 18,
+                            Reason = "Meiosis is a specific type of cell division, separate from the cell cycle."
                         },
                         new
                         {
                             Id = 55,
                             Description = "Programmed cell death",
                             IsCorrect = true,
-                            QuestionId = 19
+                            QuestionId = 19,
+                            Reason = "Apoptosis is the process of programmed cell death."
                         },
                         new
                         {
                             Id = 56,
                             Description = "Cell growth",
                             IsCorrect = false,
-                            QuestionId = 19
+                            QuestionId = 19,
+                            Reason = "Cell growth is a separate process from apoptosis."
                         },
                         new
                         {
                             Id = 57,
                             Description = "Cell division",
                             IsCorrect = false,
-                            QuestionId = 19
+                            QuestionId = 19,
+                            Reason = "Cell division is the process of replicating cells, distinct from programmed cell death."
                         },
                         new
                         {
                             Id = 58,
                             Description = "Carries genetic information",
                             IsCorrect = true,
-                            QuestionId = 20
+                            QuestionId = 20,
+                            Reason = "DNA is the molecule that carries genetic information."
                         },
                         new
                         {
                             Id = 59,
                             Description = "Produces energy",
                             IsCorrect = false,
-                            QuestionId = 20
+                            QuestionId = 20,
+                            Reason = "Energy production is not a role of DNA."
                         },
                         new
                         {
                             Id = 60,
                             Description = "Fights diseases",
                             IsCorrect = false,
-                            QuestionId = 20
+                            QuestionId = 20,
+                            Reason = "DNA does not directly fight diseases; it contains the instructions for making proteins."
                         });
                 });
 
@@ -508,7 +544,11 @@ namespace Educational_Medical_platform.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int?>("CategoryId")
+                    b.Property<string>("AuthorId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("CategoryId")
                         .HasColumnType("int");
 
                     b.Property<string>("Conclusion")
@@ -540,6 +580,8 @@ namespace Educational_Medical_platform.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("AuthorId");
+
                     b.HasIndex("CategoryId");
 
                     b.HasIndex("SubCategoryId");
@@ -550,6 +592,7 @@ namespace Educational_Medical_platform.Migrations
                         new
                         {
                             Id = 1,
+                            AuthorId = "2b222b22-2222-2222-2222-222222222222",
                             CategoryId = 1,
                             Conclusion = "Understanding human anatomy is essential for medical professionals and enthusiasts alike.",
                             Content = "This blog covers the basics of human anatomy...",
@@ -561,6 +604,7 @@ namespace Educational_Medical_platform.Migrations
                         new
                         {
                             Id = 2,
+                            AuthorId = "2b222b22-2222-2222-2222-222222222222",
                             CategoryId = 1,
                             Conclusion = "The study of comparative anatomy is crucial for evolutionary biology and understanding the functional adaptations of organisms.",
                             Content = "This blog explores comparative anatomy across species...",
@@ -572,6 +616,7 @@ namespace Educational_Medical_platform.Migrations
                         new
                         {
                             Id = 3,
+                            AuthorId = "2b222b22-2222-2222-2222-222222222222",
                             CategoryId = 2,
                             Conclusion = "A deep understanding of cell physiology is vital for advancements in medical science.",
                             Content = "Understanding the basics of cell physiology...",
@@ -583,6 +628,7 @@ namespace Educational_Medical_platform.Migrations
                         new
                         {
                             Id = 4,
+                            AuthorId = "2b222b22-2222-2222-2222-222222222222",
                             CategoryId = 1,
                             Conclusion = "This overview serves as a foundational step towards more detailed studies of specific systems.",
                             Content = "This blog provides an overview of human anatomy...",
@@ -595,6 +641,7 @@ namespace Educational_Medical_platform.Migrations
                         new
                         {
                             Id = 5,
+                            AuthorId = "3c333c33-3333-3333-3333-333333333333",
                             CategoryId = 2,
                             Conclusion = "Grasping systemic physiology is crucial for understanding how the body maintains homeostasis.",
                             Content = "An introductory blog on systemic physiology...",
@@ -607,6 +654,7 @@ namespace Educational_Medical_platform.Migrations
                         new
                         {
                             Id = 6,
+                            AuthorId = "3c333c33-3333-3333-3333-333333333333",
                             CategoryId = 3,
                             Conclusion = "Understanding these applications is essential for safe and effective patient care.",
                             Content = "Exploring clinical applications in pharmacology...",
@@ -619,6 +667,7 @@ namespace Educational_Medical_platform.Migrations
                         new
                         {
                             Id = 7,
+                            AuthorId = "3c333c33-3333-3333-3333-333333333333",
                             CategoryId = 4,
                             Conclusion = "A solid grasp of pathology is necessary for any healthcare professional.",
                             Content = "A comprehensive overview of pathology...",
@@ -722,27 +771,6 @@ namespace Educational_Medical_platform.Migrations
                         });
                 });
 
-            modelBuilder.Entity("Educational_Medical_platform.Models.CertificateDetails", b =>
-                {
-                    b.Property<int>("StudentId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("CourseId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("CertifiedHours")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("StudentId", "CourseId");
-
-                    b.HasIndex("CourseId");
-
-                    b.ToTable("CertificateDetails");
-                });
-
             modelBuilder.Entity("Educational_Medical_platform.Models.Course", b =>
                 {
                     b.Property<int>("Id")
@@ -754,17 +782,26 @@ namespace Educational_Medical_platform.Migrations
                     b.Property<float>("DurationInhours")
                         .HasColumnType("real");
 
+                    b.Property<string>("InstructorId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<string>("Preview")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("SubCategoryId")
                         .HasColumnType("int");
 
+                    b.Property<string>("ThumbnailURL")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("InstructorId");
 
                     b.HasIndex("SubCategoryId");
 
@@ -775,6 +812,7 @@ namespace Educational_Medical_platform.Migrations
                         {
                             Id = 1,
                             DurationInhours = 10f,
+                            InstructorId = "2b222b22-2222-2222-2222-222222222222",
                             SubCategoryId = 1,
                             Title = "physiology"
                         },
@@ -782,6 +820,7 @@ namespace Educational_Medical_platform.Migrations
                         {
                             Id = 2,
                             DurationInhours = 20f,
+                            InstructorId = "2b222b22-2222-2222-2222-222222222222",
                             SubCategoryId = 1,
                             Title = "anatomy"
                         },
@@ -789,37 +828,10 @@ namespace Educational_Medical_platform.Migrations
                         {
                             Id = 3,
                             DurationInhours = 30f,
+                            InstructorId = "3c333c33-3333-3333-3333-333333333333",
                             SubCategoryId = 1,
                             Title = "histology"
                         });
-                });
-
-            modelBuilder.Entity("Educational_Medical_platform.Models.Instructor", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("FirstName")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("LastName")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Supervisors");
                 });
 
             modelBuilder.Entity("Educational_Medical_platform.Models.Objective", b =>
@@ -1112,66 +1124,6 @@ namespace Educational_Medical_platform.Migrations
                         });
                 });
 
-            modelBuilder.Entity("Educational_Medical_platform.Models.Student", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("FirstName")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<bool>("IsSubscribed")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("LastName")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Students");
-                });
-
-            modelBuilder.Entity("Educational_Medical_platform.Models.Student_Courses", b =>
-                {
-                    b.Property<int>("StudentId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("CourseId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("CertificateDetailsCourseId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("CertificateDetailsStudentId")
-                        .HasColumnType("int");
-
-                    b.Property<float?>("Degree")
-                        .HasColumnType("real");
-
-                    b.Property<int>("VideoNumber")
-                        .HasColumnType("int");
-
-                    b.HasKey("StudentId", "CourseId");
-
-                    b.HasIndex("CourseId");
-
-                    b.HasIndex("CertificateDetailsStudentId", "CertificateDetailsCourseId");
-
-                    b.ToTable("StudentCourses");
-                });
-
             modelBuilder.Entity("Educational_Medical_platform.Models.SubCategory", b =>
                 {
                     b.Property<int>("Id")
@@ -1243,6 +1195,33 @@ namespace Educational_Medical_platform.Migrations
                             CategoryId = 4,
                             Name = "Systemic Pathology"
                         });
+                });
+
+            modelBuilder.Entity("Educational_Medical_platform.Models.User_Enrolled_Courses", b =>
+                {
+                    b.Property<string>("StudentId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("CourseId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CertifiedHours")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2");
+
+                    b.Property<float?>("Degree")
+                        .HasColumnType("real");
+
+                    b.Property<int>("VideoNumber")
+                        .HasColumnType("int");
+
+                    b.HasKey("StudentId", "CourseId");
+
+                    b.HasIndex("CourseId");
+
+                    b.ToTable("UserEnrolledCourses");
                 });
 
             modelBuilder.Entity("Educational_Medical_platform.Models.Video", b =>
@@ -1352,6 +1331,13 @@ namespace Educational_Medical_platform.Migrations
                             ConcurrencyStamp = "df2d8409-ce61-4dac-ae75-b26fbbab27f2",
                             Name = "Instructor",
                             NormalizedName = "INSTRUCTOR"
+                        },
+                        new
+                        {
+                            Id = "ea3206f7-8571-4e45-b209-e593236f3420",
+                            ConcurrencyStamp = "df2d8409-cg61-4aac-ae65-b26fbbab77f2",
+                            Name = "User",
+                            NormalizedName = "USER"
                         });
                 });
 
@@ -1440,6 +1426,23 @@ namespace Educational_Medical_platform.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("AspNetUserRoles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            UserId = "1a111a11-1111-1111-1111-111111111111",
+                            RoleId = "952625cb-623b-4f8e-a426-c9e14ffe41bc"
+                        },
+                        new
+                        {
+                            UserId = "2b222b22-2222-2222-2222-222222222222",
+                            RoleId = "ea3206f7-8571-4e45-b209-e593236f3420"
+                        },
+                        new
+                        {
+                            UserId = "3c333c33-3333-3333-3333-333333333333",
+                            RoleId = "ea3206f7-8571-4e45-b209-e593236f3420"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
@@ -1484,6 +1487,9 @@ namespace Educational_Medical_platform.Migrations
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("ImageUrl")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("LastName")
                         .IsRequired()
@@ -1534,15 +1540,62 @@ namespace Educational_Medical_platform.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers", (string)null);
-                });
 
-            modelBuilder.Entity("Educational_Medical_platform.Models.Admin", b =>
-                {
-                    b.HasOne("Shoghlana.Core.Models.ApplicationUser", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId");
-
-                    b.Navigation("User");
+                    b.HasData(
+                        new
+                        {
+                            Id = "1a111a11-1111-1111-1111-111111111111",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "db5b7fc3-5265-4cf0-bf1f-390c4042edba",
+                            Email = "Ehab_Naser@example.com",
+                            EmailConfirmed = true,
+                            FirstName = "Ehab",
+                            LastName = "Naser",
+                            LockoutEnabled = false,
+                            NormalizedEmail = "EHAB_NASER@EXAMPLE.COM",
+                            NormalizedUserName = "EHAB_NASER",
+                            PasswordHash = "AQAAAAIAAYagAAAAEH19xLC4E77tD3UZYb0pJLgxh11bCfEGMpHr+1UsVD5JBeSrW0ysG2jrbOHPrK8TSA==",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "ab2ef26d-a79b-45d4-ab10-3616d50d4a61",
+                            TwoFactorEnabled = false,
+                            UserName = "Ehab_Naser"
+                        },
+                        new
+                        {
+                            Id = "2b222b22-2222-2222-2222-222222222222",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "7987c56e-ee32-4ed6-804a-6856def9400d",
+                            Email = "Mohamed_Galal@example.com",
+                            EmailConfirmed = true,
+                            FirstName = "Mohamed",
+                            LastName = "Galal",
+                            LockoutEnabled = false,
+                            NormalizedEmail = "MOHAMED_GALAL@EXAMPLE.COM",
+                            NormalizedUserName = "MOHAMED_GALAL",
+                            PasswordHash = "AQAAAAIAAYagAAAAEFtGKuoBzEJHM3YEMDxYQ9eDBf0JwbBRVZ7NwJPT+3zZIP/wsoZ+BH99LXU5CMwoBw==",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "eee1ee10-9492-4046-bc29-d8936f0414fa",
+                            TwoFactorEnabled = false,
+                            UserName = "Mohamed_Galal"
+                        },
+                        new
+                        {
+                            Id = "3c333c33-3333-3333-3333-333333333333",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "a9fe9611-e632-40f3-8f30-14c2c4f85649",
+                            Email = "Alaa_Test@example.com",
+                            EmailConfirmed = true,
+                            FirstName = "Alaa",
+                            LastName = "Test",
+                            LockoutEnabled = false,
+                            NormalizedEmail = "ALAA_TEST@EXAMPLE.COM",
+                            NormalizedUserName = "ALAA_TEST",
+                            PasswordHash = "AQAAAAIAAYagAAAAELAwFPg43NfONTUMk7e4SkM/vEbFOrEAZ/YgI0M8gyq7wYuagvHSuBC7DnlKivUjBg==",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "62018a69-ad9b-46bc-86b9-ddbfd5e1049e",
+                            TwoFactorEnabled = false,
+                            UserName = "Alaa_Test"
+                        });
                 });
 
             modelBuilder.Entity("Educational_Medical_platform.Models.Answer", b =>
@@ -1558,13 +1611,23 @@ namespace Educational_Medical_platform.Migrations
 
             modelBuilder.Entity("Educational_Medical_platform.Models.Blog", b =>
                 {
+                    b.HasOne("Shoghlana.Core.Models.ApplicationUser", "Author")
+                        .WithMany("Blogs")
+                        .HasForeignKey("AuthorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Educational_Medical_platform.Models.Category", "Category")
                         .WithMany("Blogs")
-                        .HasForeignKey("CategoryId");
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Educational_Medical_platform.Models.SubCategory", "SubCategory")
                         .WithMany("Blogs")
                         .HasForeignKey("SubCategoryId");
+
+                    b.Navigation("Author");
 
                     b.Navigation("Category");
 
@@ -1605,41 +1668,21 @@ namespace Educational_Medical_platform.Migrations
                     b.Navigation("SubCategory");
                 });
 
-            modelBuilder.Entity("Educational_Medical_platform.Models.CertificateDetails", b =>
-                {
-                    b.HasOne("Educational_Medical_platform.Models.Course", "Course")
-                        .WithMany()
-                        .HasForeignKey("CourseId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Educational_Medical_platform.Models.Student", "Student")
-                        .WithMany()
-                        .HasForeignKey("StudentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Course");
-
-                    b.Navigation("Student");
-                });
-
             modelBuilder.Entity("Educational_Medical_platform.Models.Course", b =>
                 {
+                    b.HasOne("Shoghlana.Core.Models.ApplicationUser", "Instructor")
+                        .WithMany("CoursesCreated")
+                        .HasForeignKey("InstructorId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("Educational_Medical_platform.Models.SubCategory", "SubCategory")
                         .WithMany("Courses")
                         .HasForeignKey("SubCategoryId");
 
+                    b.Navigation("Instructor");
+
                     b.Navigation("SubCategory");
-                });
-
-            modelBuilder.Entity("Educational_Medical_platform.Models.Instructor", b =>
-                {
-                    b.HasOne("Shoghlana.Core.Models.ApplicationUser", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Educational_Medical_platform.Models.Objective", b =>
@@ -1691,40 +1734,6 @@ namespace Educational_Medical_platform.Migrations
                     b.Navigation("Course");
                 });
 
-            modelBuilder.Entity("Educational_Medical_platform.Models.Student", b =>
-                {
-                    b.HasOne("Shoghlana.Core.Models.ApplicationUser", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("Educational_Medical_platform.Models.Student_Courses", b =>
-                {
-                    b.HasOne("Educational_Medical_platform.Models.Course", "Course")
-                        .WithMany()
-                        .HasForeignKey("CourseId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Educational_Medical_platform.Models.Student", "Student")
-                        .WithMany()
-                        .HasForeignKey("StudentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Educational_Medical_platform.Models.CertificateDetails", "CertificateDetails")
-                        .WithMany()
-                        .HasForeignKey("CertificateDetailsStudentId", "CertificateDetailsCourseId");
-
-                    b.Navigation("CertificateDetails");
-
-                    b.Navigation("Course");
-
-                    b.Navigation("Student");
-                });
-
             modelBuilder.Entity("Educational_Medical_platform.Models.SubCategory", b =>
                 {
                     b.HasOne("Educational_Medical_platform.Models.Category", "Category")
@@ -1734,6 +1743,25 @@ namespace Educational_Medical_platform.Migrations
                         .IsRequired();
 
                     b.Navigation("Category");
+                });
+
+            modelBuilder.Entity("Educational_Medical_platform.Models.User_Enrolled_Courses", b =>
+                {
+                    b.HasOne("Educational_Medical_platform.Models.Course", "Course")
+                        .WithMany("EnrolledUsers")
+                        .HasForeignKey("CourseId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("Shoghlana.Core.Models.ApplicationUser", "Student")
+                        .WithMany("EnrolledCourses")
+                        .HasForeignKey("StudentId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("Course");
+
+                    b.Navigation("Student");
                 });
 
             modelBuilder.Entity("Educational_Medical_platform.Models.Video", b =>
@@ -1816,6 +1844,8 @@ namespace Educational_Medical_platform.Migrations
 
             modelBuilder.Entity("Educational_Medical_platform.Models.Course", b =>
                 {
+                    b.Navigation("EnrolledUsers");
+
                     b.Navigation("Objectives");
 
                     b.Navigation("Questions");
@@ -1844,6 +1874,15 @@ namespace Educational_Medical_platform.Migrations
                     b.Navigation("Courses");
 
                     b.Navigation("QuestionBank");
+                });
+
+            modelBuilder.Entity("Shoghlana.Core.Models.ApplicationUser", b =>
+                {
+                    b.Navigation("Blogs");
+
+                    b.Navigation("CoursesCreated");
+
+                    b.Navigation("EnrolledCourses");
                 });
 #pragma warning restore 612, 618
         }

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Educational_Medical_platform.Models;
+using Microsoft.AspNetCore.Identity;
 using System.ComponentModel.DataAnnotations;
 
 namespace Shoghlana.Core.Models
@@ -10,5 +11,18 @@ namespace Shoghlana.Core.Models
 
         [StringLength(maximumLength: 50, MinimumLength = 3, ErrorMessage = "Name Must be within (3-50) chars")]
         public string LastName { get; set; }
+
+        public string? ImageUrl { get; set; }
+
+        //-------------------------------------------
+         // Courses this user has created as an instructor
+        public List<Course>? CoursesCreated { get; set; }
+
+        // Navigation property for enrolled courses
+        public List<User_Enrolled_Courses>? EnrolledCourses { get; set; }
+
+        //--------------------------------------------
+
+        public List<Blog>? Blogs { get; set; }
     }
 }

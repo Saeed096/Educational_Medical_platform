@@ -13,6 +13,7 @@ namespace Educational_Medical_platform.Configurations
                 new Blog
                 {
                     Id = 1,
+                    AuthorId = "2b222b22-2222-2222-2222-222222222222",
                     Title = "Introduction to Human Anatomy",
                     Content = "This blog covers the basics of human anatomy...",
                     Intro = "Anatomy is the branch of biology concerned with the study of the structure of organisms and their parts.",
@@ -25,6 +26,7 @@ namespace Educational_Medical_platform.Configurations
                 new Blog
                 {
                     Id = 2,
+                    AuthorId = "2b222b22-2222-2222-2222-222222222222",
                     Title = "Advanced Comparative Anatomy",
                     Content = "This blog explores comparative anatomy across species...",
                     Intro = "Comparative anatomy allows us to understand the similarities and differences between different organisms.",
@@ -37,6 +39,7 @@ namespace Educational_Medical_platform.Configurations
                 new Blog
                 {
                     Id = 3,
+                    AuthorId = "2b222b22-2222-2222-2222-222222222222",
                     Title = "Fundamentals of Cell Physiology",
                     Content = "Understanding the basics of cell physiology...",
                     Intro = "Cell physiology is the study of the functions of cells and their components.",
@@ -51,6 +54,7 @@ namespace Educational_Medical_platform.Configurations
                 new Blog
                 {
                     Id = 4,
+                    AuthorId = "2b222b22-2222-2222-2222-222222222222",
                     Title = "Human Anatomy Overview",
                     Content = "This blog provides an overview of human anatomy...",
                     Intro = "An overview of human anatomy highlights the complexity and organization of the human body.",
@@ -63,6 +67,7 @@ namespace Educational_Medical_platform.Configurations
                 new Blog
                 {
                     Id = 5,
+                    AuthorId = "3c333c33-3333-3333-3333-333333333333",
                     Title = "Systemic Physiology Basics",
                     Content = "An introductory blog on systemic physiology...",
                     Intro = "Systemic physiology studies the functions of various systems within the body.",
@@ -75,6 +80,7 @@ namespace Educational_Medical_platform.Configurations
                 new Blog
                 {
                     Id = 6,
+                    AuthorId = "3c333c33-3333-3333-3333-333333333333",
                     Title = "Clinical Applications of Pharmacology",
                     Content = "Exploring clinical applications in pharmacology...",
                     Intro = "Pharmacology focuses on the interactions between drugs and living organisms.",
@@ -87,6 +93,7 @@ namespace Educational_Medical_platform.Configurations
                 new Blog
                 {
                     Id = 7,
+                    AuthorId = "3c333c33-3333-3333-3333-333333333333",
                     Title = "Pathology: An Overview",
                     Content = "A comprehensive overview of pathology...",
                     Intro = "Pathology is the study of disease, its causes, and effects on the body.",

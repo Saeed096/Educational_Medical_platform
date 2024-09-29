@@ -24,7 +24,8 @@ namespace Educational_Medical_platform.DTO.Blog
         public string Conclusion { get; set; }
 
         public int? SubCategoryId { get; set; }
-        public int? CategoryId { get; set; }
+        public int CategoryId { get; set; }
+
         public IFormFile? Image { get; set; }
     }
 }

@@ -1,31 +1,35 @@
 ﻿using Educational_Medical_platform.Models;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
 using Shoghlana.Core.Models;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace Shoghlana.EF
 {
     public class ApplicationDBContext : IdentityDbContext<ApplicationUser>
     {
-        public DbSet<Admin> Admins { get; set; }
-        public DbSet<Answer> Answers { get; set; }
-        public DbSet<Blog> Blogs { get; set; }
-        public DbSet<Book> Books { get; set; }
-        public DbSet<Category> Categories { get; set; }
-        public DbSet<Course> Courses { get; set; }
-        public DbSet<Objective> Objectives { get; set; } 
+        //public DbSet<Admin> Admins { get; set; }
         public DbSet<Question> Questions { get; set; }
-        public DbSet<Requirement> Requirements { get; set; } 
+        public DbSet<Answer> Answers { get; set; }
+
+        public DbSet<Blog> Blogs { get; set; }
+
+        public DbSet<Book> Books { get; set; }
+
+        public DbSet<Category> Categories { get; set; }
+        public DbSet<SubCategory> SubCategories { get; set; }
+
+        public DbSet<Course> Courses { get; set; }
+        public DbSet<Objective> Objectives { get; set; }
+        public DbSet<Requirement> Requirements { get; set; }
+
         public DbSet<StandardTest> StandardTests { get; set; } 
-        public DbSet<Student> Students { get; set; } 
-        public DbSet<SubCategory> SubCategories { get; set; } 
-        public DbSet<Instructor> Supervisors { get; set; } 
+
+        //public DbSet<Student> Students { get; set; } 
+        //public DbSet<Instructor> Supervisors { get; set; } 
+
         public DbSet<Video> Videos { get; set; }
-        public DbSet<Student_Courses> StudentCourses { get; set; }
+        public DbSet<User_Enrolled_Courses> UserEnrolledCourses { get; set; }
         public DbSet<Blog_User_Likes> Blog_User_Likes { get; set; }
 
 
@@ -40,7 +44,7 @@ namespace Shoghlana.EF
 
         ///<summary>
         ///Enforce Validation on RunTime Before Sending Changes to DB 
-        ///  This method will enforce validation on all entities, 
+        ///  This method will enforce validation on all entities, s
         ///  regardless of how they are added or modified, 
         ///  including those configured via Fluent API.
         /// </summary>
