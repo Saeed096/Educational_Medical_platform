@@ -5,6 +5,6 @@ namespace Educational_Medical_platform.Repositories.Interfaces
 {
     public interface ICategoryRepository:IGenericRepository<Category>
     {
-        public bool Exists(int id);
+        public bool Exists(int? id);
     }
 }
