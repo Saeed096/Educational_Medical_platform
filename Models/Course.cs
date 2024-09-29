@@ -11,6 +11,9 @@ namespace Educational_Medical_platform.Models
 
         public String Title { get; set; }
 
+        [Column(TypeName = "decimal(10, 2)")]
+        public decimal Price { get; set; }
+
         [NotMapped]
         public IFormFile? Thumbnail { get; set; }
 

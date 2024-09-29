@@ -70,6 +70,8 @@ namespace Educational_Medical_platform.Controllers
                     Preview = course.Preview,
                     Title = course.Title,
                     DurationInhours = course.DurationInhours,
+                    Price = course.Price,
+
 
                     InstructorId = course.InstructorId,
                     SubCategoryId = course.SubCategoryId,
@@ -140,6 +142,8 @@ namespace Educational_Medical_platform.Controllers
                 Preview = course.Preview,
                 Title = course.Title,
                 DurationInhours = course.DurationInhours,
+                Price = course.Price,
+
 
                 InstructorId = course.InstructorId,
                 SubCategoryId = course.SubCategoryId,
@@ -223,6 +227,8 @@ namespace Educational_Medical_platform.Controllers
                     Title = course.Title,
                     DurationInhours = course.DurationInhours,
                     Preview = course.Preview,
+                    Price = course.Price,
+
 
                     InstructorId = course.InstructorId,
                     SubCategoryId = course.SubCategoryId,
@@ -347,6 +353,7 @@ namespace Educational_Medical_platform.Controllers
                 InstructorId = courseDTO.InstructorID,
                 SubCategoryId = courseDTO.SubCategoryId,
                 ThumbnailURL = $"/Images/Courses/{fileName}",
+                Price = courseDTO.Price,
 
                 //ThumbnailURL = courseDTO.ThumbnailURL,
                 Requirements = courseDTO.Requirements?.Select(req => new Requirement
@@ -372,6 +379,8 @@ namespace Educational_Medical_platform.Controllers
                 InstructorId = courseDTO.InstructorID,
                 SubCategoryId = courseDTO.SubCategoryId,
                 ThumbnailURL = $"/Images/Courses/{fileName}",
+                Price = courseDTO.Price,
+
 
                 Requirements = courseDTO.Requirements?.Select(req => new GetCourseRequirmentsDTO
                 {
@@ -581,7 +590,7 @@ namespace Educational_Medical_platform.Controllers
                     IsSuccess = false,
                     Message = $"No Video Found with this ID : {videoId}",
                     Status = 405
-                    
+
                 };
             }
 
@@ -690,6 +699,7 @@ namespace Educational_Medical_platform.Controllers
             course.Preview = courseDTO.Preview;
             course.SubCategoryId = courseDTO.SubCategoryId;
             course.ThumbnailURL = $"/Images/Courses/{fileName}"; // Update thumbnail URL
+            course.Price = courseDTO.Price;
 
             if (course?.Requirements != null || course?.Requirements?.Count() == 0)
             {
@@ -731,7 +741,7 @@ namespace Educational_Medical_platform.Controllers
         public async Task<ActionResult<GeneralResponse>> DeleteCourse(int courseId)
         {
             // Check if the course exists
-            var course =  _courseRepository.Find(criteria: c => c.Id == courseId , includes : ["Objectives" , "Requirements", "Videos"]);
+            var course = _courseRepository.Find(criteria: c => c.Id == courseId, includes: ["Objectives", "Requirements", "Videos"]);
             if (course == null)
             {
                 return new GeneralResponse()

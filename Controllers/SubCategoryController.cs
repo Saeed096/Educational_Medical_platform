@@ -74,7 +74,6 @@ namespace Educational_Medical_platform.Controllers
             };
         }
 
-
         [HttpGet("{id}")]
         public ActionResult<GeneralResponse> GetSubCategoryById(int id)
         {

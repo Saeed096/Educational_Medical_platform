@@ -16,6 +16,7 @@ namespace Educational_Medical_platform.Configurations
                     Title = "physiology",
                     DurationInhours = 10,
                     SubCategoryId = 1,
+                    Price = 1500,
                     InstructorId = "2b222b22-2222-2222-2222-222222222222"
                 },
                 new Course
@@ -24,6 +25,7 @@ namespace Educational_Medical_platform.Configurations
                     Title = "anatomy",
                     DurationInhours = 20,
                     SubCategoryId = 1,
+                    Price = 1000,
                     InstructorId = "2b222b22-2222-2222-2222-222222222222"
                 },
                 new Course
@@ -32,7 +34,8 @@ namespace Educational_Medical_platform.Configurations
                     Title = "histology",
                     DurationInhours = 30,
                     SubCategoryId = 1,
-                    InstructorId= "3c333c33-3333-3333-3333-333333333333"
+                    Price = 2500,
+                    InstructorId = "3c333c33-3333-3333-3333-333333333333"
                 }
                 );
 

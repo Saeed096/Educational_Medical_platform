@@ -10,6 +10,9 @@ namespace Educational_Medical_platform.DTO.Course
         [Required(ErrorMessage = "CourseID is required")]
         public int CourseID { get; set; }
 
+        [Required(ErrorMessage = "Price is required")]
+        public decimal Price { get; set; }
+
         //[Required(ErrorMessage = "InstructorID is required")]
         //public string InstructorID { get; set; }
 

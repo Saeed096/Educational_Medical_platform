@@ -9,6 +9,8 @@ namespace Educational_Medical_platform.DTO.Course
 
         public String Title { get; set; }
 
+        public decimal Price { get; set; }
+
         //public IFormFile? Thumbnail { get; set; }
 
         public string ThumbnailURL { get; set; }
