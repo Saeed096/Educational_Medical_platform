@@ -25,6 +25,7 @@ namespace Educational_Medical_platform.Repositories.Implementations
                 .Where(sc => sc.CategoryId == categoryId)
                 .Select(sc => new SubCategoryDTO
                 {
+                    Id = sc.Id,
                     Name = sc.Name,
                     CategoryId = sc.CategoryId
                 }).ToListAsync();

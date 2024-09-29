@@ -31,8 +31,8 @@ namespace Educational_Medical_platform.Controllers
                 {
                     Id = Subcategory.Id,
                     Name = Subcategory.Name,
-                    CategoryId=Subcategory.CategoryId,
-                   
+                    CategoryId = Subcategory.CategoryId,
+
                 }).ToList();
 
                 return new GeneralResponse
@@ -53,7 +53,7 @@ namespace Educational_Medical_platform.Controllers
 
         }
 
-        [HttpGet("Subcategory/{categoryId}")]
+        [HttpGet("Category/{categoryId}")]
         public async Task<ActionResult<GeneralResponse>> GetSubCategoriesByCategoryId(int categoryId)
         {
             var subCategories = await SubCategoryRepository.GetSubCategoriesByCategoryIdAsync(categoryId);
@@ -62,15 +62,15 @@ namespace Educational_Medical_platform.Controllers
             {
                 return new GeneralResponse
                 {
-                    IsSuccess = false, 
-                    Message= "No subcategories found for the specified category."
+                    IsSuccess = false,
+                    Message = "No subcategories found for the specified category."
                 };
             }
 
-            return new GeneralResponse 
+            return new GeneralResponse
             {
-             IsSuccess= true,
-             Data = subCategories,
+                IsSuccess = true,
+                Data = subCategories,
             };
         }
 
@@ -169,7 +169,7 @@ namespace Educational_Medical_platform.Controllers
                     {
                         Name = addedSubCategory.Name,
                         CategoryId = addedSubCategory.CategoryId,
-                        
+
 
                     };
 
