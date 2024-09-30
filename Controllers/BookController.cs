@@ -1,8 +1,10 @@
 ﻿using Educational_Medical_platform.DTO.BookDTO;
 using Educational_Medical_platform.Models;
 using Educational_Medical_platform.Repositories.Interfaces;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Shoghlana.Api.Response;
+using Shoghlana.Core.Models;
 
 namespace Educational_Medical_platform.Controllers
 {
@@ -14,14 +16,17 @@ namespace Educational_Medical_platform.Controllers
         //private readonly ICategoryRepository CategoryRepository;
         //private readonly ISubCategoryRepository SubCategoryRepository;
         private readonly IWebHostEnvironment webHostEnvironment;
+        private readonly UserManager<ApplicationUser> userManager;
 
 
-        public BookController(IBookRepository _BookRepository, IWebHostEnvironment _webHostEnvironment, ICategoryRepository _categoryRepository, ISubCategoryRepository _subCategoryRepository)
+        public BookController(IBookRepository _BookRepository,
+            IWebHostEnvironment _webHostEnvironment,
+            UserManager<ApplicationUser> _userManager)
         {
             BookRepository = _BookRepository;
             webHostEnvironment = _webHostEnvironment;
-            //CategoryRepository = _categoryRepository;
-            //SubCategoryRepository = _subCategoryRepository;
+            userManager = _userManager;
+         
         }
 
         [HttpGet]
@@ -39,7 +44,11 @@ namespace Educational_Medical_platform.Controllers
                     ThumbnailURL = book.ThumbnailURL,
                     Url = book.Url,
                     SubCategoryId = book.SubCategoryId,
-                    CategoryId = book.CategoryId
+                    CategoryId = book.CategoryId,
+                    CreatedDate=book.PublishDate,
+                    PublisherName = book.PublisherName,
+                    PublisherRole = book.PublisherRole,
+
                 }).ToList();
 
                 if (bookDTOs is null )
@@ -94,7 +103,11 @@ namespace Educational_Medical_platform.Controllers
                     ThumbnailURL = book.ThumbnailURL,
                     Url = book.Url,
                     SubCategoryId = book.SubCategoryId,
-                    CategoryId = book.CategoryId
+                    CategoryId = book.CategoryId,
+                    CreatedDate = book.PublishDate,
+                    PublisherName = book.PublisherName,
+                    PublisherRole = book.PublisherRole,
+
                 };
 
                 return new GeneralResponse
@@ -115,7 +128,7 @@ namespace Educational_Medical_platform.Controllers
         }
 
         [HttpPost]
-        public ActionResult<GeneralResponse> AddBook([FromForm] BookDTO bookDTO)
+        public async Task <ActionResult<GeneralResponse>> AddBook([FromForm] BookDTO bookDTO)
         {
             try
             {
@@ -129,6 +142,18 @@ namespace Educational_Medical_platform.Controllers
                 bookDTO.ThumbnailURL = imagename;
                 if (ModelState.IsValid)
                 {
+                    var existinguser = await userManager.FindByIdAsync(bookDTO.UserID);
+
+                    if (existinguser == null)
+                    {
+                        return new GeneralResponse
+                        {
+                            IsSuccess = false,
+                            Message = "there is no such user "
+                        };
+                    }
+                    var roles = await userManager.GetRolesAsync(existinguser);
+
                     Book book = new Book
                     {
                         Title = bookDTO.Title,
@@ -136,7 +161,9 @@ namespace Educational_Medical_platform.Controllers
                         ThumbnailURL = $"/Images/Book/{imagename}",
                         Url = bookDTO.Url,
                         SubCategoryId = bookDTO.SubCategoryId,
-                        CategoryId = bookDTO.CategoryId
+                        CategoryId = bookDTO.CategoryId,
+                        PublishDate = bookDTO.CreatedDate,
+                        PublisherName=existinguser.UserName,
                     };
                    
                   Book addedBook = BookRepository.Add(book);
@@ -201,7 +228,7 @@ namespace Educational_Medical_platform.Controllers
 
                 if (bookDTO.Thumbnail != null)
                 {
-                    string uploadpath = Path.Combine(webHostEnvironment.WebRootPath, "Images");
+                    string uploadpath = Path.Combine(webHostEnvironment.WebRootPath, "Images", "Book");
                     string imagename = Guid.NewGuid().ToString() + "_" + bookDTO.Thumbnail.FileName;
                     string filepath = Path.Combine(uploadpath, imagename);
                     using (FileStream fileStream = new FileStream(filepath, FileMode.Create))
@@ -221,10 +248,13 @@ namespace Educational_Medical_platform.Controllers
                 {
                     existingBook.Title = bookDTO.Title;
                     existingBook.Description = bookDTO.Description;
-                    existingBook.ThumbnailURL = bookDTO.ThumbnailURL ?? existingBook.ThumbnailURL;
+                    existingBook.ThumbnailURL = $"/Images/Book/{bookDTO.ThumbnailURL}" ?? existingBook.ThumbnailURL;
                     existingBook.Url = bookDTO.Url;
                     existingBook.SubCategoryId = bookDTO.SubCategoryId;
                     existingBook.CategoryId = bookDTO.CategoryId;
+                    existingBook.PublisherRole=bookDTO.PublisherRole;
+                    existingBook.PublisherName = bookDTO.PublisherName;
+                    existingBook.PublishDate = bookDTO.CreatedDate;
                     BookRepository.Update(existingBook);  
                     BookRepository.save();  
 
@@ -237,7 +267,10 @@ namespace Educational_Medical_platform.Controllers
                         ThumbnailURL = existingBook.ThumbnailURL,
                         Url = existingBook.Url,
                         SubCategoryId = existingBook.SubCategoryId,
-                        CategoryId = existingBook.CategoryId
+                        CategoryId = existingBook.CategoryId,
+                        PublisherRole = existingBook.PublisherRole,
+                        PublisherName = existingBook.PublisherName,
+                        CreatedDate = existingBook.PublishDate,
                     };
 
                     return new GeneralResponse
