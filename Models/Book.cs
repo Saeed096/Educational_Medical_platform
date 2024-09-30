@@ -10,6 +10,9 @@ namespace Educational_Medical_platform.Models
         public int Id { get; set; }
         public string Title { get; set; }
         public string? Description { get; set; }
+        public string? PublisherName { get; set; }
+        public string? PublisherRole { get; set; }
+        public DateTime? PublishDate { get; set; }
 
         public string? ThumbnailURL { get; set; }
         [NotMapped]
