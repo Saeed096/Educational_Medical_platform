@@ -119,7 +119,7 @@ namespace Educational_Medical_platform.Controllers
         {
             try
             {
-                string uploadpath = Path.Combine(webHostEnvironment.WebRootPath, "Images");
+                string uploadpath = Path.Combine(webHostEnvironment.WebRootPath, "Images","Book");
                 string imagename = Guid.NewGuid().ToString() + "_" + bookDTO.Thumbnail.FileName;
                 string filepath = Path.Combine(uploadpath, imagename);
                 using (FileStream fileStream = new FileStream(filepath, FileMode.Create))
@@ -133,7 +133,7 @@ namespace Educational_Medical_platform.Controllers
                     {
                         Title = bookDTO.Title,
                         Description = bookDTO.Description,
-                        ThumbnailURL = bookDTO.ThumbnailURL,
+                        ThumbnailURL = $"/Images/Book/{imagename}",
                         Url = bookDTO.Url,
                         SubCategoryId = bookDTO.SubCategoryId,
                         CategoryId = bookDTO.CategoryId
