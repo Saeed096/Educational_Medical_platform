@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Educational_Medical_platform.Migrations
 {
     /// <inheritdoc />
-    public partial class Init : Migration
+    public partial class init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -255,6 +255,9 @@ namespace Educational_Medical_platform.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PublisherName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PublisherRole = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PublishDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     ThumbnailURL = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Url = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     SubCategoryId = table.Column<int>(type: "int", nullable: true),
@@ -493,9 +496,9 @@ namespace Educational_Medical_platform.Migrations
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "FirstName", "ImageUrl", "LastName", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
                 values: new object[,]
                 {
-                    { "1a111a11-1111-1111-1111-111111111111", 0, "c27ebef2-d3f6-44bc-a411-feedc0247924", "Ehab_Naser@example.com", true, "Ehab", null, "Naser", false, null, "EHAB_NASER@EXAMPLE.COM", "EHAB_NASER", "AQAAAAIAAYagAAAAEDDvpFCB+Jf1iH9aW8DLTfJRnGWV+bwD58DAbQVbf3iFNkJs4PDb+gfg2usuGZg5Xw==", null, false, "96578fe6-a780-4479-bec8-cfcd14a826ee", false, "Ehab_Naser" },
-                    { "2b222b22-2222-2222-2222-222222222222", 0, "72891089-9cd3-42d0-8a84-cd145dd3f886", "Mohamed_Galal@example.com", true, "Mohamed", null, "Galal", false, null, "MOHAMED_GALAL@EXAMPLE.COM", "MOHAMED_GALAL", "AQAAAAIAAYagAAAAEBAkem3F4HxQKcpH/XAuKfAcSLwKrO6jv67+8H1xuOx6pHDaQJ+ryXJRWjeLEivCFw==", null, false, "b0d9cfe3-306b-43f6-991d-496e36c8adae", false, "Mohamed_Galal" },
-                    { "3c333c33-3333-3333-3333-333333333333", 0, "afdade58-9d79-43a3-aa76-0e11de086117", "Alaa_Test@example.com", true, "Alaa", null, "Test", false, null, "ALAA_TEST@EXAMPLE.COM", "ALAA_TEST", "AQAAAAIAAYagAAAAEJ3UkpzFeyRcIwLg+yqekfkIjZeAEVzs5E12rAVuJ9s4q7VN4y+FJKmy/bEN1KxQkA==", null, false, "6bf7325e-aba6-4b7d-a286-dc111c040daf", false, "Alaa_Test" }
+                    { "1a111a11-1111-1111-1111-111111111111", 0, "37c672cb-422e-499f-8d27-42299cf70286", "Ehab_Naser@example.com", true, "Ehab", null, "Naser", false, null, "EHAB_NASER@EXAMPLE.COM", "EHAB_NASER", "AQAAAAIAAYagAAAAENwuzliBQZa1AnhQXwkTz9IlgxRMXzHy0+Zhg4bMRrDuY90lFLr83TJXqrbInKZ+3g==", null, false, "208c8c86-25c9-405c-b67c-841dfe68bf7c", false, "Ehab_Naser" },
+                    { "2b222b22-2222-2222-2222-222222222222", 0, "79cd15bc-43ac-459d-a853-24fdf90f5bc7", "Mohamed_Galal@example.com", true, "Mohamed", null, "Galal", false, null, "MOHAMED_GALAL@EXAMPLE.COM", "MOHAMED_GALAL", "AQAAAAIAAYagAAAAEBnHad0KD0ISI7O64Q6c3byUryTu7FJMQvQFxf8iFsZS4TSSIVv7WKIbiVjsWP28hA==", null, false, "84b5016e-cee7-4f64-a44a-c1e81cb51d86", false, "Mohamed_Galal" },
+                    { "3c333c33-3333-3333-3333-333333333333", 0, "1af6c7c3-7718-4b28-962c-4647b391dca7", "Alaa_Test@example.com", true, "Alaa", null, "Test", false, null, "ALAA_TEST@EXAMPLE.COM", "ALAA_TEST", "AQAAAAIAAYagAAAAENO7qJBz6qTPw97dXZLAvRDR7gxHOs60ylV5aN/4SlUfC3YVdwbghmeWu+CoTUtzSw==", null, false, "d7421cae-4eb5-419c-b01a-012dca93760e", false, "Alaa_Test" }
                 });
 
             migrationBuilder.InsertData(
