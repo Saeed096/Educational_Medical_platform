@@ -1,5 +1,6 @@
 ﻿using Educational_Medical_platform.DTO.Course.Objectives;
 using Educational_Medical_platform.DTO.Course.Requirments;
+using Educational_Medical_platform.Helpers;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 
@@ -11,6 +12,9 @@ namespace Educational_Medical_platform.DTO.Course
         public string InstructorID { get; set; }
 
         public decimal Price { get; set; }
+
+        [Required(ErrorMessage = "CourseType is required ( 0 => free , 1 => paid)")]
+        public CourseType Type { get; set; }
 
         [Required(ErrorMessage = "Title is required")]
         public string Title { get; set; }

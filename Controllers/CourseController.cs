@@ -48,7 +48,7 @@ namespace Educational_Medical_platform.Controllers
         [HttpGet]
         public ActionResult<GeneralResponse> GetAll()
         {
-            List<Course> courses = _courseRepository.FindAll(includes: new[] { "Requirements", "Objectives", "Videos" }).ToList();
+            List<Course> courses = _courseRepository.FindAll(includes: new[] { "Requirements", "Objectives", "Videos", "SubCategory" }).ToList();
 
             if (courses == null || !courses.Any())
             {
@@ -71,10 +71,12 @@ namespace Educational_Medical_platform.Controllers
                     Title = course.Title,
                     DurationInhours = course.DurationInhours,
                     Price = course.Price,
+                    Type = course.Type,
 
 
                     InstructorId = course.InstructorId,
                     SubCategoryId = course.SubCategoryId,
+                    CategoryId = course.SubCategory.CategoryId,
 
                     ThumbnailURL = course.ThumbnailURL,
 
@@ -123,7 +125,7 @@ namespace Educational_Medical_platform.Controllers
         [HttpGet("{courseId:int}")]
         public ActionResult<GeneralResponse> GetByCourseId(int courseId)
         {
-            Course? course = _courseRepository.Find(criteria: c => c.Id == courseId, includes: new[] { "Requirements", "Objectives", "Videos" });
+            Course? course = _courseRepository.Find(criteria: c => c.Id == courseId, includes: new[] { "Requirements", "Objectives", "Videos", "SubCategory" });
 
             if (course == null)
             {
@@ -143,10 +145,13 @@ namespace Educational_Medical_platform.Controllers
                 Title = course.Title,
                 DurationInhours = course.DurationInhours,
                 Price = course.Price,
+                Type = course.Type,
+
 
 
                 InstructorId = course.InstructorId,
                 SubCategoryId = course.SubCategoryId,
+                CategoryId = course.SubCategory.CategoryId,
 
                 ThumbnailURL = course.ThumbnailURL ?? "NA",
 
@@ -204,7 +209,7 @@ namespace Educational_Medical_platform.Controllers
                 };
             }
 
-            List<Course> courses = _courseRepository.FindAll(criteria: c => c.InstructorId == instructorId, includes: new[] { "Requirements", "Objectives" }).ToList();
+            List<Course> courses = _courseRepository.FindAll(criteria: c => c.InstructorId == instructorId, includes: new[] { "Requirements", "Objectives", "SubCategory" }).ToList();
 
             if (courses == null || !courses.Any())
             {
@@ -228,10 +233,11 @@ namespace Educational_Medical_platform.Controllers
                     DurationInhours = course.DurationInhours,
                     Preview = course.Preview,
                     Price = course.Price,
-
+                    Type = course.Type,
 
                     InstructorId = course.InstructorId,
                     SubCategoryId = course.SubCategoryId,
+                    CategoryId = course.SubCategory.CategoryId,
 
                     ThumbnailURL = course.ThumbnailURL,
 
@@ -354,6 +360,7 @@ namespace Educational_Medical_platform.Controllers
                 SubCategoryId = courseDTO.SubCategoryId,
                 ThumbnailURL = $"/Images/Courses/{fileName}",
                 Price = courseDTO.Price,
+                Type = courseDTO.Type,
 
                 //ThumbnailURL = courseDTO.ThumbnailURL,
                 Requirements = courseDTO.Requirements?.Select(req => new Requirement
@@ -365,6 +372,8 @@ namespace Educational_Medical_platform.Controllers
                     Description = obj.Description
                 }).ToList()
             };
+
+            var categoryId = _subCategoryRepository.Find(criteria: s => s.Id == newCourse.SubCategoryId, includes: ["Category"]).CategoryId;
 
             // Add the course to the repository
             _courseRepository.Add(newCourse);
@@ -380,7 +389,8 @@ namespace Educational_Medical_platform.Controllers
                 SubCategoryId = courseDTO.SubCategoryId,
                 ThumbnailURL = $"/Images/Courses/{fileName}",
                 Price = courseDTO.Price,
-
+                Type = courseDTO.Type,
+                CategoryId = categoryId,
 
                 Requirements = courseDTO.Requirements?.Select(req => new GetCourseRequirmentsDTO
                 {
@@ -700,6 +710,7 @@ namespace Educational_Medical_platform.Controllers
             course.SubCategoryId = courseDTO.SubCategoryId;
             course.ThumbnailURL = $"/Images/Courses/{fileName}"; // Update thumbnail URL
             course.Price = courseDTO.Price;
+            course.Type = courseDTO.Type;
 
             if (course?.Requirements != null || course?.Requirements?.Count() == 0)
             {
@@ -727,6 +738,18 @@ namespace Educational_Medical_platform.Controllers
             // Save the updated course
             _courseRepository.Update(course);
             await _courseRepository.SaveAsync();
+
+            GetCourseDTO getCourseDTO = new GetCourseDTO
+            {
+                Title = courseDTO.Title,
+                DurationInhours = courseDTO.DurationInhours,
+                Preview = courseDTO.Preview,
+                SubCategoryId = courseDTO.SubCategoryId,
+                ThumbnailURL = $"/Images/Courses/{fileName}", // Update thumbnail URL
+                Price = courseDTO.Price,
+                Type = courseDTO.Type,
+                CategoryId = _subCategoryRepository.Find(criteria : s => s.Id == course.SubCategoryId , includes: ["Category"]).CategoryId
+            };
 
             return new GeneralResponse()
             {
