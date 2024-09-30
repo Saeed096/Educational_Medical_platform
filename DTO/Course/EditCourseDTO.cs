@@ -5,12 +5,16 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Educational_Medical_platform.DTO.Course
 {
-    public class AddCourseDTO
+    public class EditCourseDTO
     {
-        [Required(ErrorMessage = "InstructorID is required")]
-        public string InstructorID { get; set; }
+        [Required(ErrorMessage = "CourseID is required")]
+        public int CourseID { get; set; }
 
+        [Required(ErrorMessage = "Price is required")]
         public decimal Price { get; set; }
+
+        //[Required(ErrorMessage = "InstructorID is required")]
+        //public string InstructorID { get; set; }
 
         [Required(ErrorMessage = "Title is required")]
         public string Title { get; set; }

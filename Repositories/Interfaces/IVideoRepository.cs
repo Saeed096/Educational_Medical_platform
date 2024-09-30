@@ -3,8 +3,7 @@ using Shoghlana.Core.Interfaces;
 
 namespace Educational_Medical_platform.Repositories.Interfaces
 {
-    public interface ICategoryRepository:IGenericRepository<Category>
+    public interface IVideoRepository : IGenericRepository<Video>
     {
-        public bool Exists(int? id);
     }
 }

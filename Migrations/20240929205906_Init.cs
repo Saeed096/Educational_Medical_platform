@@ -223,7 +223,7 @@ namespace Educational_Medical_platform.Migrations
                     Conclusion = table.Column<string>(type: "nvarchar(2000)", maxLength: 2000, nullable: true),
                     AuthorId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     SubCategoryId = table.Column<int>(type: "int", nullable: true),
-                    CategoryId = table.Column<int>(type: "int", nullable: true)
+                    CategoryId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -238,7 +238,8 @@ namespace Educational_Medical_platform.Migrations
                         name: "FK_Blogs_Categories_CategoryId",
                         column: x => x.CategoryId,
                         principalTable: "Categories",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.NoAction);
                     table.ForeignKey(
                         name: "FK_Blogs_SubCategories_SubCategoryId",
                         column: x => x.SubCategoryId,
@@ -281,6 +282,8 @@ namespace Educational_Medical_platform.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Price = table.Column<decimal>(type: "decimal(10,2)", nullable: false),
+                    ThumbnailURL = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     DurationInhours = table.Column<float>(type: "real", nullable: false),
                     Preview = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     InstructorId = table.Column<string>(type: "nvarchar(450)", nullable: false),
@@ -437,7 +440,6 @@ namespace Educational_Medical_platform.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Number = table.Column<int>(type: "int", nullable: false),
                     Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ThumbnailURL = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     videoURL = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     CourseId = table.Column<int>(type: "int", nullable: false)
@@ -460,6 +462,7 @@ namespace Educational_Medical_platform.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Reason = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     IsCorrect = table.Column<bool>(type: "bit", nullable: false),
                     QuestionId = table.Column<int>(type: "int", nullable: false)
                 },
@@ -490,9 +493,9 @@ namespace Educational_Medical_platform.Migrations
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "FirstName", "ImageUrl", "LastName", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
                 values: new object[,]
                 {
-                    { "1a111a11-1111-1111-1111-111111111111", 0, "a46769b7-e8ff-490a-b2e3-3e57776ec8f3", "Ehab_Naser@example.com", true, "Ehab", null, "Naser", false, null, "EHAB_NASER@EXAMPLE.COM", "EHAB_NASER", "AQAAAAIAAYagAAAAEElQrDPcq62rZhb8krXBamMVEFPCxh/k4RNlDfvDnNFfiCGcddlRW8TP+wext3CwCg==", null, false, "44b862f5-266f-4ca9-b816-d42abadcfc1c", false, "Ehab_Naser" },
-                    { "2b222b22-2222-2222-2222-222222222222", 0, "d818d7bf-2f6f-42e7-9098-ead33c150677", "Mohamed_Galal@example.com", true, "Mohamed", null, "Galal", false, null, "MOHAMED_GALAL@EXAMPLE.COM", "MOHAMED_GALAL", "AQAAAAIAAYagAAAAECu2SV7nnxK04xmwRnwHJ2TGYyj6NHCrSgHqBWOtvDKOkvH/BLT1dtvydGnjRkEl3g==", null, false, "6282b736-4934-4fef-bd6a-de3a6ff04505", false, "Mohamed_Galal" },
-                    { "3c333c33-3333-3333-3333-333333333333", 0, "c26304ef-3740-4c4a-8b9f-3176a2e0bf0d", "Alaa_Test@example.com", true, "Alaa", null, "Test", false, null, "ALAA_TEST@EXAMPLE.COM", "ALAA_TEST", "AQAAAAIAAYagAAAAEPU8yXGq3w2BRi7FgK8UazCSTS9uY4U4DWIaEZxkjO4hzZoXVjN1nSy6sDTX7R6BqA==", null, false, "e13a7907-0329-40f1-a490-1fc0b38dc390", false, "Alaa_Test" }
+                    { "1a111a11-1111-1111-1111-111111111111", 0, "c27ebef2-d3f6-44bc-a411-feedc0247924", "Ehab_Naser@example.com", true, "Ehab", null, "Naser", false, null, "EHAB_NASER@EXAMPLE.COM", "EHAB_NASER", "AQAAAAIAAYagAAAAEDDvpFCB+Jf1iH9aW8DLTfJRnGWV+bwD58DAbQVbf3iFNkJs4PDb+gfg2usuGZg5Xw==", null, false, "96578fe6-a780-4479-bec8-cfcd14a826ee", false, "Ehab_Naser" },
+                    { "2b222b22-2222-2222-2222-222222222222", 0, "72891089-9cd3-42d0-8a84-cd145dd3f886", "Mohamed_Galal@example.com", true, "Mohamed", null, "Galal", false, null, "MOHAMED_GALAL@EXAMPLE.COM", "MOHAMED_GALAL", "AQAAAAIAAYagAAAAEBAkem3F4HxQKcpH/XAuKfAcSLwKrO6jv67+8H1xuOx6pHDaQJ+ryXJRWjeLEivCFw==", null, false, "b0d9cfe3-306b-43f6-991d-496e36c8adae", false, "Mohamed_Galal" },
+                    { "3c333c33-3333-3333-3333-333333333333", 0, "afdade58-9d79-43a3-aa76-0e11de086117", "Alaa_Test@example.com", true, "Alaa", null, "Test", false, null, "ALAA_TEST@EXAMPLE.COM", "ALAA_TEST", "AQAAAAIAAYagAAAAEJ3UkpzFeyRcIwLg+yqekfkIjZeAEVzs5E12rAVuJ9s4q7VN4y+FJKmy/bEN1KxQkA==", null, false, "6bf7325e-aba6-4b7d-a286-dc111c040daf", false, "Alaa_Test" }
                 });
 
             migrationBuilder.InsertData(
@@ -565,24 +568,24 @@ namespace Educational_Medical_platform.Migrations
 
             migrationBuilder.InsertData(
                 table: "Answers",
-                columns: new[] { "Id", "Description", "IsCorrect", "QuestionId" },
+                columns: new[] { "Id", "Description", "IsCorrect", "QuestionId", "Reason" },
                 values: new object[,]
                 {
-                    { 46, "To carry oxygen", true, 16 },
-                    { 47, "To fight infections", false, 16 },
-                    { 48, "To clot blood", false, 16 },
-                    { 49, "By recognizing pathogens", true, 17 },
-                    { 50, "By producing energy", false, 17 },
-                    { 51, "By storing nutrients", false, 17 },
-                    { 52, "Interphase, mitosis, cytokinesis", true, 18 },
-                    { 53, "Prophase, metaphase, anaphase", false, 18 },
-                    { 54, "Meiosis only", false, 18 },
-                    { 55, "Programmed cell death", true, 19 },
-                    { 56, "Cell growth", false, 19 },
-                    { 57, "Cell division", false, 19 },
-                    { 58, "Carries genetic information", true, 20 },
-                    { 59, "Produces energy", false, 20 },
-                    { 60, "Fights diseases", false, 20 }
+                    { 46, "To carry oxygen", true, 16, "Hemoglobin in red blood cells carries oxygen." },
+                    { 47, "To fight infections", false, 16, "Fighting infections is primarily the role of the immune system." },
+                    { 48, "To clot blood", false, 16, "Blood clotting is done by platelets and certain plasma proteins." },
+                    { 49, "By recognizing pathogens", true, 17, "The immune system identifies and targets pathogens." },
+                    { 50, "By producing energy", false, 17, "Energy production is not a function of the immune system." },
+                    { 51, "By storing nutrients", false, 17, "Nutrient storage is a function of the liver and other organs." },
+                    { 52, "Interphase, mitosis, cytokinesis", true, 18, "These are the stages of the cell cycle." },
+                    { 53, "Prophase, metaphase, anaphase", false, 18, "These terms refer to stages of mitosis, not the entire cell cycle." },
+                    { 54, "Meiosis only", false, 18, "Meiosis is a specific type of cell division, separate from the cell cycle." },
+                    { 55, "Programmed cell death", true, 19, "Apoptosis is the process of programmed cell death." },
+                    { 56, "Cell growth", false, 19, "Cell growth is a separate process from apoptosis." },
+                    { 57, "Cell division", false, 19, "Cell division is the process of replicating cells, distinct from programmed cell death." },
+                    { 58, "Carries genetic information", true, 20, "DNA is the molecule that carries genetic information." },
+                    { 59, "Produces energy", false, 20, "Energy production is not a role of DNA." },
+                    { 60, "Fights diseases", false, 20, "DNA does not directly fight diseases; it contains the instructions for making proteins." }
                 });
 
             migrationBuilder.InsertData(
@@ -598,12 +601,12 @@ namespace Educational_Medical_platform.Migrations
 
             migrationBuilder.InsertData(
                 table: "Courses",
-                columns: new[] { "Id", "DurationInhours", "InstructorId", "Preview", "SubCategoryId", "Title" },
+                columns: new[] { "Id", "DurationInhours", "InstructorId", "Preview", "Price", "SubCategoryId", "ThumbnailURL", "Title" },
                 values: new object[,]
                 {
-                    { 1, 10f, "2b222b22-2222-2222-2222-222222222222", null, 1, "physiology" },
-                    { 2, 20f, "2b222b22-2222-2222-2222-222222222222", null, 1, "anatomy" },
-                    { 3, 30f, "3c333c33-3333-3333-3333-333333333333", null, 1, "histology" }
+                    { 1, 10f, "2b222b22-2222-2222-2222-222222222222", null, 1500m, 1, null, "physiology" },
+                    { 2, 20f, "2b222b22-2222-2222-2222-222222222222", null, 1000m, 1, null, "anatomy" },
+                    { 3, 30f, "3c333c33-3333-3333-3333-333333333333", null, 2500m, 1, null, "histology" }
                 });
 
             migrationBuilder.InsertData(
@@ -625,39 +628,39 @@ namespace Educational_Medical_platform.Migrations
 
             migrationBuilder.InsertData(
                 table: "Answers",
-                columns: new[] { "Id", "Description", "IsCorrect", "QuestionId" },
+                columns: new[] { "Id", "Description", "IsCorrect", "QuestionId", "Reason" },
                 values: new object[,]
                 {
-                    { 16, "Breaks down food", true, 6 },
-                    { 17, "Circulates blood", false, 6 },
-                    { 18, "Transports oxygen", false, 6 },
-                    { 19, "Through the walls of the intestines", true, 7 },
-                    { 20, "Via the bloodstream", false, 7 },
-                    { 21, "By chewing", false, 7 },
-                    { 22, "Mouth, esophagus, stomach", true, 8 },
-                    { 23, "Brain, heart, lungs", false, 8 },
-                    { 24, "Skin, muscles, bones", false, 8 },
-                    { 25, "They speed up chemical reactions", true, 9 },
-                    { 26, "They are absorbed", false, 9 },
-                    { 27, "They break down food", false, 9 },
-                    { 28, "The wave-like motion that moves food", true, 10 },
-                    { 29, "The absorption of nutrients", false, 10 },
-                    { 30, "The secretion of enzymes", false, 10 },
-                    { 31, "Organs and systems", true, 11 },
-                    { 32, "Cells only", false, 11 },
-                    { 33, "Muscles only", false, 11 },
-                    { 34, "By contracting and relaxing", true, 12 },
-                    { 35, "By sending signals", false, 12 },
-                    { 36, "By absorbing nutrients", false, 12 },
-                    { 37, "To understand the human body", true, 13 },
-                    { 38, "To pass exams", false, 13 },
-                    { 39, "To perform surgeries", false, 13 },
-                    { 40, "Nervous, muscular, skeletal", true, 14 },
-                    { 41, "Respiratory, circulatory", false, 14 },
-                    { 42, "Digestive, excretory", false, 14 },
-                    { 43, "Controls body functions", true, 15 },
-                    { 44, "Transports nutrients", false, 15 },
-                    { 45, "Provides energy", false, 15 }
+                    { 16, "Breaks down food", true, 6, "The digestive system's primary role is to break down food." },
+                    { 17, "Circulates blood", false, 6, "Blood circulation is the role of the circulatory system." },
+                    { 18, "Transports oxygen", false, 6, "Oxygen transport is handled by the respiratory system." },
+                    { 19, "Through the walls of the intestines", true, 7, "Nutrients are absorbed through the intestinal walls into the bloodstream." },
+                    { 20, "Via the bloodstream", false, 7, "The bloodstream transports nutrients after they are absorbed." },
+                    { 21, "By chewing", false, 7, "Chewing is part of the mechanical digestion process, not nutrient absorption." },
+                    { 22, "Mouth, esophagus, stomach", true, 8, "These are the primary organs involved in the digestive process." },
+                    { 23, "Brain, heart, lungs", false, 8, "These organs are not directly involved in digestion." },
+                    { 24, "Skin, muscles, bones", false, 8, "These are not part of the digestive system." },
+                    { 25, "They speed up chemical reactions", true, 9, "Enzymes are biological catalysts that accelerate chemical reactions." },
+                    { 26, "They are absorbed", false, 9, "Enzymes are not absorbed; they assist in reactions." },
+                    { 27, "They break down food", false, 9, "While enzymes help in breaking down food, they do not do so independently." },
+                    { 28, "The wave-like motion that moves food", true, 10, "Peristalsis is the wave-like motion that moves food through the digestive tract." },
+                    { 29, "The absorption of nutrients", false, 10, "Nutrient absorption occurs after food is moved through the digestive tract." },
+                    { 30, "The secretion of enzymes", false, 10, "Enzyme secretion assists in digestion but is not the motion that moves food." },
+                    { 31, "Organs and systems", true, 11, "These are the correct components when discussing body structures." },
+                    { 32, "Cells only", false, 11, "Cells are part of organs and systems, not the only component." },
+                    { 33, "Muscles only", false, 11, "Muscles are just one type of tissue, which is part of organs and systems." },
+                    { 34, "By contracting and relaxing", true, 12, "Muscles work by contracting and relaxing to produce movement." },
+                    { 35, "By sending signals", false, 12, "While signaling is important, it does not describe how muscles function directly." },
+                    { 36, "By absorbing nutrients", false, 12, "Muscles do not absorb nutrients; this is a function of the digestive system." },
+                    { 37, "To understand the human body", true, 13, "Anatomy is studied to understand the structure and function of the body." },
+                    { 38, "To pass exams", false, 13, "While exams may test knowledge, they are not the purpose of studying anatomy." },
+                    { 39, "To perform surgeries", false, 13, "While anatomy knowledge is important for surgeries, it is not the sole purpose of the study." },
+                    { 40, "Nervous, muscular, skeletal", true, 14, "These are major body systems." },
+                    { 41, "Respiratory, circulatory", false, 14, "While important, they do not encompass all major systems." },
+                    { 42, "Digestive, excretory", false, 14, "These systems are essential but are not all-inclusive of body systems." },
+                    { 43, "Controls body functions", true, 15, "The nervous system regulates bodily functions." },
+                    { 44, "Transports nutrients", false, 15, "Nutrient transport is handled by the circulatory system." },
+                    { 45, "Provides energy", false, 15, "Energy provision is not a primary role of the nervous system." }
                 });
 
             migrationBuilder.InsertData(
@@ -694,34 +697,34 @@ namespace Educational_Medical_platform.Migrations
 
             migrationBuilder.InsertData(
                 table: "Videos",
-                columns: new[] { "Id", "CourseId", "Description", "Number", "ThumbnailURL", "Title", "videoURL" },
+                columns: new[] { "Id", "CourseId", "Description", "Number", "Title", "videoURL" },
                 values: new object[,]
                 {
-                    { 1, 1, null, 1, null, "new video", "https://www.youtube.com/watch?v=4oThHBo2-Gs" },
-                    { 2, 2, null, 1, null, "old video", "https://www.youtube.com/watch?v=mgEAimOoyHk" },
-                    { 3, 3, null, 1, null, "funny video", "https://www.youtube.com/watch?v=zhCKr62s12w" }
+                    { 1, 1, null, 1, "new video", "https://www.youtube.com/watch?v=4oThHBo2-Gs" },
+                    { 2, 2, null, 1, "old video", "https://www.youtube.com/watch?v=mgEAimOoyHk" },
+                    { 3, 3, null, 1, "funny video", "https://www.youtube.com/watch?v=zhCKr62s12w" }
                 });
 
             migrationBuilder.InsertData(
                 table: "Answers",
-                columns: new[] { "Id", "Description", "IsCorrect", "QuestionId" },
+                columns: new[] { "Id", "Description", "IsCorrect", "QuestionId", "Reason" },
                 values: new object[,]
                 {
-                    { 1, "Cell", true, 1 },
-                    { 2, "Tissue", false, 1 },
-                    { 3, "Organ", false, 1 },
-                    { 4, "Mitochondria", true, 2 },
-                    { 5, "Nucleus", false, 2 },
-                    { 6, "Ribosome", false, 2 },
-                    { 7, "Protein synthesis", true, 3 },
-                    { 8, "Energy production", false, 3 },
-                    { 9, "DNA replication", false, 3 },
-                    { 10, "Protects the cell", true, 4 },
-                    { 11, "Stores DNA", false, 4 },
-                    { 12, "Produces energy", false, 4 },
-                    { 13, "Movement of water", true, 5 },
-                    { 14, "Transport of nutrients", false, 5 },
-                    { 15, "Protein synthesis", false, 5 }
+                    { 1, "Cell", true, 1, "Cells are the basic building blocks of life." },
+                    { 2, "Tissue", false, 1, "Tissues are made up of cells, but they are not the smallest unit of life." },
+                    { 3, "Organ", false, 1, "Organs are composed of tissues, which consist of cells." },
+                    { 4, "Mitochondria", true, 2, "Mitochondria are known as the powerhouse of the cell." },
+                    { 5, "Nucleus", false, 2, "The nucleus contains the cell's genetic material, but does not produce energy." },
+                    { 6, "Ribosome", false, 2, "Ribosomes are responsible for protein synthesis, not energy production." },
+                    { 7, "Protein synthesis", true, 3, "This is the primary function of ribosomes in the cell." },
+                    { 8, "Energy production", false, 3, "Energy production occurs in the mitochondria, not during protein synthesis." },
+                    { 9, "DNA replication", false, 3, "DNA replication is a separate process from protein synthesis." },
+                    { 10, "Protects the cell", true, 4, "The cell membrane protects the cell from its environment." },
+                    { 11, "Stores DNA", false, 4, "DNA is stored in the nucleus, not the cell membrane." },
+                    { 12, "Produces energy", false, 4, "Energy production occurs in mitochondria, not the cell membrane." },
+                    { 13, "Movement of water", true, 5, "Osmosis is the movement of water across a membrane." },
+                    { 14, "Transport of nutrients", false, 5, "Nutrient transport occurs via active and passive transport mechanisms, not osmosis." },
+                    { 15, "Protein synthesis", false, 5, "Protein synthesis involves ribosomes, not the movement of water." }
                 });
 
             migrationBuilder.CreateIndex(

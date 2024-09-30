@@ -14,7 +14,7 @@ namespace Educational_Medical_platform.Repositories.Implementations
 
         }
 
-        public bool Exists(int id)
+        public bool Exists(int? id)
         {
             return context.SubCategories.Any(c => c.Id == id);
         }
@@ -25,6 +25,7 @@ namespace Educational_Medical_platform.Repositories.Implementations
                 .Where(sc => sc.CategoryId == categoryId)
                 .Select(sc => new SubCategoryDTO
                 {
+                    Id = sc.Id,
                     Name = sc.Name,
                     CategoryId = sc.CategoryId
                 }).ToListAsync();

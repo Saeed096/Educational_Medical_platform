@@ -453,7 +453,7 @@ namespace Educational_Medical_platform.Controllers
             blog.Conclusion = updateBlogDTO.Conclusion;
 
             blog.SubCategoryId = updateBlogDTO.SubCategoryId ?? null;
-            blog.CategoryId = updateBlogDTO.CategoryId;
+            blog.CategoryId = (int)updateBlogDTO.CategoryId;
             //blog.ImageURL = fileName;
 
             _blogRepository.Update(blog);

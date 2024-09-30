@@ -6,7 +6,7 @@ namespace Educational_Medical_platform.Repositories.Interfaces
 {
     public interface ISubCategoryRepository : IGenericRepository<SubCategory>
     {
-        bool Exists(int id);
+        bool Exists(int? id);
 
         Task<IEnumerable<SubCategoryDTO>> GetSubCategoriesByCategoryIdAsync(int categoryId);
 
