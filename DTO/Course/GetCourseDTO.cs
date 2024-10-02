@@ -26,6 +26,8 @@ namespace Educational_Medical_platform.DTO.Course
 
         public string InstructorId { get; set; }
 
+        public string InstructorFullName { get; set; }
+
         //public ApplicationUser Instructor { get; set; }
 
         //----------------------------------------------------
@@ -45,7 +47,11 @@ namespace Educational_Medical_platform.DTO.Course
 
         public int SubCategoryId { get; set; }
 
+        public string SubCategoryName { get; set; }
+
         public int CategoryId { get; set; }
+
+        public string CategoryName { get; set; }
 
         //public SubCategory? SubCategory { get; set; }
     }
