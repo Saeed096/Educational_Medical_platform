@@ -1,4 +1,7 @@
-﻿namespace Educational_Medical_platform.Helpers
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
+
+namespace Educational_Medical_platform.Helpers
 {
     public enum Gender
     {
@@ -14,5 +17,12 @@
         Instructor = 1,
 
         Admin = 2,
+    }
+
+    public enum CourseType
+    {
+        Free = 0 ,
+
+        Paid = 1 ,
     }
 }

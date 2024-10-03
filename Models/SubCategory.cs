@@ -14,7 +14,6 @@ namespace Educational_Medical_platform.Models
 
         // fk  
         [ForeignKey("Category")]
-
         public int CategoryId { get; set; }
         public Category Category { get; set; }
 

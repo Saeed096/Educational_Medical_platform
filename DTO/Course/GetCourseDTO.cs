@@ -1,5 +1,6 @@
 ﻿using Educational_Medical_platform.DTO.Course.Objectives;
 using Educational_Medical_platform.DTO.Course.Requirments;
+using Educational_Medical_platform.Helpers;
 
 namespace Educational_Medical_platform.DTO.Course
 {
@@ -7,21 +8,25 @@ namespace Educational_Medical_platform.DTO.Course
     {
         public int Id { get; set; }
 
-        public String Title { get; set; }
+        public string Title { get; set; }
 
         public decimal Price { get; set; }
 
         //public IFormFile? Thumbnail { get; set; }
 
-        public string ThumbnailURL { get; set; }
+        public string? ThumbnailURL { get; set; }
 
         public float DurationInhours { get; set; }
 
         public string? Preview { get; set; }
 
+        public CourseType Type { get; set; }
+
         //----------------------------------------------------
 
         public string InstructorId { get; set; }
+
+        public string InstructorFullName { get; set; }
 
         //public ApplicationUser Instructor { get; set; }
 
@@ -40,7 +45,13 @@ namespace Educational_Medical_platform.DTO.Course
 
         //public List<Question>? Questions { get; set; }
 
-        public int? SubCategoryId { get; set; }
+        public int SubCategoryId { get; set; }
+
+        public string SubCategoryName { get; set; }
+
+        public int CategoryId { get; set; }
+
+        public string CategoryName { get; set; }
 
         //public SubCategory? SubCategory { get; set; }
     }

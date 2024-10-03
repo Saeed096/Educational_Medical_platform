@@ -19,11 +19,11 @@ namespace Educational_Medical_platform.Models
 
         // to be handeled 
 
-        public int VideoNumber { get; set; } = 0;
+        public int CurrentVideoNumber { get; set; } // to handle the progress ratio for each student
 
-        public DateTime Date { get; set; } = DateTime.Now;
+        public DateTime StartDate { get; set; }
 
-        public int CertifiedHours { get; set; }
+        //public int CertifiedHours { get; set; }
 
         //public CertificateDetails? CertificateDetails { get; set; }
 

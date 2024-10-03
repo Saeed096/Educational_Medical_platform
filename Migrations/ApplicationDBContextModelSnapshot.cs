@@ -705,6 +705,15 @@ namespace Educational_Medical_platform.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime?>("PublishDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("PublisherName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PublisherRole")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int?>("SubCategoryId")
                         .HasColumnType("int");
 
@@ -789,7 +798,7 @@ namespace Educational_Medical_platform.Migrations
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(10, 2)");
 
-                    b.Property<int?>("SubCategoryId")
+                    b.Property<int>("SubCategoryId")
                         .HasColumnType("int");
 
                     b.Property<string>("ThumbnailURL")
@@ -798,6 +807,9 @@ namespace Educational_Medical_platform.Migrations
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Type")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -815,7 +827,8 @@ namespace Educational_Medical_platform.Migrations
                             InstructorId = "2b222b22-2222-2222-2222-222222222222",
                             Price = 1500m,
                             SubCategoryId = 1,
-                            Title = "physiology"
+                            Title = "physiology",
+                            Type = 0
                         },
                         new
                         {
@@ -823,8 +836,9 @@ namespace Educational_Medical_platform.Migrations
                             DurationInhours = 20f,
                             InstructorId = "2b222b22-2222-2222-2222-222222222222",
                             Price = 1000m,
-                            SubCategoryId = 1,
-                            Title = "anatomy"
+                            SubCategoryId = 3,
+                            Title = "anatomy",
+                            Type = 1
                         },
                         new
                         {
@@ -832,8 +846,9 @@ namespace Educational_Medical_platform.Migrations
                             DurationInhours = 30f,
                             InstructorId = "3c333c33-3333-3333-3333-333333333333",
                             Price = 2500m,
-                            SubCategoryId = 1,
-                            Title = "histology"
+                            SubCategoryId = 5,
+                            Title = "histology",
+                            Type = 1
                         });
                 });
 
@@ -1208,17 +1223,14 @@ namespace Educational_Medical_platform.Migrations
                     b.Property<int>("CourseId")
                         .HasColumnType("int");
 
-                    b.Property<int>("CertifiedHours")
+                    b.Property<int>("CurrentVideoNumber")
                         .HasColumnType("int");
-
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("datetime2");
 
                     b.Property<float?>("Degree")
                         .HasColumnType("real");
 
-                    b.Property<int>("VideoNumber")
-                        .HasColumnType("int");
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnType("datetime2");
 
                     b.HasKey("StudentId", "CourseId");
 
@@ -1546,7 +1558,7 @@ namespace Educational_Medical_platform.Migrations
                         {
                             Id = "1a111a11-1111-1111-1111-111111111111",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "c27ebef2-d3f6-44bc-a411-feedc0247924",
+                            ConcurrencyStamp = "140d3f6c-ef72-4b77-ab6e-02f5875917c3",
                             Email = "Ehab_Naser@example.com",
                             EmailConfirmed = true,
                             FirstName = "Ehab",
@@ -1554,9 +1566,9 @@ namespace Educational_Medical_platform.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "EHAB_NASER@EXAMPLE.COM",
                             NormalizedUserName = "EHAB_NASER",
-                            PasswordHash = "AQAAAAIAAYagAAAAEDDvpFCB+Jf1iH9aW8DLTfJRnGWV+bwD58DAbQVbf3iFNkJs4PDb+gfg2usuGZg5Xw==",
+                            PasswordHash = "AQAAAAIAAYagAAAAENRBHpIiCuxWuQGN6kThnX2Or8cCmyyfd0SSeHRl5bH5GIDBUGJj7N6Cn3VzlIjGrQ==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "96578fe6-a780-4479-bec8-cfcd14a826ee",
+                            SecurityStamp = "ac0edd1b-b413-45cc-9b46-4efe9e176065",
                             TwoFactorEnabled = false,
                             UserName = "Ehab_Naser"
                         },
@@ -1564,7 +1576,7 @@ namespace Educational_Medical_platform.Migrations
                         {
                             Id = "2b222b22-2222-2222-2222-222222222222",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "72891089-9cd3-42d0-8a84-cd145dd3f886",
+                            ConcurrencyStamp = "c35fc235-3cf5-4bfc-a00f-59957f497404",
                             Email = "Mohamed_Galal@example.com",
                             EmailConfirmed = true,
                             FirstName = "Mohamed",
@@ -1572,9 +1584,9 @@ namespace Educational_Medical_platform.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "MOHAMED_GALAL@EXAMPLE.COM",
                             NormalizedUserName = "MOHAMED_GALAL",
-                            PasswordHash = "AQAAAAIAAYagAAAAEBAkem3F4HxQKcpH/XAuKfAcSLwKrO6jv67+8H1xuOx6pHDaQJ+ryXJRWjeLEivCFw==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEDNDrwXpqLvEBdC2QKduqVLOvGmj9hkZjL2j1JMyA06rtOoCQ3KXoiruAMBJ63mj6g==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "b0d9cfe3-306b-43f6-991d-496e36c8adae",
+                            SecurityStamp = "5cfa508d-d648-4729-9cb7-28dcf176ae57",
                             TwoFactorEnabled = false,
                             UserName = "Mohamed_Galal"
                         },
@@ -1582,7 +1594,7 @@ namespace Educational_Medical_platform.Migrations
                         {
                             Id = "3c333c33-3333-3333-3333-333333333333",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "afdade58-9d79-43a3-aa76-0e11de086117",
+                            ConcurrencyStamp = "b3e3f8ff-c49c-4e33-b111-24116f37af98",
                             Email = "Alaa_Test@example.com",
                             EmailConfirmed = true,
                             FirstName = "Alaa",
@@ -1590,9 +1602,9 @@ namespace Educational_Medical_platform.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "ALAA_TEST@EXAMPLE.COM",
                             NormalizedUserName = "ALAA_TEST",
-                            PasswordHash = "AQAAAAIAAYagAAAAEJ3UkpzFeyRcIwLg+yqekfkIjZeAEVzs5E12rAVuJ9s4q7VN4y+FJKmy/bEN1KxQkA==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEFw/tGLfRYEt/scn7Q8Gc4izdcaoKae03SiS/FcHea//begpfoO4Lj/STVsZpxL2yA==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "6bf7325e-aba6-4b7d-a286-dc111c040daf",
+                            SecurityStamp = "c04a1d9e-1efa-458a-ad7e-4520c3c937b6",
                             TwoFactorEnabled = false,
                             UserName = "Alaa_Test"
                         });
@@ -1678,7 +1690,9 @@ namespace Educational_Medical_platform.Migrations
 
                     b.HasOne("Educational_Medical_platform.Models.SubCategory", "SubCategory")
                         .WithMany("Courses")
-                        .HasForeignKey("SubCategoryId");
+                        .HasForeignKey("SubCategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Instructor");
 

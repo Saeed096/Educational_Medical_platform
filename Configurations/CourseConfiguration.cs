@@ -1,4 +1,5 @@
-﻿using Educational_Medical_platform.Models;
+﻿using Educational_Medical_platform.Helpers;
+using Educational_Medical_platform.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System.Reflection.Emit;
@@ -17,25 +18,28 @@ namespace Educational_Medical_platform.Configurations
                     DurationInhours = 10,
                     SubCategoryId = 1,
                     Price = 1500,
-                    InstructorId = "2b222b22-2222-2222-2222-222222222222"
+                    InstructorId = "2b222b22-2222-2222-2222-222222222222",
+                    Type = CourseType.Free,
                 },
                 new Course
                 {
                     Id = 2,
                     Title = "anatomy",
                     DurationInhours = 20,
-                    SubCategoryId = 1,
+                    SubCategoryId = 3,
                     Price = 1000,
-                    InstructorId = "2b222b22-2222-2222-2222-222222222222"
+                    InstructorId = "2b222b22-2222-2222-2222-222222222222",
+                    Type = CourseType.Paid,
                 },
                 new Course
                 {
                     Id = 3,
                     Title = "histology",
                     DurationInhours = 30,
-                    SubCategoryId = 1,
+                    SubCategoryId = 5,
                     Price = 2500,
-                    InstructorId = "3c333c33-3333-3333-3333-333333333333"
+                    InstructorId = "3c333c33-3333-3333-3333-333333333333",
+                    Type = CourseType.Paid,
                 }
                 );
 
