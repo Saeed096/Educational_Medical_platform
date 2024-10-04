@@ -25,4 +25,14 @@ namespace Educational_Medical_platform.Helpers
 
         Paid = 1 ,
     }
+
+    public enum CourseStatus
+    {
+        PendingApproval = 0,
+
+        Approved = 1,
+
+        PendingDeletion = 2
+    }
+
 }

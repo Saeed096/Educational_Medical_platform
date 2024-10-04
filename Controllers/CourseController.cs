@@ -474,7 +474,6 @@ namespace Educational_Medical_platform.Controllers
             };
         }
 
-
         [HttpPost]
         public async Task<ActionResult<GeneralResponse>> AddCourse([FromForm] AddCourseDTO courseDTO)
         {
@@ -982,7 +981,6 @@ namespace Educational_Medical_platform.Controllers
                 Data = getCourseDTO
             };
         }
-
 
         [HttpDelete("{courseId:int}")]
         public async Task<ActionResult<GeneralResponse>> DeleteCourse(int courseId)
