@@ -21,6 +21,7 @@ namespace Educational_Medical_platform.Configurations
                     InstructorId = "2b222b22-2222-2222-2222-222222222222",
                     Type = CourseType.Free,
                     Status = CourseStatus.Approved,
+                    CategoryId = 1,
                 },
                 new Course
                 {
@@ -32,6 +33,7 @@ namespace Educational_Medical_platform.Configurations
                     InstructorId = "2b222b22-2222-2222-2222-222222222222",
                     Type = CourseType.Paid,
                     Status = CourseStatus.PendingApproval,
+                    CategoryId = 2,
                 },
                 new Course
                 {
@@ -43,6 +45,7 @@ namespace Educational_Medical_platform.Configurations
                     InstructorId = "3c333c33-3333-3333-3333-333333333333",
                     Type = CourseType.Paid,
                     Status = CourseStatus.PendingDeletion,
+                    CategoryId = 3,
                 }
                 );
 

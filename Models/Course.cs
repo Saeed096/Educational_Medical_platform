@@ -43,6 +43,13 @@ namespace Educational_Medical_platform.Models
 
         public SubCategory SubCategory { get; set; }
 
+        //  ==========================
+
+        [ForeignKey(nameof(Category))]
+        public int CategoryId { get; set; }
+
+        public Category Category { get; set; }
+
         //----------------------------------------------------
 
         public List<Requirement>? Requirements { get; set; }
