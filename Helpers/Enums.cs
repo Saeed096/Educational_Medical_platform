@@ -32,7 +32,9 @@ namespace Educational_Medical_platform.Helpers
 
         Approved = 1,
 
-        PendingDeletion = 2
+        PendingDeletion = 2 ,
+
+        Rejected = 3 ,
     }
 
 }
