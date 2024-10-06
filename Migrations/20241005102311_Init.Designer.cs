@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Shoghlana.EF;
 
@@ -11,9 +12,11 @@ using Shoghlana.EF;
 namespace Educational_Medical_platform.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    partial class ApplicationDBContextModelSnapshot : ModelSnapshot
+    [Migration("20241005102311_Init")]
+    partial class Init
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -750,9 +753,6 @@ namespace Educational_Medical_platform.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<int>("Type")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
                     b.ToTable("Categories");
@@ -761,98 +761,22 @@ namespace Educational_Medical_platform.Migrations
                         new
                         {
                             Id = 1,
-                            Name = "Anatomy Course",
-                            Type = 0
+                            Name = "Anatomy"
                         },
                         new
                         {
                             Id = 2,
-                            Name = "Physiology Course",
-                            Type = 0
+                            Name = "Physiology"
                         },
                         new
                         {
                             Id = 3,
-                            Name = "Pharmacology Course",
-                            Type = 0
+                            Name = "Pharmacology"
                         },
                         new
                         {
                             Id = 4,
-                            Name = "Pathology Course",
-                            Type = 0
-                        },
-                        new
-                        {
-                            Id = 5,
-                            Name = "Anatomy Book",
-                            Type = 1
-                        },
-                        new
-                        {
-                            Id = 6,
-                            Name = "Physiology Book",
-                            Type = 1
-                        },
-                        new
-                        {
-                            Id = 7,
-                            Name = "Pharmacology Book",
-                            Type = 1
-                        },
-                        new
-                        {
-                            Id = 8,
-                            Name = "Pathology Book",
-                            Type = 1
-                        },
-                        new
-                        {
-                            Id = 9,
-                            Name = "Anatomy Blog",
-                            Type = 2
-                        },
-                        new
-                        {
-                            Id = 10,
-                            Name = "Physiology Blog",
-                            Type = 2
-                        },
-                        new
-                        {
-                            Id = 11,
-                            Name = "Pharmacology Blog",
-                            Type = 2
-                        },
-                        new
-                        {
-                            Id = 12,
-                            Name = "Pathology Blog",
-                            Type = 2
-                        },
-                        new
-                        {
-                            Id = 13,
-                            Name = "Anatomy Exam",
-                            Type = 3
-                        },
-                        new
-                        {
-                            Id = 14,
-                            Name = "Physiology Exam",
-                            Type = 3
-                        },
-                        new
-                        {
-                            Id = 15,
-                            Name = "Pharmacology Exam",
-                            Type = 3
-                        },
-                        new
-                        {
-                            Id = 16,
-                            Name = "Pathology Exam",
-                            Type = 3
+                            Name = "Pathology"
                         });
                 });
 
@@ -863,9 +787,6 @@ namespace Educational_Medical_platform.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("CategoryId")
-                        .HasColumnType("int");
 
                     b.Property<float>("DurationInhours")
                         .HasColumnType("real");
@@ -898,8 +819,6 @@ namespace Educational_Medical_platform.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CategoryId");
-
                     b.HasIndex("InstructorId");
 
                     b.HasIndex("SubCategoryId");
@@ -910,7 +829,6 @@ namespace Educational_Medical_platform.Migrations
                         new
                         {
                             Id = 1,
-                            CategoryId = 1,
                             DurationInhours = 10f,
                             InstructorId = "2b222b22-2222-2222-2222-222222222222",
                             Price = 1500m,
@@ -922,7 +840,6 @@ namespace Educational_Medical_platform.Migrations
                         new
                         {
                             Id = 2,
-                            CategoryId = 2,
                             DurationInhours = 20f,
                             InstructorId = "2b222b22-2222-2222-2222-222222222222",
                             Price = 1000m,
@@ -934,7 +851,6 @@ namespace Educational_Medical_platform.Migrations
                         new
                         {
                             Id = 3,
-                            CategoryId = 3,
                             DurationInhours = 30f,
                             InstructorId = "3c333c33-3333-3333-3333-333333333333",
                             Price = 2500m,
@@ -1251,9 +1167,6 @@ namespace Educational_Medical_platform.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<int>("Type")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
                     b.HasIndex("CategoryId");
@@ -1265,225 +1178,49 @@ namespace Educational_Medical_platform.Migrations
                         {
                             Id = 1,
                             CategoryId = 1,
-                            Name = "Human Anatomy",
-                            Type = 0
+                            Name = "Human Anatomy"
                         },
                         new
                         {
                             Id = 2,
                             CategoryId = 1,
-                            Name = "Comparative Anatomy",
-                            Type = 0
+                            Name = "Comparative Anatomy"
                         },
                         new
                         {
                             Id = 3,
                             CategoryId = 2,
-                            Name = "Cell Physiology",
-                            Type = 0
+                            Name = "Cell Physiology"
                         },
                         new
                         {
                             Id = 4,
                             CategoryId = 2,
-                            Name = "Systemic Physiology",
-                            Type = 0
+                            Name = "Systemic Physiology"
                         },
                         new
                         {
                             Id = 5,
                             CategoryId = 3,
-                            Name = "Clinical Pharmacology",
-                            Type = 0
+                            Name = "Clinical Pharmacology"
                         },
                         new
                         {
                             Id = 6,
                             CategoryId = 3,
-                            Name = "Pharmacokinetics",
-                            Type = 0
+                            Name = "Pharmacokinetics"
                         },
                         new
                         {
                             Id = 7,
                             CategoryId = 4,
-                            Name = "General Pathology",
-                            Type = 0
+                            Name = "General Pathology"
                         },
                         new
                         {
                             Id = 8,
                             CategoryId = 4,
-                            Name = "Systemic Pathology",
-                            Type = 0
-                        },
-                        new
-                        {
-                            Id = 9,
-                            CategoryId = 5,
-                            Name = "Human Anatomy Book",
-                            Type = 1
-                        },
-                        new
-                        {
-                            Id = 10,
-                            CategoryId = 5,
-                            Name = "Comparative Anatomy Book",
-                            Type = 1
-                        },
-                        new
-                        {
-                            Id = 11,
-                            CategoryId = 6,
-                            Name = "Cell Physiology Book",
-                            Type = 1
-                        },
-                        new
-                        {
-                            Id = 12,
-                            CategoryId = 6,
-                            Name = "Systemic Physiology Book",
-                            Type = 1
-                        },
-                        new
-                        {
-                            Id = 13,
-                            CategoryId = 7,
-                            Name = "Clinical Pharmacology Book",
-                            Type = 1
-                        },
-                        new
-                        {
-                            Id = 14,
-                            CategoryId = 7,
-                            Name = "Pharmacokinetics Book",
-                            Type = 1
-                        },
-                        new
-                        {
-                            Id = 15,
-                            CategoryId = 8,
-                            Name = "General Pathology Book",
-                            Type = 1
-                        },
-                        new
-                        {
-                            Id = 16,
-                            CategoryId = 8,
-                            Name = "Systemic Pathology Book",
-                            Type = 1
-                        },
-                        new
-                        {
-                            Id = 17,
-                            CategoryId = 9,
-                            Name = "Human Anatomy Blog",
-                            Type = 2
-                        },
-                        new
-                        {
-                            Id = 18,
-                            CategoryId = 9,
-                            Name = "Comparative Anatomy Blog",
-                            Type = 2
-                        },
-                        new
-                        {
-                            Id = 19,
-                            CategoryId = 10,
-                            Name = "Cell Physiology Blog",
-                            Type = 2
-                        },
-                        new
-                        {
-                            Id = 20,
-                            CategoryId = 10,
-                            Name = "Systemic Physiology Blog",
-                            Type = 2
-                        },
-                        new
-                        {
-                            Id = 21,
-                            CategoryId = 11,
-                            Name = "Clinical Pharmacology Blog",
-                            Type = 2
-                        },
-                        new
-                        {
-                            Id = 22,
-                            CategoryId = 11,
-                            Name = "Pharmacokinetics Blog",
-                            Type = 2
-                        },
-                        new
-                        {
-                            Id = 23,
-                            CategoryId = 12,
-                            Name = "General Pathology Blog",
-                            Type = 2
-                        },
-                        new
-                        {
-                            Id = 24,
-                            CategoryId = 12,
-                            Name = "Systemic Pathology Blog",
-                            Type = 2
-                        },
-                        new
-                        {
-                            Id = 25,
-                            CategoryId = 13,
-                            Name = "Human Anatomy Exam",
-                            Type = 3
-                        },
-                        new
-                        {
-                            Id = 26,
-                            CategoryId = 13,
-                            Name = "Comparative Anatomy Exam",
-                            Type = 3
-                        },
-                        new
-                        {
-                            Id = 27,
-                            CategoryId = 14,
-                            Name = "Cell Physiology Exam",
-                            Type = 3
-                        },
-                        new
-                        {
-                            Id = 28,
-                            CategoryId = 14,
-                            Name = "Systemic Physiology Exam",
-                            Type = 3
-                        },
-                        new
-                        {
-                            Id = 29,
-                            CategoryId = 15,
-                            Name = "Clinical Pharmacology Exam",
-                            Type = 3
-                        },
-                        new
-                        {
-                            Id = 30,
-                            CategoryId = 15,
-                            Name = "Pharmacokinetics Exam",
-                            Type = 3
-                        },
-                        new
-                        {
-                            Id = 31,
-                            CategoryId = 16,
-                            Name = "General Pathology Exam",
-                            Type = 3
-                        },
-                        new
-                        {
-                            Id = 32,
-                            CategoryId = 16,
-                            Name = "Systemic Pathology Exam",
-                            Type = 3
+                            Name = "Systemic Pathology"
                         });
                 });
 
@@ -1816,8 +1553,7 @@ namespace Educational_Medical_platform.Migrations
                         {
                             Id = "1a111a11-1111-1111-1111-111111111111",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "0abb1891-dac7-4711-bb3a-317520ca39a5",
-
+                            ConcurrencyStamp = "4e7aec21-b4b1-42c8-ba50-e417fe08d92b",
                             Email = "Ehab_Naser@example.com",
                             EmailConfirmed = true,
                             FirstName = "Ehab",
@@ -1825,10 +1561,9 @@ namespace Educational_Medical_platform.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "EHAB_NASER@EXAMPLE.COM",
                             NormalizedUserName = "EHAB_NASER",
-                            PasswordHash = "AQAAAAIAAYagAAAAEJmdGPWye8wgcAFzpppQdFQXAakxEYdBTm/igJoOipC7OhCN+K+3l4GP0cbX8jABHA==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEOOs50pOP4tSRP5Ccpdg5iJ3b/8soYsDkFkQimQm+ZgtKMUqrFUxuourwd0BJCWfag==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "3f8d856c-247a-48e6-aede-83e0d3eea0c8",
-
+                            SecurityStamp = "9f9ef764-d632-42d2-99ee-93v2410d8ae0",
                             TwoFactorEnabled = false,
                             UserName = "Ehab_Naser"
                         },
@@ -1836,7 +1571,7 @@ namespace Educational_Medical_platform.Migrations
                         {
                             Id = "2b222b22-2222-2222-2222-222222222222",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "7455653e-afb3-41c8-a6e8-d9e6c9e78905",
+                            ConcurrencyStamp = "21c399e0-f462-4320-b9eb-edf3e345a916",
                             Email = "Mohamed_Galal@example.com",
                             EmailConfirmed = true,
                             FirstName = "Mohamed",
@@ -1844,10 +1579,9 @@ namespace Educational_Medical_platform.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "MOHAMED_GALAL@EXAMPLE.COM",
                             NormalizedUserName = "MOHAMED_GALAL",
-                            PasswordHash = "AQAAAAIAAYagAAAAEJLWXh5izakNXAks4ub/fILy86TSQmf7UNVCl58qzKcgtWYQkalAwty8a61HKcTvoQ==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEOjg5/g0QErpBZ9e44zjiJwiZJhW/nqqwO1BNYEDCLPHaZGVIwJVPpmZau068lnR+w==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "cf465277-552b-49ef-9fbe-971da8eda90a",
-
+                            SecurityStamp = "9f9ed761-d631-42d2-99ee-93v2420d8ae0",
                             TwoFactorEnabled = false,
                             UserName = "Mohamed_Galal"
                         },
@@ -1855,8 +1589,7 @@ namespace Educational_Medical_platform.Migrations
                         {
                             Id = "3c333c33-3333-3333-3333-333333333333",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "e925b21e-28e4-40aa-b946-24fe159ade41",
-
+                            ConcurrencyStamp = "68487010-1ca9-4b87-984d-b1c20fa20a05",
                             Email = "Alaa_Test@example.com",
                             EmailConfirmed = true,
                             FirstName = "Alaa",
@@ -1864,10 +1597,9 @@ namespace Educational_Medical_platform.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "ALAA_TEST@EXAMPLE.COM",
                             NormalizedUserName = "ALAA_TEST",
-                            PasswordHash = "AQAAAAIAAYagAAAAEBqOMD/0ljbyPr3pfqtUrnew/IR2nKK6I3ts4CklsT46343y8zZYGWBeIkcD/HRmkg==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEAHHDOgNv9qiWMRq5X8PcP1FPga1KuXIuyNoGUzERIyO92FudxldfQFdAmbnpChWQw==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "f561928a-fa3f-4629-9262-7f9c77b45b0a",
-
+                            SecurityStamp = "9f1ed761-a631-42dq-99ee-93z2420d8aeq",
                             TwoFactorEnabled = false,
                             UserName = "Alaa_Test"
                         });
@@ -1945,12 +1677,6 @@ namespace Educational_Medical_platform.Migrations
 
             modelBuilder.Entity("Educational_Medical_platform.Models.Course", b =>
                 {
-                    b.HasOne("Educational_Medical_platform.Models.Category", "Category")
-                        .WithMany()
-                        .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("Shoghlana.Core.Models.ApplicationUser", "Instructor")
                         .WithMany("CoursesCreated")
                         .HasForeignKey("InstructorId")
@@ -1962,8 +1688,6 @@ namespace Educational_Medical_platform.Migrations
                         .HasForeignKey("SubCategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Category");
 
                     b.Navigation("Instructor");
 

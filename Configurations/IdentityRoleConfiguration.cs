@@ -16,20 +16,6 @@ internal class IdentityRoleConfiguration : IEntityTypeConfiguration<IdentityRole
             },
             new IdentityRole
             {
-                Id = "23978a1d-7823-4030-bd5d-ef7a0e6412a2",
-                Name = "Student",
-                NormalizedName = "STUDENT",
-                ConcurrencyStamp = "df2d8409-ce61-4dac-ae75-b26fbbab27f2"
-            },
-            new IdentityRole
-            {
-                Id = "ea3203f7-8571-4e45-b109-e593235f3420",
-                Name = "Instructor",
-                NormalizedName = "INSTRUCTOR",
-                ConcurrencyStamp = "df2d8409-ce61-4dac-ae75-b26fbbab27f2"
-            },
-            new IdentityRole
-            {
                 Id = "ea3206f7-8571-4e45-b209-e593236f3420",
                 Name = "User",
                 NormalizedName = "USER",

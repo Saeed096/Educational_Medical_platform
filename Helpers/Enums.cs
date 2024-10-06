@@ -43,6 +43,15 @@ namespace Educational_Medical_platform.Helpers
         Blogs = 2 ,
         Exams= 3 ,
 
+    public enum CourseStatus
+    {
+        PendingApproval = 0,
+
+        Approved = 1,
+
+        PendingDeletion = 2 ,
+
+        Rejected = 3 ,
     }
 
 }

@@ -15,9 +15,6 @@ namespace Educational_Medical_platform.Models
         [Column(TypeName = "decimal(10, 2)")]
         public decimal Price { get; set; }
 
-        //[NotMapped]
-        //public IFormFile? Thumbnail { get; set; }
-
         public string? ThumbnailURL { get; set; }
 
         public float DurationInhours { get; set; }
@@ -25,6 +22,8 @@ namespace Educational_Medical_platform.Models
         public string? Preview { get; set; }
 
         public CourseType Type { get; set; } = CourseType.Free; // 0 => free , 1 => paid
+
+        public CourseStatus Status { get; set; } = CourseStatus.PendingApproval;
 
         //----------------------------------------------------
 
@@ -39,6 +38,20 @@ namespace Educational_Medical_platform.Models
 
         //----------------------------------------------------
 
+        [ForeignKey(nameof(SubCategory))]
+        public int SubCategoryId { get; set; }
+
+        public SubCategory SubCategory { get; set; }
+
+        //  ==========================
+
+        [ForeignKey(nameof(Category))]
+        public int CategoryId { get; set; }
+
+        public Category Category { get; set; }
+
+        //----------------------------------------------------
+
         public List<Requirement>? Requirements { get; set; }
 
         public List<Objective>? Objectives { get; set; }
@@ -46,10 +59,5 @@ namespace Educational_Medical_platform.Models
         public List<Video> Videos { get; set; }
 
         public List<Question>? Questions { get; set; }
-
-        [ForeignKey(nameof(SubCategory))]
-        public int SubCategoryId { get; set; }
-
-        public SubCategory SubCategory { get; set; }
     }
 }
