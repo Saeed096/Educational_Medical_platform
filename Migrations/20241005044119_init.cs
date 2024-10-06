@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Educational_Medical_platform.Migrations
 {
     /// <inheritdoc />
-    public partial class Init : Migration
+    public partial class init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -61,7 +61,8 @@ namespace Educational_Medical_platform.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false)
+                    Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    Type = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -196,7 +197,8 @@ namespace Educational_Medical_platform.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    CategoryId = table.Column<int>(type: "int", nullable: false)
+                    CategoryId = table.Column<int>(type: "int", nullable: false),
+                    Type = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -497,20 +499,32 @@ namespace Educational_Medical_platform.Migrations
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "FirstName", "ImageUrl", "LastName", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
                 values: new object[,]
                 {
-                    { "1a111a11-1111-1111-1111-111111111111", 0, "140d3f6c-ef72-4b77-ab6e-02f5875917c3", "Ehab_Naser@example.com", true, "Ehab", null, "Naser", false, null, "EHAB_NASER@EXAMPLE.COM", "EHAB_NASER", "AQAAAAIAAYagAAAAENRBHpIiCuxWuQGN6kThnX2Or8cCmyyfd0SSeHRl5bH5GIDBUGJj7N6Cn3VzlIjGrQ==", null, false, "ac0edd1b-b413-45cc-9b46-4efe9e176065", false, "Ehab_Naser" },
-                    { "2b222b22-2222-2222-2222-222222222222", 0, "c35fc235-3cf5-4bfc-a00f-59957f497404", "Mohamed_Galal@example.com", true, "Mohamed", null, "Galal", false, null, "MOHAMED_GALAL@EXAMPLE.COM", "MOHAMED_GALAL", "AQAAAAIAAYagAAAAEDNDrwXpqLvEBdC2QKduqVLOvGmj9hkZjL2j1JMyA06rtOoCQ3KXoiruAMBJ63mj6g==", null, false, "5cfa508d-d648-4729-9cb7-28dcf176ae57", false, "Mohamed_Galal" },
-                    { "3c333c33-3333-3333-3333-333333333333", 0, "b3e3f8ff-c49c-4e33-b111-24116f37af98", "Alaa_Test@example.com", true, "Alaa", null, "Test", false, null, "ALAA_TEST@EXAMPLE.COM", "ALAA_TEST", "AQAAAAIAAYagAAAAEFw/tGLfRYEt/scn7Q8Gc4izdcaoKae03SiS/FcHea//begpfoO4Lj/STVsZpxL2yA==", null, false, "c04a1d9e-1efa-458a-ad7e-4520c3c937b6", false, "Alaa_Test" }
+                    { "1a111a11-1111-1111-1111-111111111111", 0, "0abb1891-dac7-4711-bb3a-317520ca39a5", "Ehab_Naser@example.com", true, "Ehab", null, "Naser", false, null, "EHAB_NASER@EXAMPLE.COM", "EHAB_NASER", "AQAAAAIAAYagAAAAEJmdGPWye8wgcAFzpppQdFQXAakxEYdBTm/igJoOipC7OhCN+K+3l4GP0cbX8jABHA==", null, false, "3f8d856c-247a-48e6-aede-83e0d3eea0c8", false, "Ehab_Naser" },
+                    { "2b222b22-2222-2222-2222-222222222222", 0, "7455653e-afb3-41c8-a6e8-d9e6c9e78905", "Mohamed_Galal@example.com", true, "Mohamed", null, "Galal", false, null, "MOHAMED_GALAL@EXAMPLE.COM", "MOHAMED_GALAL", "AQAAAAIAAYagAAAAEJLWXh5izakNXAks4ub/fILy86TSQmf7UNVCl58qzKcgtWYQkalAwty8a61HKcTvoQ==", null, false, "cf465277-552b-49ef-9fbe-971da8eda90a", false, "Mohamed_Galal" },
+                    { "3c333c33-3333-3333-3333-333333333333", 0, "e925b21e-28e4-40aa-b946-24fe159ade41", "Alaa_Test@example.com", true, "Alaa", null, "Test", false, null, "ALAA_TEST@EXAMPLE.COM", "ALAA_TEST", "AQAAAAIAAYagAAAAEBqOMD/0ljbyPr3pfqtUrnew/IR2nKK6I3ts4CklsT46343y8zZYGWBeIkcD/HRmkg==", null, false, "f561928a-fa3f-4629-9262-7f9c77b45b0a", false, "Alaa_Test" }
                 });
 
             migrationBuilder.InsertData(
                 table: "Categories",
-                columns: new[] { "Id", "Name" },
+                columns: new[] { "Id", "Name", "Type" },
                 values: new object[,]
                 {
-                    { 1, "Anatomy" },
-                    { 2, "Physiology" },
-                    { 3, "Pharmacology" },
-                    { 4, "Pathology" }
+                    { 1, "Anatomy Course", 0 },
+                    { 2, "Physiology Course", 0 },
+                    { 3, "Pharmacology Course", 0 },
+                    { 4, "Pathology Course", 0 },
+                    { 5, "Anatomy Book", 1 },
+                    { 6, "Physiology Book", 1 },
+                    { 7, "Pharmacology Book", 1 },
+                    { 8, "Pathology Book", 1 },
+                    { 9, "Anatomy Blog", 2 },
+                    { 10, "Physiology Blog", 2 },
+                    { 11, "Pharmacology Blog", 2 },
+                    { 12, "Pathology Blog", 2 },
+                    { 13, "Anatomy Exam", 3 },
+                    { 14, "Physiology Exam", 3 },
+                    { 15, "Pharmacology Exam", 3 },
+                    { 16, "Pathology Exam", 3 }
                 });
 
             migrationBuilder.InsertData(
@@ -557,17 +571,41 @@ namespace Educational_Medical_platform.Migrations
 
             migrationBuilder.InsertData(
                 table: "SubCategories",
-                columns: new[] { "Id", "CategoryId", "Name" },
+                columns: new[] { "Id", "CategoryId", "Name", "Type" },
                 values: new object[,]
                 {
-                    { 1, 1, "Human Anatomy" },
-                    { 2, 1, "Comparative Anatomy" },
-                    { 3, 2, "Cell Physiology" },
-                    { 4, 2, "Systemic Physiology" },
-                    { 5, 3, "Clinical Pharmacology" },
-                    { 6, 3, "Pharmacokinetics" },
-                    { 7, 4, "General Pathology" },
-                    { 8, 4, "Systemic Pathology" }
+                    { 1, 1, "Human Anatomy", 0 },
+                    { 2, 1, "Comparative Anatomy", 0 },
+                    { 3, 2, "Cell Physiology", 0 },
+                    { 4, 2, "Systemic Physiology", 0 },
+                    { 5, 3, "Clinical Pharmacology", 0 },
+                    { 6, 3, "Pharmacokinetics", 0 },
+                    { 7, 4, "General Pathology", 0 },
+                    { 8, 4, "Systemic Pathology", 0 },
+                    { 9, 5, "Human Anatomy Book", 1 },
+                    { 10, 5, "Comparative Anatomy Book", 1 },
+                    { 11, 6, "Cell Physiology Book", 1 },
+                    { 12, 6, "Systemic Physiology Book", 1 },
+                    { 13, 7, "Clinical Pharmacology Book", 1 },
+                    { 14, 7, "Pharmacokinetics Book", 1 },
+                    { 15, 8, "General Pathology Book", 1 },
+                    { 16, 8, "Systemic Pathology Book", 1 },
+                    { 17, 9, "Human Anatomy Blog", 2 },
+                    { 18, 9, "Comparative Anatomy Blog", 2 },
+                    { 19, 10, "Cell Physiology Blog", 2 },
+                    { 20, 10, "Systemic Physiology Blog", 2 },
+                    { 21, 11, "Clinical Pharmacology Blog", 2 },
+                    { 22, 11, "Pharmacokinetics Blog", 2 },
+                    { 23, 12, "General Pathology Blog", 2 },
+                    { 24, 12, "Systemic Pathology Blog", 2 },
+                    { 25, 13, "Human Anatomy Exam", 3 },
+                    { 26, 13, "Comparative Anatomy Exam", 3 },
+                    { 27, 14, "Cell Physiology Exam", 3 },
+                    { 28, 14, "Systemic Physiology Exam", 3 },
+                    { 29, 15, "Clinical Pharmacology Exam", 3 },
+                    { 30, 15, "Pharmacokinetics Exam", 3 },
+                    { 31, 16, "General Pathology Exam", 3 },
+                    { 32, 16, "Systemic Pathology Exam", 3 }
                 });
 
             migrationBuilder.InsertData(

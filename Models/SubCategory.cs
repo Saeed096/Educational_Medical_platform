@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Educational_Medical_platform.Helpers;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Educational_Medical_platform.Models
@@ -21,5 +22,7 @@ namespace Educational_Medical_platform.Models
         public List<Book>? Books { get; set; } 
         public List<Blog>? Blogs { get; set; }
         public List<Question>? QuestionBank { get; set; }
+
+        public SubCategoryType Type { get; set; }
     }
 }

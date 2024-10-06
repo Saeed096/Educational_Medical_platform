@@ -302,7 +302,7 @@ namespace Educational_Medical_platform.Controllers
             if (createBlogDTO.SubCategoryId != null)
             {
                 // Check if SubCategory exists
-                if (createBlogDTO.SubCategoryId != null && !_subCategoryRepository.Exists(createBlogDTO.SubCategoryId.Value))
+                if (createBlogDTO.SubCategoryId != null && !_subCategoryRepository.Exists(createBlogDTO.SubCategoryId.Value) )
                 {
                     return new GeneralResponse()
                     {

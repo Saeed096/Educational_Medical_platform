@@ -1,5 +1,6 @@
 ﻿using Educational_Medical_platform.DTO;
 using Educational_Medical_platform.DTO.BookDTO;
+using Educational_Medical_platform.Helpers;
 using Educational_Medical_platform.Models;
 using Educational_Medical_platform.Repositories.Implementations;
 using Educational_Medical_platform.Repositories.Interfaces;
@@ -32,9 +33,9 @@ namespace Educational_Medical_platform.Controllers
                 {
                     Id=category.Id,
                     Name = category.Name,
-                    //Books = category.Books,
-                    //SubCategories = category.SubCategories,
-                    //Blogs = category.Blogs
+                    Type = category.Type,
+
+
                 }).ToList();
 
                 return new GeneralResponse
@@ -56,7 +57,149 @@ namespace Educational_Medical_platform.Controllers
         }
 
 
+        [HttpGet("GetAllCategoriesByTypeCourses")]
+        public ActionResult<GeneralResponse> GetAllCategoriesByTypeCourses()
+        {
+            try
+            {
+                // Filter categories by Type Courses
+                List<Category> categories = (List<Category>)CategoryRepository.FindAll(
+                    criteria: category => category.Type == CategoryType.Courses
+                );
+
+                List<CategoryDTO> categoriesDTO = categories.Select(category => new CategoryDTO
+                {
+                    Id = category.Id,
+                    Name = category.Name,
+                    Type = category.Type,
+
+                }).ToList();
+
+                return new GeneralResponse
+                {
+                    IsSuccess = true,
+                    Message = "Categories retrieved successfully",
+                    Data = categoriesDTO
+                };
+            }
+            catch (Exception ex)
+            {
+                return new GeneralResponse
+                {
+                    IsSuccess = false,
+                    Message = $"An error occurred: {ex.Message}"
+                };
+            }
+        }
+
+
+        [HttpGet("GetAllCategoriesByTypeBooks")]
+        public ActionResult<GeneralResponse> GetAllCategoriesByTypeBooks()
+        {
+            try
+            {
+                // Filter categories by Type Courses
+                List<Category> categories = (List<Category>)CategoryRepository.FindAll(
+                    criteria: category => category.Type == CategoryType.Books
+                );
+
+                List<CategoryDTO> categoriesDTO = categories.Select(category => new CategoryDTO
+                {
+                    Id = category.Id,
+                    Name = category.Name,
+                    Type = category.Type,
+                }).ToList();
+
+                return new GeneralResponse
+                {
+                    IsSuccess = true,
+                    Message = "Categories retrieved successfully",
+                    Data = categoriesDTO
+                };
+            }
+            catch (Exception ex)
+            {
+                return new GeneralResponse
+                {
+                    IsSuccess = false,
+                    Message = $"An error occurred: {ex.Message}"
+                };
+            }
+        }
+
+        [HttpGet("GetAllCategoriesByTypeBlogs")]
+        public ActionResult<GeneralResponse> GetAllCategoriesByTypeBlogs()
+        {
+            try
+            {
+                // Filter categories by Type Courses
+                List<Category> categories = (List<Category>)CategoryRepository.FindAll(
+                    criteria: category => category.Type == CategoryType.Blogs
+                );
+
+                List<CategoryDTO> categoriesDTO = categories.Select(category => new CategoryDTO
+                {
+                    Id = category.Id,
+                    Name = category.Name,
+                    Type= category.Type
+                }).ToList();
+
+                return new GeneralResponse
+                {
+                    IsSuccess = true,
+                    Message = "Categories retrieved successfully",
+                    Data = categoriesDTO
+                };
+            }
+            catch (Exception ex)
+            {
+                return new GeneralResponse
+                {
+                    IsSuccess = false,
+                    Message = $"An error occurred: {ex.Message}"
+                };
+            }
+        }
+        
+        
+        
+        [HttpGet("GetAllCategoriesByTypeExams")]
+        public ActionResult<GeneralResponse> GetAllCategoriesByTypeExams()
+        {
+            try
+            {
+                // Filter categories by Type Courses
+                List<Category> categories = (List<Category>)CategoryRepository.FindAll(
+                    criteria: category => category.Type == CategoryType.Exams
+                );
+
+                List<CategoryDTO> categoriesDTO = categories.Select(category => new CategoryDTO
+                {
+                    Id = category.Id,
+                    Name = category.Name,
+                    Type=category.Type,
+                }).ToList();
+
+                return new GeneralResponse
+                {
+                    IsSuccess = true,
+                    Message = "Categories retrieved successfully",
+                    Data = categoriesDTO
+                };
+            }
+            catch (Exception ex)
+            {
+                return new GeneralResponse
+                {
+                    IsSuccess = false,
+                    Message = $"An error occurred: {ex.Message}"
+                };
+            }
+        }
+
+
         [HttpGet("{id}")]
+
         public ActionResult<GeneralResponse> GetCategoryById(int id)
         {
             try
@@ -75,6 +218,7 @@ namespace Educational_Medical_platform.Controllers
                 var categoryDTO = new CategoryDTO
                 {
                     Name = category.Name,
+                    Type = category.Type,
                   
                 };
 
@@ -107,6 +251,7 @@ namespace Educational_Medical_platform.Controllers
                     Category category = new Category
                     {
                         Name = categoryDTO.Name,
+                        Type= categoryDTO.Type,
 
                        
                     };
@@ -117,6 +262,7 @@ namespace Educational_Medical_platform.Controllers
                     CategoryDTO addedCategoryDTO = new CategoryDTO
                     {
                         Name = addedCategory.Name,
+                        Type = addedCategory.Type,
                       
                     };
 
@@ -164,6 +310,7 @@ namespace Educational_Medical_platform.Controllers
                 if (ModelState.IsValid)
                 {
                     existingCategory.Name = categoryDTO.Name;
+                    existingCategory.Type = categoryDTO.Type;
 
                     CategoryRepository.Update(existingCategory);
                     CategoryRepository.save(); 
@@ -171,6 +318,7 @@ namespace Educational_Medical_platform.Controllers
                     CategoryDTO updatedCategoryDTO = new CategoryDTO
                     {
                         Name = existingCategory.Name,
+                        Type = existingCategory.Type,
                      
                     };
 
