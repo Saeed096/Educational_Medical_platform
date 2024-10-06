@@ -35,14 +35,14 @@ namespace Educational_Medical_platform.Helpers
         Exams= 3 ,
 
     }
-    
+
     public enum SubCategoryType
     {
-        Courses = 0 ,
-        Books = 1 ,
-        Blogs = 2 ,
-        Exams= 3 ,
-
+        Courses = 0,
+        Books = 1,
+        Blogs = 2,
+        Exams = 3,
+    }
     public enum CourseStatus
     {
         PendingApproval = 0,
