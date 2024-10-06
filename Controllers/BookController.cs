@@ -164,6 +164,7 @@ namespace Educational_Medical_platform.Controllers
                         CategoryId = bookDTO.CategoryId,
                         PublishDate = bookDTO.CreatedDate,
                         PublisherName=existinguser.UserName,
+                        PublisherRole=roles.FirstOrDefault()
                     };
                    
                   Book addedBook = BookRepository.Add(book);

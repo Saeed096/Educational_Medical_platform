@@ -101,7 +101,7 @@ namespace Educational_Medical_platform.Migrations
                         column: x => x.RoleId,
                         principalTable: "AspNetRoles",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -122,7 +122,7 @@ namespace Educational_Medical_platform.Migrations
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -142,7 +142,7 @@ namespace Educational_Medical_platform.Migrations
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -160,13 +160,13 @@ namespace Educational_Medical_platform.Migrations
                         column: x => x.RoleId,
                         principalTable: "AspNetRoles",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_AspNetUserRoles_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -186,7 +186,7 @@ namespace Educational_Medical_platform.Migrations
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -206,7 +206,7 @@ namespace Educational_Medical_platform.Migrations
                         column: x => x.CategoryId,
                         principalTable: "Categories",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -233,13 +233,13 @@ namespace Educational_Medical_platform.Migrations
                         column: x => x.AuthorId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Blogs_Categories_CategoryId",
                         column: x => x.CategoryId,
                         principalTable: "Categories",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Blogs_SubCategories_SubCategoryId",
                         column: x => x.SubCategoryId,
@@ -290,6 +290,7 @@ namespace Educational_Medical_platform.Migrations
                     DurationInhours = table.Column<float>(type: "real", nullable: false),
                     Preview = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Type = table.Column<int>(type: "int", nullable: false),
+                    Status = table.Column<int>(type: "int", nullable: false),
                     InstructorId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     SubCategoryId = table.Column<int>(type: "int", nullable: false)
                 },
@@ -307,7 +308,7 @@ namespace Educational_Medical_platform.Migrations
                         column: x => x.SubCategoryId,
                         principalTable: "SubCategories",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -325,13 +326,13 @@ namespace Educational_Medical_platform.Migrations
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Blog_User_Likes_Blogs_BlogId",
                         column: x => x.BlogId,
                         principalTable: "Blogs",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -351,7 +352,7 @@ namespace Educational_Medical_platform.Migrations
                         column: x => x.CourseId,
                         principalTable: "Courses",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -408,7 +409,7 @@ namespace Educational_Medical_platform.Migrations
                         column: x => x.CourseId,
                         principalTable: "Courses",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -456,7 +457,7 @@ namespace Educational_Medical_platform.Migrations
                         column: x => x.CourseId,
                         principalTable: "Courses",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -478,7 +479,7 @@ namespace Educational_Medical_platform.Migrations
                         column: x => x.QuestionId,
                         principalTable: "Questions",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.InsertData(
@@ -486,9 +487,7 @@ namespace Educational_Medical_platform.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "23978a1d-7823-4030-bd5d-ef7a0e6412a2", "df2d8409-ce61-4dac-ae75-b26fbbab27f2", "Student", "STUDENT" },
                     { "952625cb-623b-4f8e-a426-c9e14ffe41bc", "9e9ef764-d672-42d8-99ee-93c2410d8ae0", "Admin", "ADMIN" },
-                    { "ea3203f7-8571-4e45-b109-e593235f3420", "df2d8409-ce61-4dac-ae75-b26fbbab27f2", "Instructor", "INSTRUCTOR" },
                     { "ea3206f7-8571-4e45-b209-e593236f3420", "df2d8409-cg61-4aac-ae65-b26fbbab77f2", "User", "USER" }
                 });
 
@@ -497,9 +496,9 @@ namespace Educational_Medical_platform.Migrations
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "FirstName", "ImageUrl", "LastName", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
                 values: new object[,]
                 {
-                    { "1a111a11-1111-1111-1111-111111111111", 0, "140d3f6c-ef72-4b77-ab6e-02f5875917c3", "Ehab_Naser@example.com", true, "Ehab", null, "Naser", false, null, "EHAB_NASER@EXAMPLE.COM", "EHAB_NASER", "AQAAAAIAAYagAAAAENRBHpIiCuxWuQGN6kThnX2Or8cCmyyfd0SSeHRl5bH5GIDBUGJj7N6Cn3VzlIjGrQ==", null, false, "ac0edd1b-b413-45cc-9b46-4efe9e176065", false, "Ehab_Naser" },
-                    { "2b222b22-2222-2222-2222-222222222222", 0, "c35fc235-3cf5-4bfc-a00f-59957f497404", "Mohamed_Galal@example.com", true, "Mohamed", null, "Galal", false, null, "MOHAMED_GALAL@EXAMPLE.COM", "MOHAMED_GALAL", "AQAAAAIAAYagAAAAEDNDrwXpqLvEBdC2QKduqVLOvGmj9hkZjL2j1JMyA06rtOoCQ3KXoiruAMBJ63mj6g==", null, false, "5cfa508d-d648-4729-9cb7-28dcf176ae57", false, "Mohamed_Galal" },
-                    { "3c333c33-3333-3333-3333-333333333333", 0, "b3e3f8ff-c49c-4e33-b111-24116f37af98", "Alaa_Test@example.com", true, "Alaa", null, "Test", false, null, "ALAA_TEST@EXAMPLE.COM", "ALAA_TEST", "AQAAAAIAAYagAAAAEFw/tGLfRYEt/scn7Q8Gc4izdcaoKae03SiS/FcHea//begpfoO4Lj/STVsZpxL2yA==", null, false, "c04a1d9e-1efa-458a-ad7e-4520c3c937b6", false, "Alaa_Test" }
+                    { "1a111a11-1111-1111-1111-111111111111", 0, "4e7aec21-b4b1-42c8-ba50-e417fe08d92b", "Ehab_Naser@example.com", true, "Ehab", null, "Naser", false, null, "EHAB_NASER@EXAMPLE.COM", "EHAB_NASER", "AQAAAAIAAYagAAAAEOOs50pOP4tSRP5Ccpdg5iJ3b/8soYsDkFkQimQm+ZgtKMUqrFUxuourwd0BJCWfag==", null, false, "9f9ef764-d632-42d2-99ee-93v2410d8ae0", false, "Ehab_Naser" },
+                    { "2b222b22-2222-2222-2222-222222222222", 0, "21c399e0-f462-4320-b9eb-edf3e345a916", "Mohamed_Galal@example.com", true, "Mohamed", null, "Galal", false, null, "MOHAMED_GALAL@EXAMPLE.COM", "MOHAMED_GALAL", "AQAAAAIAAYagAAAAEOjg5/g0QErpBZ9e44zjiJwiZJhW/nqqwO1BNYEDCLPHaZGVIwJVPpmZau068lnR+w==", null, false, "9f9ed761-d631-42d2-99ee-93v2420d8ae0", false, "Mohamed_Galal" },
+                    { "3c333c33-3333-3333-3333-333333333333", 0, "68487010-1ca9-4b87-984d-b1c20fa20a05", "Alaa_Test@example.com", true, "Alaa", null, "Test", false, null, "ALAA_TEST@EXAMPLE.COM", "ALAA_TEST", "AQAAAAIAAYagAAAAEAHHDOgNv9qiWMRq5X8PcP1FPga1KuXIuyNoGUzERIyO92FudxldfQFdAmbnpChWQw==", null, false, "9f1ed761-a631-42dq-99ee-93z2420d8aeq", false, "Alaa_Test" }
                 });
 
             migrationBuilder.InsertData(
@@ -605,12 +604,12 @@ namespace Educational_Medical_platform.Migrations
 
             migrationBuilder.InsertData(
                 table: "Courses",
-                columns: new[] { "Id", "DurationInhours", "InstructorId", "Preview", "Price", "SubCategoryId", "ThumbnailURL", "Title", "Type" },
+                columns: new[] { "Id", "DurationInhours", "InstructorId", "Preview", "Price", "Status", "SubCategoryId", "ThumbnailURL", "Title", "Type" },
                 values: new object[,]
                 {
-                    { 1, 10f, "2b222b22-2222-2222-2222-222222222222", null, 1500m, 1, null, "physiology", 0 },
-                    { 2, 20f, "2b222b22-2222-2222-2222-222222222222", null, 1000m, 3, null, "anatomy", 1 },
-                    { 3, 30f, "3c333c33-3333-3333-3333-333333333333", null, 2500m, 5, null, "histology", 1 }
+                    { 1, 10f, "2b222b22-2222-2222-2222-222222222222", null, 1500m, 1, 1, null, "physiology", 0 },
+                    { 2, 20f, "2b222b22-2222-2222-2222-222222222222", null, 1000m, 0, 3, null, "anatomy", 1 },
+                    { 3, 30f, "3c333c33-3333-3333-3333-333333333333", null, 2500m, 2, 5, null, "histology", 1 }
                 });
 
             migrationBuilder.InsertData(

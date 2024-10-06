@@ -27,7 +27,7 @@ namespace Shoghlana.EF.Configurations
                          NormalizedEmail = "EHAB_NASER@EXAMPLE.COM",
                          EmailConfirmed = true,
                          PasswordHash = hasher.HashPassword(null, "Test@123"),
-                         SecurityStamp = Guid.NewGuid().ToString("D")
+                         SecurityStamp = "9f9ef764-d632-42d2-99ee-93v2410d8ae0"
                      },
                     new ApplicationUser
                     {
@@ -40,7 +40,7 @@ namespace Shoghlana.EF.Configurations
                         NormalizedEmail = "MOHAMED_GALAL@EXAMPLE.COM",
                         EmailConfirmed = true,
                         PasswordHash = hasher.HashPassword(null, "Test@123"),
-                        SecurityStamp = Guid.NewGuid().ToString("D")
+                        SecurityStamp = "9f9ed761-d631-42d2-99ee-93v2420d8ae0"
                     },
                     new ApplicationUser
                     {
@@ -53,7 +53,7 @@ namespace Shoghlana.EF.Configurations
                         NormalizedEmail = "ALAA_TEST@EXAMPLE.COM",
                         EmailConfirmed = true,
                         PasswordHash = hasher.HashPassword(null, "Test@123"),
-                        SecurityStamp = Guid.NewGuid().ToString("D")
+                        SecurityStamp = "9f1ed761-a631-42dq-99ee-93z2420d8aeq"
                     }
                 );
         }

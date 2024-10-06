@@ -1,13 +1,10 @@
 ﻿using Educational_Medical_platform.DTO.Blog;
 using Educational_Medical_platform.Models;
-using Educational_Medical_platform.Repositories.Implementations;
 using Educational_Medical_platform.Repositories.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Shoghlana.Api.Response;
 using Shoghlana.Core.Models;
-using System.Linq.Expressions;
-using System.Reflection.Metadata;
 
 namespace Educational_Medical_platform.Controllers
 {
@@ -32,8 +29,6 @@ namespace Educational_Medical_platform.Controllers
             ISubCategoryRepository subCategoryRepository,
             IQuestionRepository questionRepository ,
             IAnswerRepository answerRepository)
-
-
         {
             _blogRepository = blogRepository;
             _user_LikesRepository = user_LikesRepository;
@@ -302,7 +297,7 @@ namespace Educational_Medical_platform.Controllers
             if (createBlogDTO.SubCategoryId != null)
             {
                 // Check if SubCategory exists
-                if (createBlogDTO.SubCategoryId != null && !_subCategoryRepository.Exists(createBlogDTO.SubCategoryId.Value))
+                if (createBlogDTO.SubCategoryId != null && !_subCategoryRepository.Exists(createBlogDTO.SubCategoryId.Value) )
                 {
                     return new GeneralResponse()
                     {
