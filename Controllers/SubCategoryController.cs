@@ -307,7 +307,6 @@ namespace Educational_Medical_platform.Controllers
                         CategoryId = SubcategoryDTO.CategoryId,
                         Type = (SubCategoryType)category.Type
 
-                         
                     };
 
 
