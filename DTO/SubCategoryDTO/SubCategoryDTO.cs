@@ -1,4 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Educational_Medical_platform.Helpers;
+using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace Educational_Medical_platform.DTO.SubCategoryDTO
 {
@@ -9,6 +11,8 @@ namespace Educational_Medical_platform.DTO.SubCategoryDTO
         public string? Name { get; set; }
 
         public int CategoryId { get; set; }
+
+       
 
 
     }

@@ -1,5 +1,6 @@
 ﻿using Educational_Medical_platform.DTO;
 using Educational_Medical_platform.DTO.SubCategoryDTO;
+using Educational_Medical_platform.Helpers;
 using Educational_Medical_platform.Models;
 using Educational_Medical_platform.Repositories.Implementations;
 using Educational_Medical_platform.Repositories.Interfaces;
@@ -14,10 +15,12 @@ namespace Educational_Medical_platform.Controllers
     public class SubCategoryController : ControllerBase
     {
         private readonly ISubCategoryRepository SubCategoryRepository;
+        private readonly ICategoryRepository CategoryRepository;
 
-        public SubCategoryController(ISubCategoryRepository subCategoryRepository)
+        public SubCategoryController(ISubCategoryRepository subCategoryRepository, ICategoryRepository _CategoryRepository)
         {
             SubCategoryRepository = subCategoryRepository;
+            CategoryRepository = _CategoryRepository;
         }
 
         [HttpGet("GetAllSubCategories")]
@@ -52,6 +55,149 @@ namespace Educational_Medical_platform.Controllers
             }
 
         }
+
+
+
+
+        [HttpGet("GetAllSubCategoriesByTypeCourses")]
+        public ActionResult<GeneralResponse> GetAllSubCategoriesByTypeCourses()
+        {
+            try
+            {
+                // Filter subcategories by Type Courses
+                List<SubCategory> subcategories = (List<SubCategory>)SubCategoryRepository.FindAll(
+                    criteria: subcategory => subcategory.Type == SubCategoryType.Courses
+                );
+
+                List<SubCategoryDTO> subcategoriesDTO = subcategories.Select(subcategory => new SubCategoryDTO
+                {
+                    Id = subcategory.Id,
+                    Name = subcategory.Name,
+                    CategoryId = subcategory.CategoryId,
+
+                }).ToList();
+
+                return new GeneralResponse
+                {
+                    IsSuccess = true,
+                    Message = "SubCategories retrieved successfully",
+                    Data = subcategoriesDTO
+                };
+            }
+            catch (Exception ex)
+            {
+                return new GeneralResponse
+                {
+                    IsSuccess = false,
+                    Message = $"An error occurred: {ex.Message}"
+                };
+            }
+        }
+
+
+        [HttpGet("GetAllSubCategoriesByTypeBooks")]
+        public ActionResult<GeneralResponse> GetAllSubCategoriesByTypeBooks()
+        {
+            try
+            {
+                // Filter subcategories by Type Courses
+                List<SubCategory> subcategories = (List<SubCategory>)SubCategoryRepository.FindAll(
+                    criteria: subcategory => subcategory.Type == SubCategoryType.Books
+                );
+
+                List<SubCategoryDTO> subcategoriesDTO = subcategories.Select(subcategory => new SubCategoryDTO
+                {
+                    Id = subcategory.Id,
+                    Name = subcategory.Name,
+                    CategoryId = subcategory.CategoryId,
+
+                }).ToList();
+
+                return new GeneralResponse
+                {
+                    IsSuccess = true,
+                    Message = "SubCategories retrieved successfully",
+                    Data = subcategoriesDTO
+                };
+            }
+            catch (Exception ex)
+            {
+                return new GeneralResponse
+                {
+                    IsSuccess = false,
+                    Message = $"An error occurred: {ex.Message}"
+                };
+            }
+        }
+        [HttpGet("GetAllSubCategoriesByTypeBlogs")]
+        public ActionResult<GeneralResponse> GetAllSubCategoriesByTypeBlogs()
+        {
+            try
+            {
+                // Filter subcategories by Type Courses
+                List<SubCategory> subcategories = (List<SubCategory>)SubCategoryRepository.FindAll(
+                    criteria: subcategory => subcategory.Type == SubCategoryType.Blogs
+                );
+
+                List<SubCategoryDTO> subcategoriesDTO = subcategories.Select(subcategory => new SubCategoryDTO
+                {
+                    Id = subcategory.Id,
+                    Name = subcategory.Name,
+                    CategoryId = subcategory.CategoryId,
+
+                }).ToList();
+
+                return new GeneralResponse
+                {
+                    IsSuccess = true,
+                    Message = "SubCategories retrieved successfully",
+                    Data = subcategoriesDTO
+                };
+            }
+            catch (Exception ex)
+            {
+                return new GeneralResponse
+                {
+                    IsSuccess = false,
+                    Message = $"An error occurred: {ex.Message}"
+                };
+            }
+        }
+        [HttpGet("GetAllSubCategoriesByTypeExams")]
+        public ActionResult<GeneralResponse> GetAllSubCategoriesByTypeExams()
+        {
+            try
+            {
+                // Filter subcategories by Type Courses
+                List<SubCategory> subcategories = (List<SubCategory>)SubCategoryRepository.FindAll(
+                    criteria: subcategory => subcategory.Type == SubCategoryType.Exams
+                );
+
+                List<SubCategoryDTO> subcategoriesDTO = subcategories.Select(subcategory => new SubCategoryDTO
+                {
+                    Id = subcategory.Id,
+                    Name = subcategory.Name,
+                    CategoryId = subcategory.CategoryId,
+
+                }).ToList();
+
+                return new GeneralResponse
+                {
+                    IsSuccess = true,
+                    Message = "SubCategories retrieved successfully",
+                    Data = subcategoriesDTO
+                };
+            }
+            catch (Exception ex)
+            {
+                return new GeneralResponse
+                {
+                    IsSuccess = false,
+                    Message = $"An error occurred: {ex.Message}"
+                };
+            }
+        }
+
 
         [HttpGet("Category/{categoryId}")]
         public async Task<ActionResult<GeneralResponse>> GetSubCategoriesByCategoryId(int categoryId)
@@ -153,13 +299,16 @@ namespace Educational_Medical_platform.Controllers
             {
                 if (ModelState.IsValid)
                 {
+                    Category category= CategoryRepository.GetById(SubcategoryDTO.CategoryId);
+
                     SubCategory Subcategory = new SubCategory
                     {
                         Name = SubcategoryDTO.Name,
                         CategoryId = SubcategoryDTO.CategoryId,
-
+                        Type = (SubCategoryType)category.Type
 
                     };
+
 
                     SubCategory addedSubCategory = SubCategoryRepository.Add(Subcategory);
                     SubCategoryRepository.save();
@@ -168,6 +317,7 @@ namespace Educational_Medical_platform.Controllers
                     {
                         Name = addedSubCategory.Name,
                         CategoryId = addedSubCategory.CategoryId,
+
 
 
                     };
