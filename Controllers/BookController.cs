@@ -1,5 +1,7 @@
 ﻿using Educational_Medical_platform.DTO.BookDTO;
+using Educational_Medical_platform.Helpers;
 using Educational_Medical_platform.Models;
+using Educational_Medical_platform.Repositories.Implementations;
 using Educational_Medical_platform.Repositories.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -13,19 +15,25 @@ namespace Educational_Medical_platform.Controllers
     public class BookController : ControllerBase
     {
         private readonly IBookRepository BookRepository;
-        //private readonly ICategoryRepository CategoryRepository;
-        //private readonly ISubCategoryRepository SubCategoryRepository;
+        private readonly ICategoryRepository categoryRepository;
+        private readonly ISubCategoryRepository subCategoryRepository;
         private readonly IWebHostEnvironment webHostEnvironment;
         private readonly UserManager<ApplicationUser> userManager;
 
 
         public BookController(IBookRepository _BookRepository,
             IWebHostEnvironment _webHostEnvironment,
-            UserManager<ApplicationUser> _userManager)
+            UserManager<ApplicationUser> _userManager,
+            ICategoryRepository _categoryRepository,
+            ISubCategoryRepository _subCategoryRepository
+            )
         {
             BookRepository = _BookRepository;
             webHostEnvironment = _webHostEnvironment;
             userManager = _userManager;
+            categoryRepository = _categoryRepository;
+            subCategoryRepository = _subCategoryRepository;
+
          
         }
 
@@ -152,6 +160,20 @@ namespace Educational_Medical_platform.Controllers
                             Message = "there is no such user "
                         };
                     }
+
+                    //Check if Category ID and Sub Category Id are Related to Books or not 
+
+                    Category category = categoryRepository.GetById((int)bookDTO.CategoryId);
+                    SubCategory subCategory = subCategoryRepository.GetById((int)bookDTO.SubCategoryId);
+                    if (category.Type != CategoryType.Books || subCategory.Type != SubCategoryType.Books)
+                    {
+                        return new GeneralResponse()
+                        {
+                            IsSuccess = false,
+                            Message = $"Category or SubCategory with these ID not related to Books."
+                        };
+
+                    }
                     var roles = await userManager.GetRolesAsync(existinguser);
 
                     Book book = new Book
@@ -238,12 +260,22 @@ namespace Educational_Medical_platform.Controllers
                     }
                     bookDTO.ThumbnailURL = imagename;
 
-                    // Optionally delete the old image file here if needed
-                    // var oldImagePath = Path.Combine(uploadpath, existingBook.ThumbnailURL);
-                    // if (System.IO.File.Exists(oldImagePath)) System.IO.File.Delete(oldImagePath);
+                   
                 }
 
-                
+                //Check if Category ID and Sub Category Id are Related to Books or not 
+
+                Category category = categoryRepository.GetById((int)bookDTO.CategoryId);
+                SubCategory subCategory = subCategoryRepository.GetById((int)bookDTO.SubCategoryId);
+                if (category.Type != CategoryType.Books || subCategory.Type != SubCategoryType.Books)
+                {
+                    return new GeneralResponse()
+                    {
+                        IsSuccess = false,
+                        Message = $"Category or SubCategory with these ID not related to Books."
+                    };
+
+                }
 
                 if (ModelState.IsValid)
                 {
