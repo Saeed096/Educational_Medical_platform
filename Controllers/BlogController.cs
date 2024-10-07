@@ -1,4 +1,5 @@
 ﻿using Educational_Medical_platform.DTO.Blog;
+using Educational_Medical_platform.Helpers;
 using Educational_Medical_platform.Models;
 using Educational_Medical_platform.Repositories.Interfaces;
 using Microsoft.AspNetCore.Identity;
@@ -321,6 +322,20 @@ namespace Educational_Medical_platform.Controllers
 
             #endregion
 
+            //Check if Category ID and Sub Category Id are Related to Blogs or not 
+
+            Category category = _categoryRepository.GetById(createBlogDTO.CategoryId);
+            SubCategory subCategory = _subCategoryRepository.GetById((int)createBlogDTO.SubCategoryId);
+            if(category.Type!=CategoryType.Blogs || subCategory.Type!=SubCategoryType.Blogs)
+            {
+                return new GeneralResponse()
+                {
+                    IsSuccess = false,
+                    Message = $"Category or SubCategory with these ID not related to Blogs."
+                };
+
+            }
+
             var blog = new Blog
             {
                 Title = createBlogDTO.Title,
@@ -414,6 +429,20 @@ namespace Educational_Medical_platform.Controllers
             }
 
             #endregion
+
+            //Check if Category ID and Sub Category Id are Related to Blogs or not 
+
+            Category category = _categoryRepository.GetById(updateBlogDTO.CategoryId);
+            SubCategory subCategory = _subCategoryRepository.GetById((int)updateBlogDTO.SubCategoryId);
+            if (category.Type != CategoryType.Blogs || subCategory.Type != SubCategoryType.Blogs)
+            {
+                return new GeneralResponse()
+                {
+                    IsSuccess = false,
+                    Message = $"Category or SubCategory with these ID not related to Blogs."
+                };
+
+            }
 
 
             if (updateBlogDTO.Image != null)
