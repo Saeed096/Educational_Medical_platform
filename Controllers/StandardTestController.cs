@@ -1,8 +1,10 @@
 ﻿using Educational_Medical_platform.DTO.StandardTestDTO;
+using Educational_Medical_platform.Helpers;
 using Educational_Medical_platform.Models;
 using Educational_Medical_platform.Repositories.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Shoghlana.Api.Response;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Educational_Medical_platform.Controllers
 {
@@ -24,7 +26,7 @@ namespace Educational_Medical_platform.Controllers
         {
             try
             {
-                var standardTests = StandardTestRepository.FindAll();
+                var standardTests = StandardTestRepository.FindAll(includes: ["Category", "SubCategory"]);
 
                 if (standardTests == null || !standardTests.Any())
                 {
@@ -40,6 +42,19 @@ namespace Educational_Medical_platform.Controllers
                     Title = test.Title,
                     Fullmark = test.Fullmark,
                     DurationInMinutes = test.DurationInMinutes,
+
+                    SubCategoryId = test.SubCategoryId,
+                    SubCategoryName = test.SubCategory.Name,
+
+                    CategoryId = test.CategoryId,
+                    CategoryName = test.Category.Name,
+
+                    Type = test.Type,
+                    TypeName = test.Type.GetDisplayName(),
+
+                    Difficulty = test.Difficulty,
+                    DifficultyName = test.Difficulty.GetDisplayName(),
+
                 }).ToList();
 
                 return new GeneralResponse
@@ -65,7 +80,7 @@ namespace Educational_Medical_platform.Controllers
         {
             try
             {
-                var standardTest = StandardTestRepository.GetById( id);
+                var standardTest = StandardTestRepository.Find(t => t.Id == id , ["Category", "SubCategory"]);
 
                 if (standardTest == null)
                 {
@@ -82,6 +97,12 @@ namespace Educational_Medical_platform.Controllers
                     Title = standardTest.Title,
                     Fullmark = standardTest.Fullmark,
                     DurationInMinutes = standardTest.DurationInMinutes,
+
+                    SubCategoryId = standardTest.SubCategoryId,
+                    SubCategoryName = standardTest.SubCategory.Name,
+
+                    CategoryId = standardTest.CategoryId,
+                    CategoryName = standardTest.Category.Name
                 };
 
                 return new GeneralResponse

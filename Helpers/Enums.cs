@@ -1,4 +1,6 @@
-﻿namespace Educational_Medical_platform.Helpers
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Educational_Medical_platform.Helpers
 {
     public enum Gender
     {
@@ -18,20 +20,20 @@
 
     public enum CourseType
     {
-        Free = 0 ,
+        Free = 0,
 
-        Paid = 1 ,
+        Paid = 1,
     }
 
     public enum CategoryType
     {
-        Courses = 0 ,
+        Courses = 0,
 
-        Books = 1 ,
+        Books = 1,
 
-        Blogs = 2 ,
+        Blogs = 2,
 
-        Exams= 3 ,
+        Exams = 3,
     }
 
     public enum SubCategoryType
@@ -51,9 +53,32 @@
 
         Approved = 1,
 
-        PendingDeletion = 2 ,
+        PendingDeletion = 2,
 
-        Rejected = 3 ,
+        Rejected = 3,
     }
+
+
+    public enum TestType
+    {
+        [Display(Name = "Free Test")]
+        Free = 0,
+
+        [Display(Name = "Premium Test")]
+        Premium = 1,
+    }
+
+    public enum TestDifficulty
+    {
+        [Display(Name = "Easy Level")]
+        Easy = 0,
+
+        [Display(Name = "Intermediate Level")]
+        Intermediate = 1,
+
+        [Display(Name = "Hard Level")]
+        Hard = 2,
+    }
+
 
 }
