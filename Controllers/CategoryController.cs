@@ -56,7 +56,6 @@ namespace Educational_Medical_platform.Controllers
 
         }
 
-
         [HttpGet("GetAllCategoriesByTypeCourses")]
         public ActionResult<GeneralResponse> GetAllCategoriesByTypeCourses()
         {
@@ -91,7 +90,6 @@ namespace Educational_Medical_platform.Controllers
                 };
             }
         }
-
 
         [HttpGet("GetAllCategoriesByTypeBooks")]
         public ActionResult<GeneralResponse> GetAllCategoriesByTypeBooks()
@@ -161,8 +159,6 @@ namespace Educational_Medical_platform.Controllers
             }
         }
         
-        
-        
         [HttpGet("GetAllCategoriesByTypeExams")]
         public ActionResult<GeneralResponse> GetAllCategoriesByTypeExams()
         {
@@ -197,8 +193,7 @@ namespace Educational_Medical_platform.Controllers
             }
         }
 
-
-        [HttpGet("{id}")]
+        [HttpGet("{id:int}")]
 
         public ActionResult<GeneralResponse> GetCategoryById(int id)
         {
@@ -238,8 +233,6 @@ namespace Educational_Medical_platform.Controllers
                 };
             }
         }
-
-
 
         [HttpPost]
         public ActionResult<GeneralResponse> AddCategory([FromBody] CategoryDTO categoryDTO)
@@ -290,8 +283,7 @@ namespace Educational_Medical_platform.Controllers
             }
         }
 
-
-        [HttpPut("{id}")]
+        [HttpPut("{id:int}")]
         public ActionResult<GeneralResponse> UpdateCategory(int id, [FromBody] CategoryDTO categoryDTO)
         {
             try
@@ -346,8 +338,7 @@ namespace Educational_Medical_platform.Controllers
             }
         }
 
-
-        [HttpDelete("{id}")]
+        [HttpDelete("{id:int}")]
         public ActionResult<GeneralResponse> DeleteCategory(int id)
         {
             try
@@ -381,12 +372,5 @@ namespace Educational_Medical_platform.Controllers
                 };
             }
         }
-
-
-
-
-
-
-
     }
 }

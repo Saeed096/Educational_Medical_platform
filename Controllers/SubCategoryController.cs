@@ -1,10 +1,7 @@
-﻿using Educational_Medical_platform.DTO;
-using Educational_Medical_platform.DTO.SubCategoryDTO;
+﻿using Educational_Medical_platform.DTO.SubCategoryDTO;
 using Educational_Medical_platform.Helpers;
 using Educational_Medical_platform.Models;
-using Educational_Medical_platform.Repositories.Implementations;
 using Educational_Medical_platform.Repositories.Interfaces;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Shoghlana.Api.Response;
 
@@ -56,9 +53,6 @@ namespace Educational_Medical_platform.Controllers
 
         }
 
-
-
-
         [HttpGet("GetAllSubCategoriesByTypeCourses")]
         public ActionResult<GeneralResponse> GetAllSubCategoriesByTypeCourses()
         {
@@ -94,7 +88,6 @@ namespace Educational_Medical_platform.Controllers
             }
         }
 
-
         [HttpGet("GetAllSubCategoriesByTypeBooks")]
         public ActionResult<GeneralResponse> GetAllSubCategoriesByTypeBooks()
         {
@@ -129,6 +122,7 @@ namespace Educational_Medical_platform.Controllers
                 };
             }
         }
+
         [HttpGet("GetAllSubCategoriesByTypeBlogs")]
         public ActionResult<GeneralResponse> GetAllSubCategoriesByTypeBlogs()
         {
@@ -163,6 +157,7 @@ namespace Educational_Medical_platform.Controllers
                 };
             }
         }
+
         [HttpGet("GetAllSubCategoriesByTypeExams")]
         public ActionResult<GeneralResponse> GetAllSubCategoriesByTypeExams()
         {
@@ -198,8 +193,7 @@ namespace Educational_Medical_platform.Controllers
             }
         }
 
-
-        [HttpGet("Category/{categoryId}")]
+        [HttpGet("Category/{categoryId:int}")]
         public async Task<ActionResult<GeneralResponse>> GetSubCategoriesByCategoryId(int categoryId)
         {
             var subCategories = await SubCategoryRepository.GetSubCategoriesByCategoryIdAsync(categoryId);
@@ -220,7 +214,7 @@ namespace Educational_Medical_platform.Controllers
             };
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{id:int}")]
         public ActionResult<GeneralResponse> GetSubCategoryById(int id)
         {
             try
@@ -259,8 +253,7 @@ namespace Educational_Medical_platform.Controllers
             }
         }
 
-
-        [HttpPut("{id}")]
+        [HttpPut("{id:int}")]
         public async Task<ActionResult<GeneralResponse>> UpdateSubCategory(int id, [FromBody] SubCategoryDTO subCategoryDTO)
         {
             if (!ModelState.IsValid)
@@ -290,7 +283,6 @@ namespace Educational_Medical_platform.Controllers
                 Data = updatedSubCategory
             };
         }
-
 
         [HttpPost]
         public ActionResult<GeneralResponse> AddSubCategory([FromBody] SubCategoryDTO SubcategoryDTO)
@@ -346,7 +338,7 @@ namespace Educational_Medical_platform.Controllers
             }
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("{id:int}")]
         public ActionResult<GeneralResponse> DeleteSubCategory(int id)
         {
             try
@@ -380,6 +372,5 @@ namespace Educational_Medical_platform.Controllers
                 };
             }
         }
-
     }
 }
