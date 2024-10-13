@@ -669,6 +669,16 @@ namespace Educational_Medical_platform.Controllers
                 };
             }
 
+            if (subCategory.Type != SubCategoryType.Courses)
+            {
+                return new GeneralResponse()
+                {
+                    IsSuccess = false,
+                    Message = $"The Subcategory type must be valid for courses !",
+                    Status = 407,
+                };
+            }
+
             string fileName = "";
 
             if (courseDTO.Thumbnail != null)
@@ -1032,6 +1042,16 @@ namespace Educational_Medical_platform.Controllers
             }
 
             var subCategory = _subCategoryRepository.Find(s => courseDTO.SubCategoryId == s.Id, ["Category"]);
+
+            if (subCategory.Type != SubCategoryType.Courses)
+            {
+                return new GeneralResponse()
+                {
+                    IsSuccess = false,
+                    Message = $"The Subcategory type must be valid for courses !",
+                    Status = 407,
+                };
+            }
 
             string fileName = course.ThumbnailURL; // Keep the existing thumbnail URL
 
