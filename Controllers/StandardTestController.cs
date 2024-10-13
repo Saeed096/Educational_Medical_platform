@@ -13,20 +13,22 @@ namespace Educational_Medical_platform.Controllers
     public class StandardTestController : ControllerBase
     {
 
-        private readonly IStandardTestRepository StandardTestRepository;
+        private readonly IStandardTestRepository _standardTestRepository;
+        private readonly ISubCategoryRepository _subCategoryRepository;
 
-        public StandardTestController(IStandardTestRepository standardTestRepository)
+        public StandardTestController(IStandardTestRepository standardTestRepository,
+            ISubCategoryRepository subCategoryRepository)
         {
-            this.StandardTestRepository = standardTestRepository;
+            _standardTestRepository = standardTestRepository;
+            _subCategoryRepository = subCategoryRepository;
         }
-
 
         [HttpGet]
         public ActionResult<GeneralResponse> GetAllStandardTests()
         {
             try
             {
-                var standardTests = StandardTestRepository.FindAll(includes: ["Category", "SubCategory"]);
+                var standardTests = _standardTestRepository.FindAll(includes: ["Category", "SubCategory"]);
 
                 if (standardTests == null || !standardTests.Any())
                 {
@@ -36,6 +38,7 @@ namespace Educational_Medical_platform.Controllers
                         IsSuccess = false
                     };
                 }
+
                 var standardTestDTOs = standardTests.Select(test => new StandardTestDTO
                 {
                     Id = test.Id,
@@ -66,7 +69,7 @@ namespace Educational_Medical_platform.Controllers
             }
             catch (Exception ex)
             {
-                return  new GeneralResponse
+                return new GeneralResponse
                 {
                     Message = $"An error occurred while retrieving Standard Tests: {ex.Message}",
                     IsSuccess = false
@@ -74,13 +77,12 @@ namespace Educational_Medical_platform.Controllers
             }
         }
 
-
         [HttpGet("{id:int}")]
         public ActionResult<GeneralResponse> GetStandardTestById(int id)
         {
             try
             {
-                var standardTest = StandardTestRepository.Find(t => t.Id == id , ["Category", "SubCategory"]);
+                var standardTest = _standardTestRepository.Find(t => t.Id == id, ["Category", "SubCategory"]);
 
                 if (standardTest == null)
                 {
@@ -102,7 +104,13 @@ namespace Educational_Medical_platform.Controllers
                     SubCategoryName = standardTest.SubCategory.Name,
 
                     CategoryId = standardTest.CategoryId,
-                    CategoryName = standardTest.Category.Name
+                    CategoryName = standardTest.Category.Name,
+
+                    Difficulty = standardTest.Difficulty,
+                    DifficultyName = standardTest.Difficulty.GetDisplayName(),
+
+                    Type = standardTest.Type,
+                    TypeName = standardTest.Type.GetDisplayName(),
                 };
 
                 return new GeneralResponse
@@ -114,7 +122,7 @@ namespace Educational_Medical_platform.Controllers
             }
             catch (Exception ex)
             {
-                return  new GeneralResponse
+                return new GeneralResponse
                 {
                     Message = $"An error occurred while retrieving the Standard Test: {ex.Message}",
                     IsSuccess = false
@@ -122,13 +130,12 @@ namespace Educational_Medical_platform.Controllers
             }
         }
 
-
         [HttpPost]
-        public ActionResult<GeneralResponse> AddStandardTest([FromBody] StandardTestDTO standardTestDTO)
+        public ActionResult<GeneralResponse> AddStandardTest([FromBody] AddTestDTO standardTestDTO)
         {
             try
             {
-                if (!ModelState.IsValid )
+                if (!ModelState.IsValid)
                 {
                     return new GeneralResponse
                     {
@@ -136,23 +143,90 @@ namespace Educational_Medical_platform.Controllers
                         IsSuccess = false
                     };
                 }
+
+                var subCategory = _subCategoryRepository.Find(s => s.Id == standardTestDTO.SubCategoryId, ["Category"]);
+
+                if (subCategory == null)
+                {
+                    return new GeneralResponse
+                    {
+                        IsSuccess = false,
+                        Message = "Subcategory not Found !",
+                        Status = 404
+                    };
+                }
+
+                if (subCategory.Type != SubCategoryType.Exams)
+                {
+                    return new GeneralResponse
+                    {
+                        IsSuccess = false,
+                        Message = "Subcategory Type is not Valid for Exams ",
+                        Status = 404
+                    };
+                }
+
+                // Enum validation for Difficulty
+                if (!Enum.IsDefined(typeof(TestDifficulty), standardTestDTO.Difficulty))
+                {
+                    return new GeneralResponse
+                    {
+                        IsSuccess = false,
+                        Message = "Invalid Test Difficulty value.",
+                        Status = 400
+                    };
+                }
+
+                // Enum validation for Type
+                if (!Enum.IsDefined(typeof(TestType), standardTestDTO.Type))
+                {
+                    return new GeneralResponse
+                    {
+                        IsSuccess = false,
+                        Message = "Invalid Test Type value.",
+                        Status = 400
+                    };
+                }
+
+
                 var standardTest = new StandardTest
                 {
                     Title = standardTestDTO.Title,
                     Fullmark = standardTestDTO.Fullmark,
                     DurationInMinutes = standardTestDTO.DurationInMinutes,
+
+                    SubCategoryId = standardTestDTO.SubCategoryId,
+
+                    CategoryId = subCategory.CategoryId,
+
+                    Difficulty = standardTestDTO.Difficulty,
+
+                    Type = standardTestDTO.Type,
                 };
 
-                var createdTest = StandardTestRepository.Add(standardTest);
+                var createdTest = _standardTestRepository.Add(standardTest);
 
-                StandardTestRepository.save(); 
+                _standardTestRepository.save();
 
                 var createdTestDTO = new StandardTestDTO
                 {
-                    Id = createdTest.Id,
-                    Title = createdTest.Title,
-                    Fullmark = createdTest.Fullmark,
-                    DurationInMinutes = createdTest.DurationInMinutes,
+                    Id = createdTest.Id, // only this from the created obj 
+
+                    Title = standardTest.Title,
+                    Fullmark = standardTest.Fullmark,
+                    DurationInMinutes = standardTest.DurationInMinutes,
+
+                    SubCategoryId = standardTest.SubCategoryId,
+                    SubCategoryName = standardTest.SubCategory.Name,
+
+                    CategoryId = standardTest.CategoryId,
+                    CategoryName = standardTest.Category.Name,
+
+                    Difficulty = standardTest.Difficulty,
+                    DifficultyName = standardTest.Difficulty.GetDisplayName(),
+
+                    Type = standardTest.Type,
+                    TypeName = standardTest.Type.GetDisplayName(),
                 };
 
                 return new GeneralResponse
@@ -172,9 +246,8 @@ namespace Educational_Medical_platform.Controllers
             }
         }
 
-
         [HttpPut("{id:int}")]
-        public ActionResult<GeneralResponse> UpdateStandardTest(int id, [FromBody] StandardTestDTO standardTestDTO)
+        public ActionResult<GeneralResponse> UpdateStandardTest(int id, [FromBody] AddTestDTO standardTestDTO)
         {
             try
             {
@@ -187,7 +260,51 @@ namespace Educational_Medical_platform.Controllers
                     });
                 }
 
-                var existingTest = StandardTestRepository.GetById(id);
+                var subCategory = _subCategoryRepository.Find(s => s.Id == standardTestDTO.SubCategoryId, ["Category"]);
+
+                if (subCategory == null)
+                {
+                    return new GeneralResponse
+                    {
+                        IsSuccess = false,
+                        Message = "Subcategory not Found !",
+                        Status = 404
+                    };
+                }
+
+                if (subCategory.Type != SubCategoryType.Exams)
+                {
+                    return new GeneralResponse
+                    {
+                        IsSuccess = false,
+                        Message = "Subcategory Type is not Valid for Exams ",
+                        Status = 404
+                    };
+                }
+
+                // Enum validation for Difficulty
+                if (!Enum.IsDefined(typeof(TestDifficulty), standardTestDTO.Difficulty))
+                {
+                    return new GeneralResponse
+                    {
+                        IsSuccess = false,
+                        Message = "Invalid Test Difficulty value.",
+                        Status = 400
+                    };
+                }
+
+                // Enum validation for Type
+                if (!Enum.IsDefined(typeof(TestType), standardTestDTO.Type))
+                {
+                    return new GeneralResponse
+                    {
+                        IsSuccess = false,
+                        Message = "Invalid Test Type value.",
+                        Status = 400
+                    };
+                }
+
+                var existingTest = _standardTestRepository.GetById(id);
 
                 if (existingTest == null)
                 {
@@ -201,17 +318,33 @@ namespace Educational_Medical_platform.Controllers
                 existingTest.Title = standardTestDTO.Title;
                 existingTest.Fullmark = standardTestDTO.Fullmark;
                 existingTest.DurationInMinutes = standardTestDTO.DurationInMinutes;
+                existingTest.SubCategoryId = standardTestDTO.SubCategoryId;
+                existingTest.CategoryId = subCategory.CategoryId;
+                existingTest.Type = standardTestDTO.Type;
+                existingTest.Difficulty = standardTestDTO.Difficulty;
 
-                 var updatedTest = StandardTestRepository.Update(existingTest);
+                var updatedTest = _standardTestRepository.Update(existingTest);
 
-                 StandardTestRepository.save(); 
+                _standardTestRepository.save();
 
                 var updatedTestDTO = new StandardTestDTO
                 {
                     Id = updatedTest.Id,
-                    Title = updatedTest.Title,
-                    Fullmark = updatedTest.Fullmark,
-                    DurationInMinutes = updatedTest.DurationInMinutes
+                    Title = standardTestDTO.Title,
+                    Fullmark = standardTestDTO.Fullmark,
+                    DurationInMinutes = standardTestDTO.DurationInMinutes,
+
+                    SubCategoryId = standardTestDTO.SubCategoryId,
+                    SubCategoryName = subCategory.Name,
+
+                    CategoryId = subCategory.CategoryId,
+                    CategoryName = subCategory.Category.Name,
+
+                    Difficulty = standardTestDTO.Difficulty,
+                    DifficultyName = standardTestDTO.Difficulty.GetDisplayName(),
+
+                    Type = standardTestDTO.Type,
+                    TypeName = standardTestDTO.Type.GetDisplayName(),
                 };
 
                 return new GeneralResponse
@@ -223,7 +356,7 @@ namespace Educational_Medical_platform.Controllers
             }
             catch (Exception ex)
             {
-                return  new GeneralResponse
+                return new GeneralResponse
                 {
                     Message = $"An error occurred while updating the Standard Test: {ex.Message}",
                     IsSuccess = false
@@ -231,13 +364,12 @@ namespace Educational_Medical_platform.Controllers
             }
         }
 
-
         [HttpDelete("{id:int}")]
         public ActionResult<GeneralResponse> DeleteCategory(int id)
         {
             try
             {
-                var existingStandardTest = StandardTestRepository.GetById(id);
+                var existingStandardTest = _standardTestRepository.GetById(id);
 
                 if (existingStandardTest == null)
                 {
@@ -248,8 +380,8 @@ namespace Educational_Medical_platform.Controllers
                     };
                 }
 
-                StandardTestRepository.Delete(existingStandardTest);
-                StandardTestRepository.save();
+                _standardTestRepository.Delete(existingStandardTest);
+                _standardTestRepository.save();
 
                 return new GeneralResponse
                 {
@@ -266,6 +398,5 @@ namespace Educational_Medical_platform.Controllers
                 };
             }
         }
-
     }
 }
