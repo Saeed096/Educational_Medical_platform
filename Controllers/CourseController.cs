@@ -708,7 +708,6 @@ namespace Educational_Medical_platform.Controllers
                 courseDTO.Thumbnail = null; // Remove the image from DTO after saving
             }
 
-
             // Map the DTO to the Course entity
             var newCourse = new Course
             {
@@ -720,6 +719,7 @@ namespace Educational_Medical_platform.Controllers
                 ThumbnailURL = $"/Images/Courses/{fileName}",
                 Price = courseDTO.Price,
                 Type = courseDTO.Type,
+                CategoryId = subCategory.CategoryId,
 
                 //ThumbnailURL = courseDTO.ThumbnailURL,
                 Requirements = courseDTO.Requirements?.Select(req => new Requirement
@@ -732,7 +732,17 @@ namespace Educational_Medical_platform.Controllers
                 }).ToList()
             };
 
-            var categoryId = _subCategoryRepository.Find(criteria: s => s.Id == newCourse.SubCategoryId, includes: ["Category"]).CategoryId;
+            int? categoryId = _subCategoryRepository.Find(criteria: s => s.Id == newCourse.SubCategoryId, includes: ["Category"]).CategoryId;
+
+            if (categoryId == null || categoryId == 0)
+            {
+                return new GeneralResponse()
+                {
+                    IsSuccess = false,
+                    Message = "Invalid CategoryId associated with the SubCategory.",
+                    Status = 408
+                };
+            }
 
             // Add the course to the repository
             _courseRepository.Add(newCourse);
@@ -751,7 +761,7 @@ namespace Educational_Medical_platform.Controllers
                 SubCategoryId = courseDTO.SubCategoryId,
                 SubCategoryName = subCategory.Name,
 
-                CategoryId = categoryId,
+                CategoryId = (int)categoryId,
                 CategoryName = subCategory.Category.Name,
 
                 ThumbnailURL = $"/Images/Courses/{fileName}",

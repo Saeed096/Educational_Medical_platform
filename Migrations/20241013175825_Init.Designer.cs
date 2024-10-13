@@ -12,8 +12,8 @@ using Shoghlana.EF;
 namespace Educational_Medical_platform.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    [Migration("20241005044119_init")]
-    partial class init
+    [Migration("20241013175825_Init")]
+    partial class Init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -867,6 +867,9 @@ namespace Educational_Medical_platform.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<int>("CategoryId")
+                        .HasColumnType("int");
+
                     b.Property<float>("DurationInhours")
                         .HasColumnType("real");
 
@@ -879,6 +882,9 @@ namespace Educational_Medical_platform.Migrations
 
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(10, 2)");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
 
                     b.Property<int>("SubCategoryId")
                         .HasColumnType("int");
@@ -895,6 +901,8 @@ namespace Educational_Medical_platform.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CategoryId");
+
                     b.HasIndex("InstructorId");
 
                     b.HasIndex("SubCategoryId");
@@ -905,9 +913,11 @@ namespace Educational_Medical_platform.Migrations
                         new
                         {
                             Id = 1,
+                            CategoryId = 1,
                             DurationInhours = 10f,
                             InstructorId = "2b222b22-2222-2222-2222-222222222222",
                             Price = 1500m,
+                            Status = 1,
                             SubCategoryId = 1,
                             Title = "physiology",
                             Type = 0
@@ -915,9 +925,11 @@ namespace Educational_Medical_platform.Migrations
                         new
                         {
                             Id = 2,
+                            CategoryId = 2,
                             DurationInhours = 20f,
                             InstructorId = "2b222b22-2222-2222-2222-222222222222",
                             Price = 1000m,
+                            Status = 0,
                             SubCategoryId = 3,
                             Title = "anatomy",
                             Type = 1
@@ -925,9 +937,11 @@ namespace Educational_Medical_platform.Migrations
                         new
                         {
                             Id = 3,
+                            CategoryId = 3,
                             DurationInhours = 30f,
                             InstructorId = "3c333c33-3333-3333-3333-333333333333",
                             Price = 2500m,
+                            Status = 2,
                             SubCategoryId = 5,
                             Title = "histology",
                             Type = 1
@@ -1593,20 +1607,6 @@ namespace Educational_Medical_platform.Migrations
                         },
                         new
                         {
-                            Id = "23978a1d-7823-4030-bd5d-ef7a0e6412a2",
-                            ConcurrencyStamp = "df2d8409-ce61-4dac-ae75-b26fbbab27f2",
-                            Name = "Student",
-                            NormalizedName = "STUDENT"
-                        },
-                        new
-                        {
-                            Id = "ea3203f7-8571-4e45-b109-e593235f3420",
-                            ConcurrencyStamp = "df2d8409-ce61-4dac-ae75-b26fbbab27f2",
-                            Name = "Instructor",
-                            NormalizedName = "INSTRUCTOR"
-                        },
-                        new
-                        {
                             Id = "ea3206f7-8571-4e45-b209-e593236f3420",
                             ConcurrencyStamp = "df2d8409-cg61-4aac-ae65-b26fbbab77f2",
                             Name = "User",
@@ -1819,7 +1819,7 @@ namespace Educational_Medical_platform.Migrations
                         {
                             Id = "1a111a11-1111-1111-1111-111111111111",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "0abb1891-dac7-4711-bb3a-317520ca39a5",
+                            ConcurrencyStamp = "ca3879ae-dc86-4bd7-8f99-38d646ea5ad7",
                             Email = "Ehab_Naser@example.com",
                             EmailConfirmed = true,
                             FirstName = "Ehab",
@@ -1827,9 +1827,9 @@ namespace Educational_Medical_platform.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "EHAB_NASER@EXAMPLE.COM",
                             NormalizedUserName = "EHAB_NASER",
-                            PasswordHash = "AQAAAAIAAYagAAAAEJmdGPWye8wgcAFzpppQdFQXAakxEYdBTm/igJoOipC7OhCN+K+3l4GP0cbX8jABHA==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEMYhuVkBTTZwLWjPUli3VwGsHG5o7X/ivfKsPqkBIyaDIpTdPRWWlWUarRZJcQjkHw==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "3f8d856c-247a-48e6-aede-83e0d3eea0c8",
+                            SecurityStamp = "9f9ef764-d632-42d2-99ee-93v2410d8ae0",
                             TwoFactorEnabled = false,
                             UserName = "Ehab_Naser"
                         },
@@ -1837,7 +1837,7 @@ namespace Educational_Medical_platform.Migrations
                         {
                             Id = "2b222b22-2222-2222-2222-222222222222",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "7455653e-afb3-41c8-a6e8-d9e6c9e78905",
+                            ConcurrencyStamp = "0fff490b-e684-46b8-8e90-a6904330e935",
                             Email = "Mohamed_Galal@example.com",
                             EmailConfirmed = true,
                             FirstName = "Mohamed",
@@ -1845,9 +1845,9 @@ namespace Educational_Medical_platform.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "MOHAMED_GALAL@EXAMPLE.COM",
                             NormalizedUserName = "MOHAMED_GALAL",
-                            PasswordHash = "AQAAAAIAAYagAAAAEJLWXh5izakNXAks4ub/fILy86TSQmf7UNVCl58qzKcgtWYQkalAwty8a61HKcTvoQ==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEAY1wai+hg7sXqRpXuJJhp0JSxbruBzys1AyHxsO+XEFVkP1WBp32Eq/BsSXIOTVAQ==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "cf465277-552b-49ef-9fbe-971da8eda90a",
+                            SecurityStamp = "9f9ed761-d631-42d2-99ee-93v2420d8ae0",
                             TwoFactorEnabled = false,
                             UserName = "Mohamed_Galal"
                         },
@@ -1855,7 +1855,7 @@ namespace Educational_Medical_platform.Migrations
                         {
                             Id = "3c333c33-3333-3333-3333-333333333333",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "e925b21e-28e4-40aa-b946-24fe159ade41",
+                            ConcurrencyStamp = "218e2bf6-2474-4377-98bb-d24f3a76d326",
                             Email = "Alaa_Test@example.com",
                             EmailConfirmed = true,
                             FirstName = "Alaa",
@@ -1863,9 +1863,9 @@ namespace Educational_Medical_platform.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "ALAA_TEST@EXAMPLE.COM",
                             NormalizedUserName = "ALAA_TEST",
-                            PasswordHash = "AQAAAAIAAYagAAAAEBqOMD/0ljbyPr3pfqtUrnew/IR2nKK6I3ts4CklsT46343y8zZYGWBeIkcD/HRmkg==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEDCtSsQQrGtgXvtZEuGfNNLeMQkRf2kwHbZzJ3ppK/i3qBpcQT39Wl3yf8yy8bwXoQ==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "f561928a-fa3f-4629-9262-7f9c77b45b0a",
+                            SecurityStamp = "9f1ed761-a631-42dq-99ee-93z2420d8aeq",
                             TwoFactorEnabled = false,
                             UserName = "Alaa_Test"
                         });
@@ -1943,6 +1943,12 @@ namespace Educational_Medical_platform.Migrations
 
             modelBuilder.Entity("Educational_Medical_platform.Models.Course", b =>
                 {
+                    b.HasOne("Educational_Medical_platform.Models.Category", "Category")
+                        .WithMany()
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Shoghlana.Core.Models.ApplicationUser", "Instructor")
                         .WithMany("CoursesCreated")
                         .HasForeignKey("InstructorId")
@@ -1954,6 +1960,8 @@ namespace Educational_Medical_platform.Migrations
                         .HasForeignKey("SubCategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Category");
 
                     b.Navigation("Instructor");
 

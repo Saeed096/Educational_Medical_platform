@@ -1,8 +1,4 @@
-﻿
-using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
-
-namespace Educational_Medical_platform.Helpers
+﻿namespace Educational_Medical_platform.Helpers
 {
     public enum Gender
     {
@@ -30,19 +26,25 @@ namespace Educational_Medical_platform.Helpers
     public enum CategoryType
     {
         Courses = 0 ,
-        Books = 1 ,
-        Blogs = 2 ,
-        Exams= 3 ,
 
+        Books = 1 ,
+
+        Blogs = 2 ,
+
+        Exams= 3 ,
     }
 
     public enum SubCategoryType
     {
         Courses = 0,
+
         Books = 1,
+
         Blogs = 2,
+
         Exams = 3,
     }
+
     public enum CourseStatus
     {
         PendingApproval = 0,
