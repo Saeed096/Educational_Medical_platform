@@ -281,12 +281,15 @@ namespace Educational_Medical_platform.Controllers
                 {
                     existingBook.Title = bookDTO.Title;
                     existingBook.Description = bookDTO.Description;
-                    existingBook.ThumbnailURL = $"/Images/Book/{bookDTO.ThumbnailURL}" ?? existingBook.ThumbnailURL;
+                    if (bookDTO.Thumbnail != null)
+                    {
+                        existingBook.ThumbnailURL = $"/Images/Book/{bookDTO.ThumbnailURL}";
+                    }
                     existingBook.Url = bookDTO.Url;
                     existingBook.SubCategoryId = bookDTO.SubCategoryId;
                     existingBook.CategoryId = bookDTO.CategoryId;
-                    existingBook.PublisherRole=bookDTO.PublisherRole;
-                    existingBook.PublisherName = bookDTO.PublisherName;
+                    existingBook.PublisherRole=bookDTO.PublisherRole ?? existingBook.PublisherRole;
+                    existingBook.PublisherName = bookDTO.PublisherName ?? existingBook.PublisherName;
                     existingBook.PublishDate = bookDTO.CreatedDate;
                     BookRepository.Update(existingBook);  
                     BookRepository.save();  
