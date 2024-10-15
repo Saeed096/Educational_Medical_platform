@@ -79,7 +79,7 @@ namespace Educational_Medical_platform.Controllers
                     DurationInhours = course.DurationInhours,
                     Price = course.Price,
                     Type = course.Type,
-
+                    RejectionReason = course.RejectedReason,
 
                     InstructorId = course.InstructorId,
                     InstructorFullName = $"{course.Instructor.FirstName} {course.Instructor.LastName}",
@@ -324,6 +324,7 @@ namespace Educational_Medical_platform.Controllers
                 DurationInhours = course.DurationInhours,
                 Price = course.Price,
                 Type = course.Type,
+                RejectionReason = course.RejectedReason,
 
                 InstructorId = course.InstructorId,
                 InstructorFullName = $"{course.Instructor.FirstName} {course.Instructor.LastName}",
@@ -1451,6 +1452,88 @@ namespace Educational_Medical_platform.Controllers
             };
         }
 
+        [HttpGet("Rejected")]
+        public ActionResult<GeneralResponse> GetRejectedCourses()
+        {
+            List<Course> courses = _courseRepository.FindAll(criteria: c => c.Status == CourseStatus.Rejected, includes: new[] { "Requirements", "Objectives", "Videos", "SubCategory", "Instructor" }).ToList();
+
+            if (courses == null || !courses.Any())
+            {
+                return new GeneralResponse()
+                {
+                    IsSuccess = false,
+                    Message = "There are no courses available"
+                };
+            }
+
+            var courseDTOs = new List<GetCourseDTO>();
+
+            foreach (var course in courses)
+            {
+                GetCourseDTO courseDTO = new GetCourseDTO()
+                {
+                    Id = course.Id,
+
+                    Preview = course.Preview,
+                    Title = course.Title,
+                    DurationInhours = course.DurationInhours,
+                    Price = course.Price,
+                    Type = course.Type,
+                    RejectionReason = course.RejectedReason,
+
+                    InstructorId = course.InstructorId,
+                    InstructorFullName = $"{course.Instructor.FirstName} {course.Instructor.LastName}",
+
+                    SubCategoryId = course.SubCategoryId,
+                    SubCategoryName = course.SubCategory.Name,
+
+                    CategoryId = course.SubCategory.CategoryId,
+                    CategoryName = _categoryRepository.GetById(course.SubCategory.CategoryId).Name ?? "NA",
+
+                    ThumbnailURL = course.ThumbnailURL,
+
+                    Requirements = course.Requirements != null && course.Requirements.Any()
+                        ? course.Requirements.Select(req => new GetCourseRequirmentsDTO()
+                        {
+                            Id = req.Id,
+                            CourseId = req.CourseId,
+                            Description = req.Description,
+                        }).ToList()
+                        : new List<GetCourseRequirmentsDTO>(), // Provide an empty list if there are no requirements
+
+                    Objectives = course.Objectives != null && course.Objectives.Any()
+                        ? course.Objectives.Select(req => new GetCourseObjectiveDTO()
+                        {
+                            Id = req.Id,
+                            CourseId = req.CourseId,
+                            Description = req.Description,
+                        }).ToList()
+                        : new List<GetCourseObjectiveDTO>(), // Provide an empty list if there are no Objectives
+
+                    Videos = course.Videos != null && course.Videos.Any()
+                    ? course.Videos.Select(video => new GetVideoDTO()
+                    {
+                        Id = video.Id,
+                        CourseId = video.CourseId,
+                        Description = video.Description,
+                        Number = video.Number,
+                        Title = video.Title,
+                        videoURL = video.videoURL
+                    }).ToList()
+                    : new List<GetVideoDTO>(),
+                };
+
+                courseDTOs.Add(courseDTO);
+            }
+
+            return new GeneralResponse()
+            {
+                IsSuccess = true,
+                Message = "Courses retrieved with Requirments and objectives and VideosURLs successfully.",
+                Data = courseDTOs
+            };
+        }
+
         [HttpPost("ApproveAddingCourse/{courseId:int}")]
         public ActionResult<GeneralResponse> ApproveAddingCourse(int courseId)
         {
@@ -1477,7 +1560,7 @@ namespace Educational_Medical_platform.Controllers
         }
 
         [HttpPost("RejectAddingCourse/{courseId:int}")]
-        public ActionResult<GeneralResponse> RejectAddingCourse(int courseId)
+        public ActionResult<GeneralResponse> RejectAddingCourse(int courseId , string? rejectionReason)
         {
             var course = _courseRepository.Find(c => c.Id == courseId);
 
@@ -1491,6 +1574,7 @@ namespace Educational_Medical_platform.Controllers
             }
 
             course.Status = CourseStatus.Rejected;
+            course.RejectedReason = rejectionReason;
 
             _courseRepository.save();
 

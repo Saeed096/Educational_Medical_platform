@@ -25,6 +25,8 @@ namespace Educational_Medical_platform.Models
 
         public CourseStatus Status { get; set; } = CourseStatus.PendingApproval;
 
+        public string? RejectedReason { get; set; }
+
         //----------------------------------------------------
 
         public string InstructorId { get; set; }

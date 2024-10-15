@@ -1,4 +1,3 @@
-
 use MedLearnHubDB
 
 --delete from students
@@ -16,3 +15,9 @@ select * from blogs
 select * from AspNetUsers
 
 select * from Blog_User_Likes
+
+select * from Categories
+
+select * from SubCategories
+
+select * from Courses
