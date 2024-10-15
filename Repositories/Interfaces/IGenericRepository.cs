@@ -19,7 +19,7 @@ namespace Shoghlana.Core.Interfaces
 
         public Task<IEnumerable<T>> FindAllAsync(string[] includes = null, Expression<Func<T, bool>> criteria = null);
 
-        public int GetCount();
+        public int GetCount(Expression<Func<T, bool>> criteria = null);
 
         //-------------------------------------------------------------------------
 

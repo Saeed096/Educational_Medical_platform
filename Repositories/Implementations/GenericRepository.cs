@@ -109,9 +109,16 @@ namespace Shoghlana.EF.Repository
             return await query.ToListAsync(); 
         }
 
-        public int GetCount()
+        public int GetCount(Expression<Func<T,bool>> criteria = null)
         {
-            return dbSet.Count();
+            if(criteria is not null)
+            {
+                return dbSet.Count(criteria);
+            }
+            else
+            {
+                return dbSet.Count();
+            }
         }
 
         //----------------------------------------------------------

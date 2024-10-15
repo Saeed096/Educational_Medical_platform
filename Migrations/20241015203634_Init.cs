@@ -35,6 +35,7 @@ namespace Educational_Medical_platform.Migrations
                     FirstName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     LastName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     ImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    IsSubscribedToPlatform = table.Column<bool>(type: "bit", nullable: false),
                     UserName = table.Column<string>(type: "nvarchar(50)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -67,21 +68,6 @@ namespace Educational_Medical_platform.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Categories", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "StandardTests",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Fullmark = table.Column<int>(type: "int", nullable: false),
-                    DurationInMinutes = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_StandardTests", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -263,11 +249,18 @@ namespace Educational_Medical_platform.Migrations
                     ThumbnailURL = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Url = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     SubCategoryId = table.Column<int>(type: "int", nullable: true),
-                    CategoryId = table.Column<int>(type: "int", nullable: true)
+                    CategoryId = table.Column<int>(type: "int", nullable: true),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Books", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Books_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.NoAction);
                     table.ForeignKey(
                         name: "FK_Books_Categories_CategoryId",
                         column: x => x.CategoryId,
@@ -293,6 +286,7 @@ namespace Educational_Medical_platform.Migrations
                     Preview = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Type = table.Column<int>(type: "int", nullable: false),
                     Status = table.Column<int>(type: "int", nullable: false),
+                    RejectedReason = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     InstructorId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     SubCategoryId = table.Column<int>(type: "int", nullable: false),
                     CategoryId = table.Column<int>(type: "int", nullable: false)
@@ -314,6 +308,37 @@ namespace Educational_Medical_platform.Migrations
                         onDelete: ReferentialAction.NoAction);
                     table.ForeignKey(
                         name: "FK_Courses_SubCategories_SubCategoryId",
+                        column: x => x.SubCategoryId,
+                        principalTable: "SubCategories",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.NoAction);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "StandardTests",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Fullmark = table.Column<int>(type: "int", nullable: false),
+                    Type = table.Column<int>(type: "int", nullable: false),
+                    Difficulty = table.Column<int>(type: "int", nullable: false),
+                    DurationInMinutes = table.Column<int>(type: "int", nullable: false),
+                    SubCategoryId = table.Column<int>(type: "int", nullable: false),
+                    CategoryId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_StandardTests", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_StandardTests_Categories_CategoryId",
+                        column: x => x.CategoryId,
+                        principalTable: "Categories",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.NoAction);
+                    table.ForeignKey(
+                        name: "FK_StandardTests_SubCategories_SubCategoryId",
                         column: x => x.SubCategoryId,
                         principalTable: "SubCategories",
                         principalColumn: "Id",
@@ -362,43 +387,6 @@ namespace Educational_Medical_platform.Migrations
                         principalTable: "Courses",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.NoAction);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Questions",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Description = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
-                    TestId = table.Column<int>(type: "int", nullable: true),
-                    SubCategoryId = table.Column<int>(type: "int", nullable: true),
-                    CourseId = table.Column<int>(type: "int", nullable: true),
-                    BlogId = table.Column<int>(type: "int", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Questions", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Questions_Blogs_BlogId",
-                        column: x => x.BlogId,
-                        principalTable: "Blogs",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_Questions_Courses_CourseId",
-                        column: x => x.CourseId,
-                        principalTable: "Courses",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_Questions_StandardTests_TestId",
-                        column: x => x.TestId,
-                        principalTable: "StandardTests",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_Questions_SubCategories_SubCategoryId",
-                        column: x => x.SubCategoryId,
-                        principalTable: "SubCategories",
-                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -470,6 +458,43 @@ namespace Educational_Medical_platform.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Questions",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Description = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
+                    TestId = table.Column<int>(type: "int", nullable: true),
+                    SubCategoryId = table.Column<int>(type: "int", nullable: true),
+                    CourseId = table.Column<int>(type: "int", nullable: true),
+                    BlogId = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Questions", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Questions_Blogs_BlogId",
+                        column: x => x.BlogId,
+                        principalTable: "Blogs",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Questions_Courses_CourseId",
+                        column: x => x.CourseId,
+                        principalTable: "Courses",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Questions_StandardTests_TestId",
+                        column: x => x.TestId,
+                        principalTable: "StandardTests",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Questions_SubCategories_SubCategoryId",
+                        column: x => x.SubCategoryId,
+                        principalTable: "SubCategories",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Answers",
                 columns: table => new
                 {
@@ -502,12 +527,12 @@ namespace Educational_Medical_platform.Migrations
 
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
-                columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "FirstName", "ImageUrl", "LastName", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
+                columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "FirstName", "ImageUrl", "IsSubscribedToPlatform", "LastName", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
                 values: new object[,]
                 {
-                    { "1a111a11-1111-1111-1111-111111111111", 0, "ca3879ae-dc86-4bd7-8f99-38d646ea5ad7", "Ehab_Naser@example.com", true, "Ehab", null, "Naser", false, null, "EHAB_NASER@EXAMPLE.COM", "EHAB_NASER", "AQAAAAIAAYagAAAAEMYhuVkBTTZwLWjPUli3VwGsHG5o7X/ivfKsPqkBIyaDIpTdPRWWlWUarRZJcQjkHw==", null, false, "9f9ef764-d632-42d2-99ee-93v2410d8ae0", false, "Ehab_Naser" },
-                    { "2b222b22-2222-2222-2222-222222222222", 0, "0fff490b-e684-46b8-8e90-a6904330e935", "Mohamed_Galal@example.com", true, "Mohamed", null, "Galal", false, null, "MOHAMED_GALAL@EXAMPLE.COM", "MOHAMED_GALAL", "AQAAAAIAAYagAAAAEAY1wai+hg7sXqRpXuJJhp0JSxbruBzys1AyHxsO+XEFVkP1WBp32Eq/BsSXIOTVAQ==", null, false, "9f9ed761-d631-42d2-99ee-93v2420d8ae0", false, "Mohamed_Galal" },
-                    { "3c333c33-3333-3333-3333-333333333333", 0, "218e2bf6-2474-4377-98bb-d24f3a76d326", "Alaa_Test@example.com", true, "Alaa", null, "Test", false, null, "ALAA_TEST@EXAMPLE.COM", "ALAA_TEST", "AQAAAAIAAYagAAAAEDCtSsQQrGtgXvtZEuGfNNLeMQkRf2kwHbZzJ3ppK/i3qBpcQT39Wl3yf8yy8bwXoQ==", null, false, "9f1ed761-a631-42dq-99ee-93z2420d8aeq", false, "Alaa_Test" }
+                    { "1a111a11-1111-1111-1111-111111111111", 0, "08fc7215-21f9-4a7a-be2e-dffc2f033f1e", "Ehab_Naser@example.com", true, "Ehab", null, false, "Naser", false, null, "EHAB_NASER@EXAMPLE.COM", "EHAB_NASER", "AQAAAAIAAYagAAAAEB4V7akh0Js4JzYFHBq28r3jWIHDW5BLVKVnmCvoIxIkDVIov481OG7ghM9yx2MOyw==", "011548726155", false, "9f9ef764-d632-42d2-99ee-93v2410d8ae0", false, "Ehab_Naser" },
+                    { "2b222b22-2222-2222-2222-222222222222", 0, "47003250-983e-4cd0-9c5c-0b8216ad225a", "Mohamed_Galal@example.com", true, "Mohamed", null, false, "Galal", false, null, "MOHAMED_GALAL@EXAMPLE.COM", "MOHAMED_GALAL", "AQAAAAIAAYagAAAAEArFUNCedwZCB77pzdHRZPla/e7wDY9XTp5TQSNveQIaaonhj53lbkG8Zplj/tx0LQ==", "01054871566", false, "9f9ed761-d631-42d2-99ee-93v2420d8ae0", false, "Mohamed_Galal" },
+                    { "3c333c33-3333-3333-3333-333333333333", 0, "1da08389-6bc6-4324-9e67-4e667449a02f", "Alaa_Test@example.com", true, "Alaa", null, false, "Ahmed", false, null, "ALAA_AHMED@EXAMPLE.COM", "ALAA_AHMED", "AQAAAAIAAYagAAAAEN3ofc1DT+WwHOMB3dJt9sNY5uTjoiVmVFZa6KiiWwr8jRecRyWVFZjMfuiA5LMoFw==", "01225193482", false, "9f1ed761-a631-42dq-99ee-93z2420d8aeq", false, "Alaa_Ahmed" }
                 });
 
             migrationBuilder.InsertData(
@@ -534,16 +559,6 @@ namespace Educational_Medical_platform.Migrations
                 });
 
             migrationBuilder.InsertData(
-                table: "StandardTests",
-                columns: new[] { "Id", "DurationInMinutes", "Fullmark", "Title" },
-                values: new object[,]
-                {
-                    { 1, 60, 100, "Test1" },
-                    { 2, 100, 150, "Test2" },
-                    { 3, 200, 300, "Test3" }
-                });
-
-            migrationBuilder.InsertData(
                 table: "AspNetUserRoles",
                 columns: new[] { "RoleId", "UserId" },
                 values: new object[,]
@@ -561,18 +576,6 @@ namespace Educational_Medical_platform.Migrations
                     { 1, "2b222b22-2222-2222-2222-222222222222", 1, "Understanding human anatomy is essential for medical professionals and enthusiasts alike.", "This blog covers the basics of human anatomy...", "/Images/Blogs/blog1.jpg", "Anatomy is the branch of biology concerned with the study of the structure of organisms and their parts.", 10, null, "Introduction to Human Anatomy" },
                     { 2, "2b222b22-2222-2222-2222-222222222222", 1, "The study of comparative anatomy is crucial for evolutionary biology and understanding the functional adaptations of organisms.", "This blog explores comparative anatomy across species...", "/Images/Blogs/blog1.jpg", "Comparative anatomy allows us to understand the similarities and differences between different organisms.", 15, null, "Advanced Comparative Anatomy" },
                     { 3, "2b222b22-2222-2222-2222-222222222222", 2, "A deep understanding of cell physiology is vital for advancements in medical science.", "Understanding the basics of cell physiology...", "/Images/Blogs/blog1.jpg", "Cell physiology is the study of the functions of cells and their components.", 20, null, "Fundamentals of Cell Physiology" }
-                });
-
-            migrationBuilder.InsertData(
-                table: "Questions",
-                columns: new[] { "Id", "BlogId", "CourseId", "Description", "SubCategoryId", "TestId" },
-                values: new object[,]
-                {
-                    { 16, null, null, "What is the primary function of red blood cells?", null, 1 },
-                    { 17, null, null, "How does the immune system protect the body?", null, 1 },
-                    { 18, null, null, "What are the stages of the cell cycle?", null, 2 },
-                    { 19, null, null, "What is apoptosis?", null, 2 },
-                    { 20, null, null, "What role does DNA play in inheritance?", null, 2 }
                 });
 
             migrationBuilder.InsertData(
@@ -615,28 +618,6 @@ namespace Educational_Medical_platform.Migrations
                 });
 
             migrationBuilder.InsertData(
-                table: "Answers",
-                columns: new[] { "Id", "Description", "IsCorrect", "QuestionId", "Reason" },
-                values: new object[,]
-                {
-                    { 46, "To carry oxygen", true, 16, "Hemoglobin in red blood cells carries oxygen." },
-                    { 47, "To fight infections", false, 16, "Fighting infections is primarily the role of the immune system." },
-                    { 48, "To clot blood", false, 16, "Blood clotting is done by platelets and certain plasma proteins." },
-                    { 49, "By recognizing pathogens", true, 17, "The immune system identifies and targets pathogens." },
-                    { 50, "By producing energy", false, 17, "Energy production is not a function of the immune system." },
-                    { 51, "By storing nutrients", false, 17, "Nutrient storage is a function of the liver and other organs." },
-                    { 52, "Interphase, mitosis, cytokinesis", true, 18, "These are the stages of the cell cycle." },
-                    { 53, "Prophase, metaphase, anaphase", false, 18, "These terms refer to stages of mitosis, not the entire cell cycle." },
-                    { 54, "Meiosis only", false, 18, "Meiosis is a specific type of cell division, separate from the cell cycle." },
-                    { 55, "Programmed cell death", true, 19, "Apoptosis is the process of programmed cell death." },
-                    { 56, "Cell growth", false, 19, "Cell growth is a separate process from apoptosis." },
-                    { 57, "Cell division", false, 19, "Cell division is the process of replicating cells, distinct from programmed cell death." },
-                    { 58, "Carries genetic information", true, 20, "DNA is the molecule that carries genetic information." },
-                    { 59, "Produces energy", false, 20, "Energy production is not a role of DNA." },
-                    { 60, "Fights diseases", false, 20, "DNA does not directly fight diseases; it contains the instructions for making proteins." }
-                });
-
-            migrationBuilder.InsertData(
                 table: "Blogs",
                 columns: new[] { "Id", "AuthorId", "CategoryId", "Conclusion", "Content", "ImageURL", "Intro", "LikesNumber", "SubCategoryId", "Title" },
                 values: new object[,]
@@ -648,13 +629,27 @@ namespace Educational_Medical_platform.Migrations
                 });
 
             migrationBuilder.InsertData(
-                table: "Courses",
-                columns: new[] { "Id", "CategoryId", "DurationInhours", "InstructorId", "Preview", "Price", "Status", "SubCategoryId", "ThumbnailURL", "Title", "Type" },
+                table: "Books",
+                columns: new[] { "Id", "CategoryId", "Description", "PublishDate", "PublisherName", "PublisherRole", "SubCategoryId", "ThumbnailURL", "Title", "Url", "UserId" },
                 values: new object[,]
                 {
-                    { 1, 1, 10f, "2b222b22-2222-2222-2222-222222222222", null, 1500m, 1, 1, null, "physiology", 0 },
-                    { 2, 2, 20f, "2b222b22-2222-2222-2222-222222222222", null, 1000m, 0, 3, null, "anatomy", 1 },
-                    { 3, 3, 30f, "3c333c33-3333-3333-3333-333333333333", null, 2500m, 2, 5, null, "histology", 1 }
+                    { 1, 5, "A comprehensive guide for first-year medical students.", new DateTime(2021, 4, 15, 0, 0, 0, 0, DateTimeKind.Unspecified), "Mohamed Galal", "User", 9, "https://example.com/thumbnails/book1.jpg", "Introduction to Medical Studies", "https://example.com/books/intro-medical-studies", "2b222b22-2222-2222-2222-222222222222" },
+                    { 2, 5, "In-depth study of human anatomy for advanced medical students.", new DateTime(2020, 11, 20, 0, 0, 0, 0, DateTimeKind.Unspecified), "Mohamed Galal", "User", 9, "https://example.com/thumbnails/book2.jpg", "Advanced Human Anatomy", "https://example.com/books/advanced-anatomy", "2b222b22-2222-2222-2222-222222222222" },
+                    { 3, 5, "A practical guide to clinical diagnostic methods.", new DateTime(2019, 7, 10, 0, 0, 0, 0, DateTimeKind.Unspecified), "Alaa Ahmed", "User", 10, "https://example.com/thumbnails/book3.jpg", "Clinical Diagnosis Techniques", "https://example.com/books/clinical-diagnosis", "3c333c33-3333-3333-3333-333333333333" },
+                    { 4, 6, "Essential pharmacology concepts for healthcare professionals.", new DateTime(2022, 3, 5, 0, 0, 0, 0, DateTimeKind.Unspecified), "Alaa Ahmed", "User", 11, "https://example.com/thumbnails/book4.jpg", "Pharmacology Basics", "https://example.com/books/pharmacology-basics", "3c333c33-3333-3333-3333-333333333333" },
+                    { 5, 6, "Key topics in pathology explained in a clear and concise manner.", new DateTime(2021, 1, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), "Alaa Ahmed", "User", 12, "https://example.com/thumbnails/book5.jpg", "Pathology Essentials", "https://example.com/books/pathology-essentials", "3c333c33-3333-3333-3333-333333333333" },
+                    { 6, 7, "Basic microbiology concepts for beginners.", new DateTime(2020, 6, 22, 0, 0, 0, 0, DateTimeKind.Unspecified), "Ehab Naser", "Admin", 13, "https://example.com/thumbnails/book6.jpg", "Microbiology Fundamentals", "https://example.com/books/microbiology-fundamentals", "1a111a11-1111-1111-1111-111111111111" },
+                    { 7, 7, "A handbook on modern surgical techniques.", new DateTime(2023, 8, 13, 0, 0, 0, 0, DateTimeKind.Unspecified), "Ehab Naser", "Admin", 13, "https://example.com/thumbnails/book7.jpg", "Surgical Procedures Handbook", "https://example.com/books/surgical-procedures", "1a111a11-1111-1111-1111-111111111111" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Courses",
+                columns: new[] { "Id", "CategoryId", "DurationInhours", "InstructorId", "Preview", "Price", "RejectedReason", "Status", "SubCategoryId", "ThumbnailURL", "Title", "Type" },
+                values: new object[,]
+                {
+                    { 1, 1, 10f, "2b222b22-2222-2222-2222-222222222222", null, 1500m, null, 1, 1, null, "physiology", 0 },
+                    { 2, 2, 20f, "2b222b22-2222-2222-2222-222222222222", null, 1000m, null, 0, 3, null, "anatomy", 1 },
+                    { 3, 3, 30f, "3c333c33-3333-3333-3333-333333333333", null, 2500m, null, 2, 5, null, "histology", 1 }
                 });
 
             migrationBuilder.InsertData(
@@ -672,6 +667,16 @@ namespace Educational_Medical_platform.Migrations
                     { 13, 2, null, "What is the importance of studying anatomy?", null, null },
                     { 14, 2, null, "What are the different systems of the human body?", null, null },
                     { 15, 3, null, "What role does the nervous system play in body functions?", null, null }
+                });
+
+            migrationBuilder.InsertData(
+                table: "StandardTests",
+                columns: new[] { "Id", "CategoryId", "Difficulty", "DurationInMinutes", "Fullmark", "SubCategoryId", "Title", "Type" },
+                values: new object[,]
+                {
+                    { 1, 13, 0, 60, 100, 25, "Test1", 0 },
+                    { 2, 14, 1, 100, 150, 27, "Test2", 0 },
+                    { 3, 15, 2, 200, 300, 29, "Test3", 0 }
                 });
 
             migrationBuilder.InsertData(
@@ -730,7 +735,12 @@ namespace Educational_Medical_platform.Migrations
                     { 2, null, 1, "Which organelle is known as the powerhouse of the cell?", null, null },
                     { 3, null, 2, "What is the function of ribosomes?", null, null },
                     { 4, null, 2, "What is the role of the cell membrane?", null, null },
-                    { 5, null, 2, "What is osmosis?", null, null }
+                    { 5, null, 2, "What is osmosis?", null, null },
+                    { 16, null, null, "What is the primary function of red blood cells?", null, 1 },
+                    { 17, null, null, "How does the immune system protect the body?", null, 1 },
+                    { 18, null, null, "What are the stages of the cell cycle?", null, 2 },
+                    { 19, null, null, "What is apoptosis?", null, 2 },
+                    { 20, null, null, "What role does DNA play in inheritance?", null, 2 }
                 });
 
             migrationBuilder.InsertData(
@@ -772,7 +782,22 @@ namespace Educational_Medical_platform.Migrations
                     { 12, "Produces energy", false, 4, "Energy production occurs in mitochondria, not the cell membrane." },
                     { 13, "Movement of water", true, 5, "Osmosis is the movement of water across a membrane." },
                     { 14, "Transport of nutrients", false, 5, "Nutrient transport occurs via active and passive transport mechanisms, not osmosis." },
-                    { 15, "Protein synthesis", false, 5, "Protein synthesis involves ribosomes, not the movement of water." }
+                    { 15, "Protein synthesis", false, 5, "Protein synthesis involves ribosomes, not the movement of water." },
+                    { 46, "To carry oxygen", true, 16, "Hemoglobin in red blood cells carries oxygen." },
+                    { 47, "To fight infections", false, 16, "Fighting infections is primarily the role of the immune system." },
+                    { 48, "To clot blood", false, 16, "Blood clotting is done by platelets and certain plasma proteins." },
+                    { 49, "By recognizing pathogens", true, 17, "The immune system identifies and targets pathogens." },
+                    { 50, "By producing energy", false, 17, "Energy production is not a function of the immune system." },
+                    { 51, "By storing nutrients", false, 17, "Nutrient storage is a function of the liver and other organs." },
+                    { 52, "Interphase, mitosis, cytokinesis", true, 18, "These are the stages of the cell cycle." },
+                    { 53, "Prophase, metaphase, anaphase", false, 18, "These terms refer to stages of mitosis, not the entire cell cycle." },
+                    { 54, "Meiosis only", false, 18, "Meiosis is a specific type of cell division, separate from the cell cycle." },
+                    { 55, "Programmed cell death", true, 19, "Apoptosis is the process of programmed cell death." },
+                    { 56, "Cell growth", false, 19, "Cell growth is a separate process from apoptosis." },
+                    { 57, "Cell division", false, 19, "Cell division is the process of replicating cells, distinct from programmed cell death." },
+                    { 58, "Carries genetic information", true, 20, "DNA is the molecule that carries genetic information." },
+                    { 59, "Produces energy", false, 20, "Energy production is not a role of DNA." },
+                    { 60, "Fights diseases", false, 20, "DNA does not directly fight diseases; it contains the instructions for making proteins." }
                 });
 
             migrationBuilder.CreateIndex(
@@ -850,6 +875,11 @@ namespace Educational_Medical_platform.Migrations
                 column: "SubCategoryId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Books_UserId",
+                table: "Books",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Courses_CategoryId",
                 table: "Courses",
                 column: "CategoryId");
@@ -893,6 +923,16 @@ namespace Educational_Medical_platform.Migrations
                 name: "IX_Requirements_CourseId",
                 table: "Requirements",
                 column: "CourseId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_StandardTests_CategoryId",
+                table: "StandardTests",
+                column: "CategoryId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_StandardTests_SubCategoryId",
+                table: "StandardTests",
+                column: "SubCategoryId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_SubCategories_CategoryId",

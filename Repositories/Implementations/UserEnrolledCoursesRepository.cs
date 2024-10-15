@@ -10,5 +10,10 @@ namespace Educational_Medical_platform.Repositories.Implementations
         public UserEnrolledCoursesRepository(ApplicationDBContext Context) : base(Context)
         {
         }
+
+        public bool IsUserHasEnrolledInAnyCourse(string userID)
+        {
+            return base.context.UserEnrolledCourses.Any(uc => uc.StudentId == userID);
+        }
     }
 }

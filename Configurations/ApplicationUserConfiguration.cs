@@ -18,16 +18,17 @@ namespace Shoghlana.EF.Configurations
             builder.HasData(
                      new ApplicationUser
                      {
-                         Id = "1a111a11-1111-1111-1111-111111111111", 
+                         Id = "1a111a11-1111-1111-1111-111111111111",
                          UserName = "Ehab_Naser",
-                         FirstName ="Ehab",
+                         FirstName = "Ehab",
                          LastName = "Naser",
                          NormalizedUserName = "EHAB_NASER",
                          Email = "Ehab_Naser@example.com",
                          NormalizedEmail = "EHAB_NASER@EXAMPLE.COM",
                          EmailConfirmed = true,
                          PasswordHash = hasher.HashPassword(null, "Test@123"),
-                         SecurityStamp = "9f9ef764-d632-42d2-99ee-93v2410d8ae0"
+                         SecurityStamp = "9f9ef764-d632-42d2-99ee-93v2410d8ae0",
+                         PhoneNumber = "011548726155",
                      },
                     new ApplicationUser
                     {
@@ -40,20 +41,23 @@ namespace Shoghlana.EF.Configurations
                         NormalizedEmail = "MOHAMED_GALAL@EXAMPLE.COM",
                         EmailConfirmed = true,
                         PasswordHash = hasher.HashPassword(null, "Test@123"),
-                        SecurityStamp = "9f9ed761-d631-42d2-99ee-93v2420d8ae0"
+                        SecurityStamp = "9f9ed761-d631-42d2-99ee-93v2420d8ae0",
+                        PhoneNumber = "01054871566",
+
                     },
                     new ApplicationUser
                     {
                         Id = "3c333c33-3333-3333-3333-333333333333",
-                        UserName = "Alaa_Test",
+                        UserName = "Alaa_Ahmed",
                         FirstName = "Alaa",
-                        LastName = "Test",
-                        NormalizedUserName = "ALAA_TEST",
+                        LastName = "Ahmed",
+                        NormalizedUserName = "ALAA_AHMED",
                         Email = "Alaa_Test@example.com",
-                        NormalizedEmail = "ALAA_TEST@EXAMPLE.COM",
+                        NormalizedEmail = "ALAA_AHMED@EXAMPLE.COM",
                         EmailConfirmed = true,
                         PasswordHash = hasher.HashPassword(null, "Test@123"),
-                        SecurityStamp = "9f1ed761-a631-42dq-99ee-93z2420d8aeq"
+                        SecurityStamp = "9f1ed761-a631-42dq-99ee-93z2420d8aeq",
+                        PhoneNumber = "01225193482",
                     }
                 );
         }

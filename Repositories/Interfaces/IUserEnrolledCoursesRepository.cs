@@ -5,5 +5,6 @@ namespace Educational_Medical_platform.Repositories.Interfaces
 {
     public interface IUserEnrolledCoursesRepository : IGenericRepository<User_Enrolled_Courses>
     {
+        public bool IsUserHasEnrolledInAnyCourse(string userId);
     }
 }

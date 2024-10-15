@@ -25,6 +25,8 @@ namespace Shoghlana.Core.Models
 
         public List<Blog>? Blogs { get; set; }
 
+        public List<Book>? Books { get; set; }
+
         public bool IsSubscribedToPlatform { get; set; } = false;
     }
 }

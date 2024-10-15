@@ -12,8 +12,8 @@ using Shoghlana.EF;
 namespace Educational_Medical_platform.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    [Migration("20241013185202_TestDifficulty")]
-    partial class TestDifficulty
+    [Migration("20241015203634_Init")]
+    partial class Init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -731,13 +731,119 @@ namespace Educational_Medical_platform.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("CategoryId");
 
                     b.HasIndex("SubCategoryId");
 
+                    b.HasIndex("UserId");
+
                     b.ToTable("Books");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CategoryId = 5,
+                            Description = "A comprehensive guide for first-year medical students.",
+                            PublishDate = new DateTime(2021, 4, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            PublisherName = "Mohamed Galal",
+                            PublisherRole = "User",
+                            SubCategoryId = 9,
+                            ThumbnailURL = "https://example.com/thumbnails/book1.jpg",
+                            Title = "Introduction to Medical Studies",
+                            Url = "https://example.com/books/intro-medical-studies",
+                            UserId = "2b222b22-2222-2222-2222-222222222222"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            CategoryId = 5,
+                            Description = "In-depth study of human anatomy for advanced medical students.",
+                            PublishDate = new DateTime(2020, 11, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            PublisherName = "Mohamed Galal",
+                            PublisherRole = "User",
+                            SubCategoryId = 9,
+                            ThumbnailURL = "https://example.com/thumbnails/book2.jpg",
+                            Title = "Advanced Human Anatomy",
+                            Url = "https://example.com/books/advanced-anatomy",
+                            UserId = "2b222b22-2222-2222-2222-222222222222"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            CategoryId = 5,
+                            Description = "A practical guide to clinical diagnostic methods.",
+                            PublishDate = new DateTime(2019, 7, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            PublisherName = "Alaa Ahmed",
+                            PublisherRole = "User",
+                            SubCategoryId = 10,
+                            ThumbnailURL = "https://example.com/thumbnails/book3.jpg",
+                            Title = "Clinical Diagnosis Techniques",
+                            Url = "https://example.com/books/clinical-diagnosis",
+                            UserId = "3c333c33-3333-3333-3333-333333333333"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            CategoryId = 6,
+                            Description = "Essential pharmacology concepts for healthcare professionals.",
+                            PublishDate = new DateTime(2022, 3, 5, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            PublisherName = "Alaa Ahmed",
+                            PublisherRole = "User",
+                            SubCategoryId = 11,
+                            ThumbnailURL = "https://example.com/thumbnails/book4.jpg",
+                            Title = "Pharmacology Basics",
+                            Url = "https://example.com/books/pharmacology-basics",
+                            UserId = "3c333c33-3333-3333-3333-333333333333"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            CategoryId = 6,
+                            Description = "Key topics in pathology explained in a clear and concise manner.",
+                            PublishDate = new DateTime(2021, 1, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            PublisherName = "Alaa Ahmed",
+                            PublisherRole = "User",
+                            SubCategoryId = 12,
+                            ThumbnailURL = "https://example.com/thumbnails/book5.jpg",
+                            Title = "Pathology Essentials",
+                            Url = "https://example.com/books/pathology-essentials",
+                            UserId = "3c333c33-3333-3333-3333-333333333333"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            CategoryId = 7,
+                            Description = "Basic microbiology concepts for beginners.",
+                            PublishDate = new DateTime(2020, 6, 22, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            PublisherName = "Ehab Naser",
+                            PublisherRole = "Admin",
+                            SubCategoryId = 13,
+                            ThumbnailURL = "https://example.com/thumbnails/book6.jpg",
+                            Title = "Microbiology Fundamentals",
+                            Url = "https://example.com/books/microbiology-fundamentals",
+                            UserId = "1a111a11-1111-1111-1111-111111111111"
+                        },
+                        new
+                        {
+                            Id = 7,
+                            CategoryId = 7,
+                            Description = "A handbook on modern surgical techniques.",
+                            PublishDate = new DateTime(2023, 8, 13, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            PublisherName = "Ehab Naser",
+                            PublisherRole = "Admin",
+                            SubCategoryId = 13,
+                            ThumbnailURL = "https://example.com/thumbnails/book7.jpg",
+                            Title = "Surgical Procedures Handbook",
+                            Url = "https://example.com/books/surgical-procedures",
+                            UserId = "1a111a11-1111-1111-1111-111111111111"
+                        });
                 });
 
             modelBuilder.Entity("Educational_Medical_platform.Models.Category", b =>
@@ -882,6 +988,9 @@ namespace Educational_Medical_platform.Migrations
 
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(10, 2)");
+
+                    b.Property<string>("RejectedReason")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Status")
                         .HasColumnType("int");
@@ -1792,6 +1901,9 @@ namespace Educational_Medical_platform.Migrations
                     b.Property<string>("ImageUrl")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool>("IsSubscribedToPlatform")
+                        .HasColumnType("bit");
+
                     b.Property<string>("LastName")
                         .IsRequired()
                         .HasMaxLength(50)
@@ -1847,15 +1959,17 @@ namespace Educational_Medical_platform.Migrations
                         {
                             Id = "1a111a11-1111-1111-1111-111111111111",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "77651b5e-a772-40e3-a77c-316932e1ddf7",
+                            ConcurrencyStamp = "08fc7215-21f9-4a7a-be2e-dffc2f033f1e",
                             Email = "Ehab_Naser@example.com",
                             EmailConfirmed = true,
                             FirstName = "Ehab",
+                            IsSubscribedToPlatform = false,
                             LastName = "Naser",
                             LockoutEnabled = false,
                             NormalizedEmail = "EHAB_NASER@EXAMPLE.COM",
                             NormalizedUserName = "EHAB_NASER",
-                            PasswordHash = "AQAAAAIAAYagAAAAEJtC9fAbgLU2z+U/p58AYktiMcpV0BinmlEgiGp0lcdEQ3yqEIOIPoQUoigIRqdtfw==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEB4V7akh0Js4JzYFHBq28r3jWIHDW5BLVKVnmCvoIxIkDVIov481OG7ghM9yx2MOyw==",
+                            PhoneNumber = "011548726155",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "9f9ef764-d632-42d2-99ee-93v2410d8ae0",
                             TwoFactorEnabled = false,
@@ -1865,15 +1979,17 @@ namespace Educational_Medical_platform.Migrations
                         {
                             Id = "2b222b22-2222-2222-2222-222222222222",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "97869376-ad14-4710-83ca-ae3d61fa6a49",
+                            ConcurrencyStamp = "47003250-983e-4cd0-9c5c-0b8216ad225a",
                             Email = "Mohamed_Galal@example.com",
                             EmailConfirmed = true,
                             FirstName = "Mohamed",
+                            IsSubscribedToPlatform = false,
                             LastName = "Galal",
                             LockoutEnabled = false,
                             NormalizedEmail = "MOHAMED_GALAL@EXAMPLE.COM",
                             NormalizedUserName = "MOHAMED_GALAL",
-                            PasswordHash = "AQAAAAIAAYagAAAAELTbKpcyy8TrVtWIPBq6uRG95KIr0JDJuNLnIExq3M9Hciu7Kvu4s0dt+vCd2LoY/w==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEArFUNCedwZCB77pzdHRZPla/e7wDY9XTp5TQSNveQIaaonhj53lbkG8Zplj/tx0LQ==",
+                            PhoneNumber = "01054871566",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "9f9ed761-d631-42d2-99ee-93v2420d8ae0",
                             TwoFactorEnabled = false,
@@ -1883,19 +1999,21 @@ namespace Educational_Medical_platform.Migrations
                         {
                             Id = "3c333c33-3333-3333-3333-333333333333",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "142c6516-090f-4d25-be5a-15283844f61b",
+                            ConcurrencyStamp = "1da08389-6bc6-4324-9e67-4e667449a02f",
                             Email = "Alaa_Test@example.com",
                             EmailConfirmed = true,
                             FirstName = "Alaa",
-                            LastName = "Test",
+                            IsSubscribedToPlatform = false,
+                            LastName = "Ahmed",
                             LockoutEnabled = false,
-                            NormalizedEmail = "ALAA_TEST@EXAMPLE.COM",
-                            NormalizedUserName = "ALAA_TEST",
-                            PasswordHash = "AQAAAAIAAYagAAAAEEN/0NBsQSqrkdN6ylKwk5z0jKfdLd0vqNDNb8TJYMdko65V1avw4RQ2qi8M2qqKYg==",
+                            NormalizedEmail = "ALAA_AHMED@EXAMPLE.COM",
+                            NormalizedUserName = "ALAA_AHMED",
+                            PasswordHash = "AQAAAAIAAYagAAAAEN3ofc1DT+WwHOMB3dJt9sNY5uTjoiVmVFZa6KiiWwr8jRecRyWVFZjMfuiA5LMoFw==",
+                            PhoneNumber = "01225193482",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "9f1ed761-a631-42dq-99ee-93z2420d8aeq",
                             TwoFactorEnabled = false,
-                            UserName = "Alaa_Test"
+                            UserName = "Alaa_Ahmed"
                         });
                 });
 
@@ -1964,9 +2082,17 @@ namespace Educational_Medical_platform.Migrations
                         .WithMany("Books")
                         .HasForeignKey("SubCategoryId");
 
+                    b.HasOne("Shoghlana.Core.Models.ApplicationUser", "User")
+                        .WithMany("Books")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Category");
 
                     b.Navigation("SubCategory");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Educational_Medical_platform.Models.Course", b =>
@@ -2209,6 +2335,8 @@ namespace Educational_Medical_platform.Migrations
             modelBuilder.Entity("Shoghlana.Core.Models.ApplicationUser", b =>
                 {
                     b.Navigation("Blogs");
+
+                    b.Navigation("Books");
 
                     b.Navigation("CoursesCreated");
 
