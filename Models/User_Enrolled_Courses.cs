@@ -23,22 +23,9 @@ namespace Educational_Medical_platform.Models
 
         public DateTime StartDate { get; set; }
 
-        //public int CertifiedHours { get; set; }
-
-        //public CertificateDetails? CertificateDetails { get; set; }
-
         //******************************************
 
-        //// comp 1ry key
-        //public int StudentId { get; set; } 
-        //public int CourseId { get; set; }
-
-        //public Student Student { get; set; }
-        //public Course Course { get; set; }
-
-        //public float? Degree { get; set; }
-
-        //// to be handeled 
+        //// TODO : Make Logic To handle The current Video each user Stopped at (progress)
 
         //public int VideoNumber { get; set; } = 0;
 

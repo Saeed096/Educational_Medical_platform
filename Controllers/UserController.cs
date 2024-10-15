@@ -27,7 +27,6 @@ namespace Educational_Medical_platform.Controllers
         public UserController(
             UserManager<ApplicationUser> userManager,
             IEmailService emailService,
-            IInstructorRepository instructorRepository,
             IConfiguration configuration)
         {
             _userManager = userManager;

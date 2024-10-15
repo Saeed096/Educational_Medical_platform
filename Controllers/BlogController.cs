@@ -22,7 +22,6 @@ namespace Educational_Medical_platform.Controllers
         private readonly IAnswerRepository _answerRepository;
         private readonly string _imagesPath;
 
-        ///TODO : Don't Forget to make end point for assigning question to blog 
         public BlogController(IBlogRepository blogRepository,
             IBlog_User_LikesRepository user_LikesRepository,
             UserManager<ApplicationUser> userManager,
