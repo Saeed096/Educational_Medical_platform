@@ -572,7 +572,6 @@ namespace Educational_Medical_platform.Controllers
         [HttpPost("Enroll")]
         public async Task<ActionResult<GeneralResponse>> EnrollStudentInCourse(string studentId, int courseId)
         {
-            // Check if student exists
             var student = await _userManager.FindByIdAsync(studentId);
             if (student == null)
             {
@@ -584,7 +583,6 @@ namespace Educational_Medical_platform.Controllers
                 };
             }
 
-            // Check if course exists
             var course = _courseRepository.Find(c => c.Id == courseId);
             if (course == null)
             {
@@ -604,7 +602,7 @@ namespace Educational_Medical_platform.Controllers
                 {
                     IsSuccess = false,
                     Message = "Student is already enrolled in this course.",
-                    Status = 409 // Conflict
+                    Status = 409 
                 };
             }
 
@@ -619,7 +617,6 @@ namespace Educational_Medical_platform.Controllers
                 };
             }
 
-            // Create a new record in the User_Enrolled_Courses table
             var newEnrollment = new User_Enrolled_Courses()
             {
                 StudentId = studentId,
@@ -629,9 +626,8 @@ namespace Educational_Medical_platform.Controllers
                 StartDate = DateTime.Now
             };
 
-            // Save the new enrollment record
             await _userEnrolledCoursesRepository.AddAsync(newEnrollment);
-            await _userEnrolledCoursesRepository.SaveAsync(); // Save changes to the database
+            await _userEnrolledCoursesRepository.SaveAsync();
 
             return new GeneralResponse()
             {

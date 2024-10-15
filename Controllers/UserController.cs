@@ -20,9 +20,6 @@ namespace Educational_Medical_platform.Controllers
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IEmailService _emailService;
-        private readonly IAdminRepository _adminRepository;
-        private readonly IInstructorRepository _instructorRepository;
-        private readonly IStudentRepository _studentRepository;
         private readonly IConfiguration _configuration;
         private readonly string _imagesPath;
 
@@ -30,16 +27,11 @@ namespace Educational_Medical_platform.Controllers
         public UserController(
             UserManager<ApplicationUser> userManager,
             IEmailService emailService,
-            IAdminRepository adminRepository,
             IInstructorRepository instructorRepository,
-            IStudentRepository studentRepository,
             IConfiguration configuration)
         {
             _userManager = userManager;
             _emailService = emailService;
-            _adminRepository = adminRepository;
-            _instructorRepository = instructorRepository;
-            _studentRepository = studentRepository;
             _configuration = configuration;
             _imagesPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Images", "Users");
         }

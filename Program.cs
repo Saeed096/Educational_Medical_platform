@@ -47,9 +47,7 @@ namespace Educational_Medical_platform
             builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("MailSettings"));
 
             builder.Services.AddScoped<IEmailService, EmailService>();
-            builder.Services.AddScoped<IAdminRepository, AdminRepository>();
             builder.Services.AddScoped<IInstructorRepository, InstructorRepository>();
-            builder.Services.AddScoped<IStudentRepository, StudentRepository>(); 
             builder.Services.AddScoped<IBlogRepository, BlogRepository>(); 
             builder.Services.AddScoped<IBookRepository,BookRepository>();
             builder.Services.AddScoped<ISubCategoryRepository, SubCategoryRepository>();

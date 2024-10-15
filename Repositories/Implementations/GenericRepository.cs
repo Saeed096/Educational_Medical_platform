@@ -264,6 +264,5 @@ namespace Shoghlana.EF.Repository
         {
            return context.SaveChangesAsync();
         }
-
     }
 }
