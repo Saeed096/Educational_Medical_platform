@@ -226,7 +226,7 @@ namespace Educational_Medical_platform.PayPal
             return result;
         }
 
-    //    public async Task<bool> ActiveSubscription(string id, SubscriptionStatusChangeRequest request)
+       //    public async Task<bool> ActiveSubscription(string id, SubscriptionStatusChangeRequest request)
     //    {
     //        EnsureHttpClientCreated();
 
@@ -329,5 +329,6 @@ namespace Educational_Medical_platform.PayPal
 
     //        return true;
     //    }
+ 
     }
-}
+}   
