@@ -79,6 +79,51 @@ namespace Educational_Medical_platform.Controllers
             };
         }
 
+        [HttpGet("GetAllPaginated")]
+        public ActionResult<GeneralResponse> GetAllPaginated(int page = 1, int pageSize = 10)
+        {
+            var blogsPaginationList = _blogRepository.FindPaginated(page, pageSize);
+
+            if (blogsPaginationList == null || !blogsPaginationList.Items.Any())
+            {
+                return new GeneralResponse()
+                {
+                    IsSuccess = true,
+                    Data = new List<GetBlogsDTO>(), 
+                    Message = "There are no blogs available."
+                };
+            }
+
+            var blogsDTO = blogsPaginationList.Items.Select(b => new GetBlogsDTO()
+            {
+                Id = b.Id,
+                Title = b.Title,
+                CategoryId = b.CategoryId,
+                SubCategoryId = b.SubCategoryId,
+                AuthorId = b.AuthorId,
+                Intro = b.Intro,
+                Content = b.Content,
+                Conclusion = b.Conclusion,
+                Image = b.Image,
+                ImageURL = b.ImageURL,
+                LikesNumber = b.LikesNumber,
+            }).ToList();
+
+            return new GeneralResponse()
+            {
+                IsSuccess = true,
+                Data = new
+                {
+                    CurrentPage = blogsPaginationList.CurrentPage,
+                    TotalPages = blogsPaginationList.TotalPages,
+                    TotalItems = blogsPaginationList.TotalItems,
+                    Blogs = blogsDTO
+                },
+                Message = "Blogs retrieved successfully."
+            };
+        }
+
+
         [HttpGet("{id:int}")]
         public ActionResult<GeneralResponse> GetById(int id)
         {
