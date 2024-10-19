@@ -10,6 +10,8 @@ namespace Educational_Medical_platform.DTO.StandardTestDTO
 
         public int Fullmark { get; set; }
 
+        public int Price { get; set; }
+
         public string CategoryName { get; set; }
 
         public int CategoryId { get; set; }

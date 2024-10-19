@@ -21,6 +21,9 @@ namespace Educational_Medical_platform.DTO.StandardTestDTO
         [Required(ErrorMessage = "DurationInMinutes is required")]
         public int DurationInMinutes { get; set; }
 
+        [Required(ErrorMessage = "Price is required (Note : price = 0 if the test type is free)")]
+        public int Price { get; set; }
+
         //------------------------------------
 
         [Required(ErrorMessage = "TestType is required ( free => 0 , Premium => 1)")]

@@ -1,6 +1,7 @@
 ﻿using Educational_Medical_platform.DTO.StandardTestDTO;
 using Educational_Medical_platform.Helpers;
 using Educational_Medical_platform.Models;
+using Educational_Medical_platform.Repositories.Implementations;
 using Educational_Medical_platform.Repositories.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Shoghlana.Api.Response;
@@ -15,12 +16,20 @@ namespace Educational_Medical_platform.Controllers
 
         private readonly IStandardTestRepository _standardTestRepository;
         private readonly ISubCategoryRepository _subCategoryRepository;
+        private readonly IQuestionRepository _questionRepository;
+        private readonly IAnswerRepository _answerRepository;
 
-        public StandardTestController(IStandardTestRepository standardTestRepository,
-            ISubCategoryRepository subCategoryRepository)
+        public StandardTestController(
+            IStandardTestRepository standardTestRepository,
+            ISubCategoryRepository subCategoryRepository,
+            IQuestionRepository questionRepository,
+            IAnswerRepository answerRepository
+            )
         {
             _standardTestRepository = standardTestRepository;
             _subCategoryRepository = subCategoryRepository;
+            _questionRepository = questionRepository;
+            this._answerRepository = answerRepository;
         }
 
         [HttpGet]
@@ -45,6 +54,7 @@ namespace Educational_Medical_platform.Controllers
                     Title = test.Title,
                     Fullmark = test.Fullmark,
                     DurationInMinutes = test.DurationInMinutes,
+                    Price = test.Price,
 
                     SubCategoryId = test.SubCategoryId,
                     SubCategoryName = test.SubCategory.Name,
@@ -99,6 +109,7 @@ namespace Educational_Medical_platform.Controllers
                     Title = standardTest.Title,
                     Fullmark = standardTest.Fullmark,
                     DurationInMinutes = standardTest.DurationInMinutes,
+                    Price = standardTest.Price,
 
                     SubCategoryId = standardTest.SubCategoryId,
                     SubCategoryName = standardTest.SubCategory.Name,
@@ -188,12 +199,32 @@ namespace Educational_Medical_platform.Controllers
                     };
                 }
 
+                if (standardTestDTO.Type == TestType.Premium && standardTestDTO.Price <= 0)
+                {
+                    return new GeneralResponse
+                    {
+                        IsSuccess = false,
+                        Message = "Paid Test must have valid price > 0",
+                        Status = 400
+                    };
+                }
+
+                if (standardTestDTO.Type == TestType.Free && standardTestDTO.Price != 0)
+                {
+                    return new GeneralResponse
+                    {
+                        IsSuccess = false,
+                        Message = "Free Test must have valid price = 0",
+                        Status = 400
+                    };
+                }
 
                 var standardTest = new StandardTest
                 {
                     Title = standardTestDTO.Title,
                     Fullmark = standardTestDTO.Fullmark,
                     DurationInMinutes = standardTestDTO.DurationInMinutes,
+                    Price = standardTestDTO.Price,
 
                     SubCategoryId = standardTestDTO.SubCategoryId,
 
@@ -215,6 +246,7 @@ namespace Educational_Medical_platform.Controllers
                     Title = standardTest.Title,
                     Fullmark = standardTest.Fullmark,
                     DurationInMinutes = standardTest.DurationInMinutes,
+                    Price = createdTest.Price,
 
                     SubCategoryId = standardTest.SubCategoryId,
                     SubCategoryName = standardTest.SubCategory.Name,
@@ -315,6 +347,27 @@ namespace Educational_Medical_platform.Controllers
                     };
                 }
 
+
+                if (standardTestDTO.Type == TestType.Premium && standardTestDTO.Price <= 0)
+                {
+                    return new GeneralResponse
+                    {
+                        IsSuccess = false,
+                        Message = "Paid Test must have valid price > 0",
+                        Status = 400
+                    };
+                }
+
+                if (standardTestDTO.Type == TestType.Free && standardTestDTO.Price != 0)
+                {
+                    return new GeneralResponse
+                    {
+                        IsSuccess = false,
+                        Message = "Free Test must have valid price = 0",
+                        Status = 400
+                    };
+                }
+
                 existingTest.Title = standardTestDTO.Title;
                 existingTest.Fullmark = standardTestDTO.Fullmark;
                 existingTest.DurationInMinutes = standardTestDTO.DurationInMinutes;
@@ -322,6 +375,7 @@ namespace Educational_Medical_platform.Controllers
                 existingTest.CategoryId = subCategory.CategoryId;
                 existingTest.Type = standardTestDTO.Type;
                 existingTest.Difficulty = standardTestDTO.Difficulty;
+                existingTest.Price = standardTestDTO.Price;
 
                 var updatedTest = _standardTestRepository.Update(existingTest);
 
@@ -333,6 +387,7 @@ namespace Educational_Medical_platform.Controllers
                     Title = standardTestDTO.Title,
                     Fullmark = standardTestDTO.Fullmark,
                     DurationInMinutes = standardTestDTO.DurationInMinutes,
+                    Price = standardTestDTO.Price,
 
                     SubCategoryId = standardTestDTO.SubCategoryId,
                     SubCategoryName = subCategory.Name,
@@ -365,28 +420,40 @@ namespace Educational_Medical_platform.Controllers
         }
 
         [HttpDelete("{id:int}")]
-        public ActionResult<GeneralResponse> DeleteCategory(int id)
+        public async Task<ActionResult<GeneralResponse>> DeleteTest(int id)
         {
             try
             {
-                var existingStandardTest = _standardTestRepository.GetById(id);
+                var existingStandardTest = _standardTestRepository.Find(t => t.Id == id);
 
                 if (existingStandardTest == null)
                 {
                     return new GeneralResponse
                     {
                         IsSuccess = false,
-                        Message = "Standard Test not found"
+                        Message = "Standard Test not found",
+                        Status = 404
                     };
                 }
 
+                var questions = _questionRepository.FindAll(criteria: q => q.TestId == existingStandardTest.Id, includes: ["Answers"]);
+
+                foreach (var question in questions)
+                {
+                    _answerRepository.DeleteRange(question.Answers);
+                }
+
+                _questionRepository.DeleteRange(questions);
+
                 _standardTestRepository.Delete(existingStandardTest);
-                _standardTestRepository.save();
+
+                await _standardTestRepository.SaveAsync();
 
                 return new GeneralResponse
                 {
                     IsSuccess = true,
-                    Message = "Standard Test deleted successfully"
+                    Message = "Standard Test and its associated Questions and Answers have been deleted successfully.",
+                    Status = 200
                 };
             }
             catch (Exception ex)
@@ -394,9 +461,12 @@ namespace Educational_Medical_platform.Controllers
                 return new GeneralResponse
                 {
                     IsSuccess = false,
-                    Message = $"An error occurred: {ex.Message}"
+                    Message = $"An error occurred: {ex.Message}",
+                    Status = 500,
+                    Data = ex
                 };
             }
         }
+
     }
 }

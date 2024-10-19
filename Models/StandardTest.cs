@@ -13,6 +13,8 @@ namespace Educational_Medical_platform.Models
 
         public int Fullmark { get; set; }
 
+        public int Price { get; set; }
+
         public TestType Type { get; set; }
 
         public TestDifficulty Difficulty { get; set; }

@@ -19,6 +19,8 @@ namespace Educational_Medical_platform.Configurations
                      CategoryId = 13,
                      SubCategoryId = 25,
                      Difficulty = TestDifficulty.Easy,
+                     Type = TestType.Free,
+                     Price = 0,
                  },
                  new StandardTest()
                  {
@@ -29,6 +31,8 @@ namespace Educational_Medical_platform.Configurations
                      CategoryId = 14,
                      SubCategoryId = 27,
                      Difficulty = TestDifficulty.Intermediate,
+                     Type = TestType.Premium,
+                     Price = 100,
                  },
                  new StandardTest()
                  {
@@ -39,6 +43,8 @@ namespace Educational_Medical_platform.Configurations
                      CategoryId = 15,
                      SubCategoryId = 29,
                      Difficulty = TestDifficulty.Hard,
+                     Type = TestType.Premium,
+                     Price = 150,
                  }
                 );
         }
