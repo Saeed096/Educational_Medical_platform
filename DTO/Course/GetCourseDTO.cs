@@ -22,6 +22,12 @@ namespace Educational_Medical_platform.DTO.Course
 
         public CourseType Type { get; set; }
 
+        public string TypeName { get; set; }
+
+        public CourseStatus Status { get; set; }
+
+        public string StatusName { get; set; }
+
         public string? RejectionReason { get; set; }
 
         //----------------------------------------------------

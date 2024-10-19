@@ -3,11 +3,13 @@ using Educational_Medical_platform.DTO.Course.Objectives;
 using Educational_Medical_platform.DTO.Course.Requirments;
 using Educational_Medical_platform.Helpers;
 using Educational_Medical_platform.Models;
+using Educational_Medical_platform.Repositories.Implementations;
 using Educational_Medical_platform.Repositories.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Shoghlana.Api.Response;
 using Shoghlana.Core.Models;
+using System.Linq.Expressions;
 
 namespace Educational_Medical_platform.Controllers
 {
@@ -23,6 +25,8 @@ namespace Educational_Medical_platform.Controllers
         private readonly ISubCategoryRepository _subCategoryRepository;
         private readonly ICategoryRepository _categoryRepository;
         private readonly IUserEnrolledCoursesRepository _userEnrolledCoursesRepository;
+        private readonly IQuestionRepository _questionRepository;
+        private readonly IAnswerRepository _answerRepository;
         private readonly string _imagesPath;
         private readonly string _videosPath;
         private readonly long _maxImageSize;
@@ -33,9 +37,12 @@ namespace Educational_Medical_platform.Controllers
             IVideoRepository videoRepository,
             ICourseRequirementsRepository courseRequirementsRepository,
             ICourseObjectiveRepository courseObjectiveRepository,
-            ISubCategoryRepository subCategoryRepository , 
-            ICategoryRepository categoryRepository ,
-            IUserEnrolledCoursesRepository userEnrolledCoursesRepository)
+            ISubCategoryRepository subCategoryRepository,
+            ICategoryRepository categoryRepository,
+            IUserEnrolledCoursesRepository userEnrolledCoursesRepository,
+            IQuestionRepository questionRepository,
+            IAnswerRepository answerRepository
+            )
         {
             _courseRepository = courseRepository;
             _userManager = userManager;
@@ -43,8 +50,11 @@ namespace Educational_Medical_platform.Controllers
             _courseRequirementsRepository = courseRequirementsRepository;
             _courseObjectiveRepository = courseObjectiveRepository;
             _subCategoryRepository = subCategoryRepository;
-            this._categoryRepository = categoryRepository;
-            this._userEnrolledCoursesRepository = userEnrolledCoursesRepository;
+            _categoryRepository = categoryRepository;
+            _userEnrolledCoursesRepository = userEnrolledCoursesRepository;
+            this._questionRepository = questionRepository;
+            this._answerRepository = answerRepository;
+
             _imagesPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Images", "Courses");
             _videosPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Videos", "Courses");
 
@@ -55,7 +65,7 @@ namespace Educational_Medical_platform.Controllers
         [HttpGet("All")]
         public ActionResult<GeneralResponse> GetAll()
         {
-            List<Course> courses = _courseRepository.FindAll(includes: new[] { "Requirements", "Objectives", "Videos", "SubCategory" , "Instructor" }).ToList();
+            List<Course> courses = _courseRepository.FindAll(includes: new[] { "Requirements", "Objectives", "Videos", "SubCategory", "Instructor" }).ToList();
 
             if (courses == null || !courses.Any())
             {
@@ -78,7 +88,13 @@ namespace Educational_Medical_platform.Controllers
                     Title = course.Title,
                     DurationInhours = course.DurationInhours,
                     Price = course.Price,
+
                     Type = course.Type,
+                    TypeName = course.Type.GetDisplayName(),
+
+                    Status = course.Status,
+                    StatusName = course.Status.GetDisplayName(),
+
                     RejectionReason = course.RejectedReason,
 
                     InstructorId = course.InstructorId,
@@ -134,6 +150,113 @@ namespace Educational_Medical_platform.Controllers
             };
         }
 
+        [HttpGet("GetFilteredCoursesPaginated")]
+        public ActionResult<GeneralResponse> GetAllCoursesPaginated(CourseStatus? status = null, CourseType? type = null, int page = 1, int pageSize = 10)
+        {
+            // Check if the provided status exists in the CourseStatus enum
+            if (status.HasValue && !Enum.IsDefined(typeof(CourseStatus), status.Value))
+            {
+                return new GeneralResponse()
+                {
+                    IsSuccess = false,
+                    Message = "Invalid course status provided."
+                };
+            }
+
+            // Check if the provided type exists in the CourseType enum
+            if (type.HasValue && !Enum.IsDefined(typeof(CourseType), type.Value))
+            {
+                return new GeneralResponse()
+                {
+                    IsSuccess = false,
+                    Message = "Invalid course type provided."
+                };
+            }
+
+            // Build criteria dynamically
+            Expression<Func<Course, bool>> criteria = c =>
+                (!status.HasValue || c.Status == status.Value) &&
+                (!type.HasValue || c.Type == type.Value);
+
+            // Fetch paginated course data based on the criteria
+            var coursesPaginationList = _courseRepository.FindPaginated(
+                page: page,
+                pageSize: pageSize,
+                includes: new[] { "Requirements", "Objectives", "Videos", "SubCategory", "Instructor" },
+                criteria: criteria
+            );
+
+            // Check if there are any courses returned
+            if (coursesPaginationList == null || !coursesPaginationList.Items.Any())
+            {
+                return new GeneralResponse()
+                {
+                    IsSuccess = false,
+                    Message = "No courses available with the specified filters."
+                };
+            }
+
+            // Transform the paginated list into DTOs
+            var courseDTOs = coursesPaginationList.Items.Select(course => new GetCourseDTO
+            {
+                Id = course.Id,
+                Preview = course.Preview,
+                Title = course.Title,
+                DurationInhours = course.DurationInhours,
+                Price = course.Price,
+
+                Type = course.Type,
+                TypeName = course.Type.GetDisplayName(),
+
+                Status = course.Status,
+                StatusName = course.Status.GetDisplayName(),
+
+                RejectionReason = course.RejectedReason,
+                InstructorId = course.InstructorId,
+                InstructorFullName = $"{course.Instructor.FirstName} {course.Instructor.LastName}",
+                SubCategoryId = course.SubCategoryId,
+                SubCategoryName = course.SubCategory.Name,
+                CategoryId = course.SubCategory.CategoryId,
+                CategoryName = _categoryRepository.GetById(course.SubCategory.CategoryId)?.Name ?? "NA",
+                ThumbnailURL = course.ThumbnailURL,
+                Requirements = course.Requirements?.Select(req => new GetCourseRequirmentsDTO
+                {
+                    Id = req.Id,
+                    CourseId = req.CourseId,
+                    Description = req.Description,
+                }).ToList() ?? new List<GetCourseRequirmentsDTO>(),
+                Objectives = course.Objectives?.Select(obj => new GetCourseObjectiveDTO
+                {
+                    Id = obj.Id,
+                    CourseId = obj.CourseId,
+                    Description = obj.Description,
+                }).ToList() ?? new List<GetCourseObjectiveDTO>(),
+                Videos = course.Videos?.Select(video => new GetVideoDTO
+                {
+                    Id = video.Id,
+                    CourseId = video.CourseId,
+                    Description = video.Description,
+                    Number = video.Number,
+                    Title = video.Title,
+                    videoURL = video.videoURL
+                }).ToList() ?? new List<GetVideoDTO>(),
+            }).ToList();
+
+            // Return the response with pagination details
+            return new GeneralResponse()
+            {
+                IsSuccess = true,
+                Message = "Courses retrieved successfully.",
+                Data = new
+                {
+                    CurrentPage = coursesPaginationList.CurrentPage,
+                    TotalPages = coursesPaginationList.TotalPages,
+                    TotalItems = coursesPaginationList.TotalItems,
+                    Courses = courseDTOs
+                }
+            };
+        }
+
         [HttpGet("FilteredCourses")]
         public ActionResult<GeneralResponse> GetFilteredCourses(int? minPrice, int? maxPrice, int? categoryId, int? subCategoryId)
         {
@@ -182,7 +305,13 @@ namespace Educational_Medical_platform.Controllers
                     Title = course.Title,
                     DurationInhours = course.DurationInhours,
                     Price = course.Price,
+
                     Type = course.Type,
+                    TypeName = course.Type.GetDisplayName(),
+
+                    Status = course.Status,
+                    StatusName = course.Status.GetDisplayName(),
+
                     InstructorId = course.InstructorId,
                     InstructorFullName = $"{course.Instructor.FirstName} {course.Instructor.LastName}",
                     SubCategoryId = course.SubCategoryId,
@@ -248,7 +377,12 @@ namespace Educational_Medical_platform.Controllers
                 Title = course.Title,
                 DurationInhours = course.DurationInhours,
                 Price = course.Price,
+
                 Type = course.Type,
+                TypeName = course.Type.GetDisplayName(),
+
+                Status = course.Status,
+                StatusName = course.Status.GetDisplayName(),
 
                 InstructorId = course.InstructorId,
                 InstructorFullName = $"{course.Instructor.FirstName} {course.Instructor.LastName}",
@@ -303,7 +437,7 @@ namespace Educational_Medical_platform.Controllers
         [HttpGet("{courseId:int}")]
         public ActionResult<GeneralResponse> GetByCourseId(int courseId)
         {
-            Course? course = _courseRepository.Find(criteria: c => c.Id == courseId, includes: new[] { "Requirements", "Objectives", "Videos", "SubCategory" , "Instructor" });
+            Course? course = _courseRepository.Find(criteria: c => c.Id == courseId, includes: new[] { "Requirements", "Objectives", "Videos", "SubCategory", "Instructor" });
 
             if (course == null)
             {
@@ -323,7 +457,13 @@ namespace Educational_Medical_platform.Controllers
                 Title = course.Title,
                 DurationInhours = course.DurationInhours,
                 Price = course.Price,
+
                 Type = course.Type,
+                TypeName = course.Type.GetDisplayName(),
+
+                Status = course.Status,
+                StatusName = course.Status.GetDisplayName(),
+
                 RejectionReason = course.RejectedReason,
 
                 InstructorId = course.InstructorId,
@@ -391,7 +531,7 @@ namespace Educational_Medical_platform.Controllers
                 };
             }
 
-            List<Course> courses = _courseRepository.FindAll(criteria: c => c.InstructorId == instructorId, includes: new[] { "Requirements", "Objectives", "SubCategory" , "Instructor" }).ToList();
+            List<Course> courses = _courseRepository.FindAll(criteria: c => c.InstructorId == instructorId, includes: new[] { "Requirements", "Objectives", "SubCategory", "Instructor" }).ToList();
 
             if (courses == null || !courses.Any())
             {
@@ -485,7 +625,7 @@ namespace Educational_Medical_platform.Controllers
                 };
             }
 
-            List<User_Enrolled_Courses> User_Enrolled_Courses = _userEnrolledCoursesRepository.FindAll(criteria: uc => uc.StudentId == studentId ).ToList();
+            List<User_Enrolled_Courses> User_Enrolled_Courses = _userEnrolledCoursesRepository.FindAll(criteria: uc => uc.StudentId == studentId).ToList();
 
             if (User_Enrolled_Courses == null || !User_Enrolled_Courses.Any())
             {
@@ -515,6 +655,11 @@ namespace Educational_Medical_platform.Controllers
                     Preview = User_Enrolled_Course.Course.Preview,
                     Price = User_Enrolled_Course.Course.Price,
                     Type = User_Enrolled_Course.Course.Type,
+
+                    TypeName = User_Enrolled_Course.Course.Type.GetDisplayName(),
+
+                    Status = User_Enrolled_Course.Course.Status,
+                    StatusName = User_Enrolled_Course.Course.Status.GetDisplayName(),
 
                     InstructorId = course.InstructorId,
                     InstructorFullName = $"{course.Instructor.FirstName} {course.Instructor.LastName}",
@@ -602,7 +747,7 @@ namespace Educational_Medical_platform.Controllers
                 {
                     IsSuccess = false,
                     Message = "Student is already enrolled in this course.",
-                    Status = 409 
+                    Status = 409
                 };
             }
 
@@ -621,8 +766,8 @@ namespace Educational_Medical_platform.Controllers
             {
                 StudentId = studentId,
                 CourseId = courseId,
-                Degree = 0, 
-                CurrentVideoNumber = 0, 
+                Degree = 0,
+                CurrentVideoNumber = 0,
                 StartDate = DateTime.Now
             };
 
@@ -654,7 +799,7 @@ namespace Educational_Medical_platform.Controllers
 
             bool foundSubCategory = _subCategoryRepository.Exists(courseDTO.SubCategoryId);
 
-            var subCategory = _subCategoryRepository.Find(s => s.Id == courseDTO.SubCategoryId , ["Category"]);
+            var subCategory = _subCategoryRepository.Find(s => s.Id == courseDTO.SubCategoryId, ["Category"]);
 
             if (!foundSubCategory)
             {
@@ -1015,7 +1160,7 @@ namespace Educational_Medical_platform.Controllers
         public async Task<ActionResult<GeneralResponse>> EditCourse([FromForm] EditCourseDTO courseDTO)
         {
             // Check if the course exists
-            Course? course = _courseRepository.Find(criteria: c => c.Id == courseDTO.CourseID, includes: ["Requirements", "Objectives" , "Instructor"]);
+            Course? course = _courseRepository.Find(criteria: c => c.Id == courseDTO.CourseID, includes: ["Requirements", "Objectives", "Instructor"]);
             if (course == null)
             {
                 return new GeneralResponse()
@@ -1228,7 +1373,12 @@ namespace Educational_Medical_platform.Controllers
                     Title = course.Title,
                     DurationInhours = course.DurationInhours,
                     Price = course.Price,
+
                     Type = course.Type,
+                    TypeName = course.Type.GetDisplayName(),
+
+                    Status = course.Status,
+                    StatusName = course.Status.GetDisplayName(),
 
 
                     InstructorId = course.InstructorId,
@@ -1311,6 +1461,10 @@ namespace Educational_Medical_platform.Controllers
                     DurationInhours = course.DurationInhours,
                     Price = course.Price,
                     Type = course.Type,
+                    TypeName = course.Type.GetDisplayName(),
+
+                    Status = course.Status,
+                    StatusName = course.Status.GetDisplayName(),
 
 
                     InstructorId = course.InstructorId,
@@ -1393,6 +1547,10 @@ namespace Educational_Medical_platform.Controllers
                     DurationInhours = course.DurationInhours,
                     Price = course.Price,
                     Type = course.Type,
+                    TypeName = course.Type.GetDisplayName(),
+
+                    Status = course.Status,
+                    StatusName = course.Status.GetDisplayName(),
 
 
                     InstructorId = course.InstructorId,
@@ -1475,6 +1633,10 @@ namespace Educational_Medical_platform.Controllers
                     DurationInhours = course.DurationInhours,
                     Price = course.Price,
                     Type = course.Type,
+                    TypeName = course.Type.GetDisplayName(),
+
+                    Status = course.Status,
+                    StatusName = course.Status.GetDisplayName(),
                     RejectionReason = course.RejectedReason,
 
                     InstructorId = course.InstructorId,
@@ -1535,7 +1697,7 @@ namespace Educational_Medical_platform.Controllers
         {
             var course = _courseRepository.Find(c => c.Id == courseId);
 
-            if(course == null)
+            if (course == null)
             {
                 return new GeneralResponse()
                 {
@@ -1556,7 +1718,7 @@ namespace Educational_Medical_platform.Controllers
         }
 
         [HttpPost("RejectAddingCourse/{courseId:int}")]
-        public ActionResult<GeneralResponse> RejectAddingCourse(int courseId , string? rejectionReason)
+        public ActionResult<GeneralResponse> RejectAddingCourse(int courseId, string? rejectionReason)
         {
             var course = _courseRepository.Find(c => c.Id == courseId);
 
@@ -1584,7 +1746,6 @@ namespace Educational_Medical_platform.Controllers
         [HttpDelete("{courseId:int}")]
         public async Task<ActionResult<GeneralResponse>> DeleteCourse(int courseId)
         {
-            // Check if the course exists
             var course = _courseRepository.Find(criteria: c => c.Id == courseId, includes: ["Objectives", "Requirements", "Videos"]);
             if (course == null)
             {
@@ -1645,8 +1806,16 @@ namespace Educational_Medical_platform.Controllers
             _videoRepository.DeleteRange(course.Videos);
             _videoRepository.save();
 
-            // Delete the course
+            var questions = _questionRepository.FindAll(criteria: q => q.CourseId == course.Id, includes: ["Answers"]);
+
+            foreach (var question in questions)
+            {
+                _answerRepository.DeleteRange(question.Answers);
+            }
+            _questionRepository.DeleteRange(questions);
+
             _courseRepository.Delete(course);
+
             await _courseRepository.SaveAsync();
 
             return new GeneralResponse()

@@ -1,4 +1,5 @@
-﻿using System.Linq.Expressions;
+﻿using Shoghlana.Core.DTO;
+using System.Linq.Expressions;
 namespace Shoghlana.Core.Interfaces
 {
     public interface IGenericRepository<T> where T : class
@@ -23,9 +24,9 @@ namespace Shoghlana.Core.Interfaces
 
         //-------------------------------------------------------------------------
 
-        //public PaginatedListDTO<T> FindPaginated(int page , int pageSize ,string[] includes = null, Expression<Func<T, bool>> criteria = null);
+        public PaginatedListDTO<T> FindPaginated(int page, int pageSize, string[] includes = null, Expression<Func<T, bool>> criteria = null);
 
-        //public Task<PaginatedListDTO<T>> FindPaginatedAsync(int page, int pageSize ,string[] includes = null, Expression<Func<T, bool>> criteria = null);
+        public Task<PaginatedListDTO<T>> FindPaginatedAsync(int page, int pageSize, string[] includes = null, Expression<Func<T, bool>> criteria = null);
 
         //-------------------------------------------------------------------------
 

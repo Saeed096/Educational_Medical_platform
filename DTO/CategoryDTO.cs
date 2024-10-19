@@ -14,9 +14,5 @@ namespace Educational_Medical_platform.DTO
 
         [JsonConverter(typeof(JsonStringEnumConverter))]
         public CategoryType Type { get; set; }
-
-
-
     }
-
 }

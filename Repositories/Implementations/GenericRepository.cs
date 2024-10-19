@@ -142,6 +142,18 @@ namespace Shoghlana.EF.Repository
 
             int totalFilteredItems = query.Count();
 
+            // If no items are found, return an empty PaginatedListDTO
+            if (totalFilteredItems == 0)
+            {
+                return new PaginatedListDTO<T>
+                {
+                    TotalItems = 0,
+                    TotalPages = 0,
+                    CurrentPage = 1,
+                    Items = new List<T>()
+                };
+            }
+
             if (page < 1)
             {
                 page = 1;
