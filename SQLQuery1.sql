@@ -1,3 +1,3 @@
 use MedLearnHubDB
 
-select * from Courses
+select * from books

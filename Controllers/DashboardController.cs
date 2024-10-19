@@ -1,11 +1,8 @@
 ﻿using Educational_Medical_platform.Repositories.Interfaces;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Shoghlana.Api.Response;
 using Shoghlana.Core.Models;
-using System.Security.Claims;
 
 namespace Educational_Medical_platform.Controllers
 {

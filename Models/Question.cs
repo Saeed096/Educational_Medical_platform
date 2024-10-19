@@ -15,18 +15,18 @@ namespace Educational_Medical_platform.Models
         public int? TestId { get; set; }
 
         public StandardTest? Test { get; set; }
-        [ForeignKey("SubCategory")]
 
+        [ForeignKey("SubCategory")]
         public int? SubCategoryId { get; set; }  // nullable as this question may not be related to any question bank but related to course questions 
        
         public SubCategory? SubCategory { get; set; }
-        [ForeignKey("Course")]
 
+        [ForeignKey("Course")]
         public int? CourseId { get; set; } 
        
         public Course? Course  { get; set; }
-        [ForeignKey("Blog")]
 
+        [ForeignKey("Blog")]
         public int? BlogId { get; set; } 
        
         public Blog? Blog { get; set; }

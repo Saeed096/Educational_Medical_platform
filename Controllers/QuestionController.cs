@@ -559,5 +559,127 @@ namespace Educational_Medical_platform.Controllers
 
         }
 
+
+        [HttpPatch("{questionId:int}")]
+        public async Task<ActionResult<GeneralResponse>> EditQuestion(AddQuestionDTO questionDTO, int questionId)
+        {
+            var question = _questionRepository.Find(q => q.Id == questionId, includes: ["Answers"]);
+
+            if (question == null)
+            {
+                return new GeneralResponse()
+                {
+                    IsSuccess = false,
+                    Data = null,
+                    Message = $"No question found for ID: {questionId}",
+                    Status = 404
+                };
+            }
+
+            int correctAnswerCount = questionDTO.Answers.Count(answer => answer.IsCorrect);
+
+            if (correctAnswerCount == 0)
+            {
+                return new GeneralResponse
+                {
+                    IsSuccess = false,
+                    Data = null,
+                    Message = "There must be at least one correct answer.",
+                    Status = 400
+                };
+            }
+
+            if (correctAnswerCount > 1)
+            {
+                return new GeneralResponse
+                {
+                    IsSuccess = false,
+                    Data = null,
+                    Message = "There can't be more than one correct answer.",
+                    Status = 400
+                };
+            }
+
+            try
+            {
+                question.Description = questionDTO.Description;
+
+                _answerRepository.DeleteRange(question.Answers);
+
+                List<Answer> answers = questionDTO.Answers.Select(a => new Answer
+                {
+                    Description = a.Description,
+                    Reason = a.Reason,
+                    IsCorrect = a.IsCorrect,
+                    QuestionId = question.Id
+                }).ToList();
+
+                _answerRepository.AddRange(answers);
+
+                await _questionRepository.SaveAsync();
+
+                return new GeneralResponse()
+                {
+                    IsSuccess = true,
+                    Message = "Question and its Answers have been successfully updated.",
+                    Status = 200
+                };
+            }
+            catch (Exception ex)
+            {
+                return new GeneralResponse()
+                {
+                    IsSuccess = false,
+                    Message = "An error occurred while updating the question and answers.",
+                    Status = 500,
+                    Data = ex
+                };
+            }
+        }
+
+        [HttpDelete("{questionId:int}")]
+        public async Task<ActionResult<GeneralResponse>> DeleteQuestion(int questionId)
+        {
+            var question = _questionRepository.Find(q => q.Id == questionId, includes: ["Answers"]);
+
+            if (question == null)
+            {
+                return new GeneralResponse()
+                {
+                    IsSuccess = false,
+                    Data = null,
+                    Message = $"No question found for ID: {questionId}",
+                    Status = 404
+                };
+            }
+
+            try
+            {
+                _answerRepository.DeleteRange(question.Answers);
+
+                _questionRepository.Delete(question);
+
+                await _questionRepository.SaveAsync();
+
+                return new GeneralResponse()
+                {
+                    IsSuccess = true,
+                    Message = "Question and its Answers have been successfully deleted.",
+                    Status = 200
+                };
+            }
+            catch (Exception ex)
+            {
+                return new GeneralResponse()
+                {
+                    IsSuccess = false,
+                    Message = "An error occurred while deleting the question and answers.",
+                    Status = 500,
+                    Data = ex
+                };
+            }
+        }
+
+
     }
 }

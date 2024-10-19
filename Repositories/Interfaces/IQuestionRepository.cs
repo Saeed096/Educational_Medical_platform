@@ -5,5 +5,6 @@ namespace Educational_Medical_platform.Repositories.Interfaces
 {
     public interface IQuestionRepository : IGenericRepository<Question>
     {
+        public bool Exists(int id);
     }
 }
