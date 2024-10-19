@@ -66,5 +66,18 @@ namespace Educational_Medical_platform.Controllers
                 Data = response
             };
         }
+
+
+        [HttpPost("/CreateSubscribtion")]
+        public async Task<ActionResult<GeneralResponse>> CreateSubscribtion(CreateSubscribtionDTO createSubscribtionDTO)
+        {
+            var response = await _client.CreateSubscribtion(createSubscribtionDTO);
+
+            return new GeneralResponse
+            {
+                IsSuccess = response?.status != null ? true : false,
+                Data = response
+            };
+        }
     }
 }

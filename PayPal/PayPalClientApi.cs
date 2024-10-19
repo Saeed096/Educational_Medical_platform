@@ -44,6 +44,7 @@ namespace Educational_Medical_platform.PayPal
                     throw new InvalidOperationException("Failed to retrieve access token.");
                 }
             }
+
             SetAuthorizationHeader(_accessToken);
         }
 
@@ -195,6 +196,8 @@ namespace Educational_Medical_platform.PayPal
         {
             EnsureHttpClientCreated();
 
+            await EnsureValidAccessTokenAsync();
+
             var response = await _client.GetAsync($"{ConfigHelper.BaseUrl}/v1/billing/plans/{planId}");
 
             var responseAsString = await response.Content.ReadAsStringAsync();
@@ -204,23 +207,49 @@ namespace Educational_Medical_platform.PayPal
             return result;
         }
 
-        public async Task<CreateSubscriptionResponse> CreateSubscription(CreateSubscriptionRequest request)
+        public async Task<CreateSubscriptionResponse?> CreateSubscribtion(CreateSubscribtionDTO request)
         {
             EnsureHttpClientCreated();
 
-            var requestContent = JsonConvert.SerializeObject(request);
+            await EnsureValidAccessTokenAsync();
 
+            var newSubscribtionRequestBody = new CreateSubscriptionRequest
+            {
+                plan_id = request.PlanId,
+                subscriber = new Subscriber
+                {
+                    name = new Name
+                    {
+                        given_name = request.SubscriberFirstName,
+                        surname = request.SubscriberLastName
+                    },
+                    email_address = request.SubscriberEmail
+                },
+                application_context = new ApplicationContext
+                {
+                    brand_name = "MedicalHub Platform",
+                    shipping_preference = "NO_SHIPPING",
+                    locale = "en-US",
+                    user_action = "SUBSCRIBE_NOW",
+                    payment_method = new PaymentMethod
+                    {
+                        payer_selected = "PAYPAL",
+                        payee_preferred = "IMMEDIATE_PAYMENT_REQUIRED"
+                    },
+                    return_url = "https://example.com/return",
+                    cancel_url = "https://example.com/cancel"
+                }
+            };
+
+            var requestContent = JsonConvert.SerializeObject(newSubscribtionRequestBody);
             var httpRequestMessage = new HttpRequestMessage
             {
                 Content = new StringContent(requestContent, Encoding.UTF8, "application/json")
             };
 
             httpRequestMessage.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-
             var response = await _client.PostAsync($"{ConfigHelper.BaseUrl}/v1/billing/subscriptions", httpRequestMessage.Content);
-
             var responseAsString = await response.Content.ReadAsStringAsync();
-
             var result = JsonConvert.DeserializeObject<CreateSubscriptionResponse>(responseAsString);
 
             return result;
