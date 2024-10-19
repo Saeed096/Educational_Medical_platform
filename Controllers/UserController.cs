@@ -1,6 +1,10 @@
-﻿using Educational_Medical_platform.DTO.User;
+﻿using Educational_Medical_platform.DTO.Course.Objectives;
+using Educational_Medical_platform.DTO.Course.Requirments;
+using Educational_Medical_platform.DTO.Course;
+using Educational_Medical_platform.DTO.User;
 using Educational_Medical_platform.Helpers;
 using Educational_Medical_platform.Models;
+using Educational_Medical_platform.Repositories.Implementations;
 using Educational_Medical_platform.Repositories.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -8,6 +12,7 @@ using Microsoft.IdentityModel.Tokens;
 using Shoghlana.Api.Response;
 using Shoghlana.Core.Models;
 using System.IdentityModel.Tokens.Jwt;
+using System.Linq.Expressions;
 using System.Security.Claims;
 using System.Text;
 using System.Web;
@@ -21,17 +26,21 @@ namespace Educational_Medical_platform.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IEmailService _emailService;
         private readonly IConfiguration _configuration;
+        private readonly IApplicationUserRepository _applicationUserRepository;
         private readonly string _imagesPath;
 
 
         public UserController(
             UserManager<ApplicationUser> userManager,
             IEmailService emailService,
-            IConfiguration configuration)
+            IConfiguration configuration , 
+            IApplicationUserRepository applicationUserRepository
+            )
         {
             _userManager = userManager;
             _emailService = emailService;
             _configuration = configuration;
+            this._applicationUserRepository = applicationUserRepository;
             _imagesPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Images", "Users");
         }
 
@@ -544,5 +553,44 @@ namespace Educational_Medical_platform.Controllers
                 Message = "User information updated successfully."
             };
         }
+        [HttpGet("GetAllUsersPaginated")]
+        public ActionResult<GeneralResponse> GetAllUsersPaginated(int page = 1, int pageSize = 10)
+        {
+            var usersPaginationList = _applicationUserRepository.FindPaginatedUsers(page: page, pageSize: pageSize);
+
+            if (usersPaginationList == null || !usersPaginationList.Items.Any())
+            {
+                return new GeneralResponse()
+                {
+                    IsSuccess = false,
+                    Message = "No users available."
+                };
+            }
+
+            var userDTOs = usersPaginationList.Items.Select(user => new ApplicationUser
+            {
+                Id = user.Id,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Email = user.Email,
+                PhoneNumber = user.PhoneNumber,
+                IsSubscribedToPlatform = user.IsSubscribedToPlatform,
+                ImageUrl = user.ImageUrl
+            }).ToList();
+
+            return new GeneralResponse()
+            {
+                IsSuccess = true,
+                Message = "Users retrieved successfully.",
+                Data = new
+                {
+                    CurrentPage = usersPaginationList.CurrentPage,
+                    TotalPages = usersPaginationList.TotalPages,
+                    TotalItems = usersPaginationList.TotalItems,
+                    Users = userDTOs
+                }
+            };
+        }
+
     }
 }

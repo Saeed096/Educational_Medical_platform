@@ -23,14 +23,7 @@ namespace Educational_Medical_platform.Helpers
         Admin = 2,
     }
 
-    public enum CourseType
-    {
-        [Display(Name = "Free Course")]
-        Free = 0,
 
-        [Display(Name = "Paid Course")]
-        Paid = 1,
-    }
 
     public enum CategoryType
     {
@@ -60,6 +53,15 @@ namespace Educational_Medical_platform.Helpers
 
         [Display(Name = "Exam SubCategory")]
         Exams = 3,
+    }
+
+    public enum CourseType
+    {
+        [Display(Name = "Free Course")]
+        Free = 0,
+
+        [Display(Name = "Paid Course")]
+        Paid = 1,
     }
 
     public enum CourseStatus
