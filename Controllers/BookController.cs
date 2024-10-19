@@ -1,4 +1,5 @@
-﻿using Educational_Medical_platform.DTO.BookDTO;
+﻿using Educational_Medical_platform.DTO.Blog;
+using Educational_Medical_platform.DTO.BookDTO;
 using Educational_Medical_platform.Helpers;
 using Educational_Medical_platform.Models;
 using Educational_Medical_platform.Repositories.Implementations;
@@ -6,6 +7,7 @@ using Educational_Medical_platform.Repositories.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Shoghlana.Api.Response;
+using Shoghlana.Core.DTO;
 using Shoghlana.Core.Models;
 
 namespace Educational_Medical_platform.Controllers
@@ -14,27 +16,25 @@ namespace Educational_Medical_platform.Controllers
     [ApiController]
     public class BookController : ControllerBase
     {
-        private readonly IBookRepository BookRepository;
-        private readonly ICategoryRepository categoryRepository;
-        private readonly ISubCategoryRepository subCategoryRepository;
-        private readonly IWebHostEnvironment webHostEnvironment;
-        private readonly UserManager<ApplicationUser> userManager;
+        private readonly IBookRepository _bookRepository;
+        private readonly ICategoryRepository _categoryRepository;
+        private readonly ISubCategoryRepository _subCategoryRepository;
+        private readonly IWebHostEnvironment _webHostEnvironment;
+        private readonly UserManager<ApplicationUser> _userManager;
 
 
-        public BookController(IBookRepository _BookRepository,
-            IWebHostEnvironment _webHostEnvironment,
-            UserManager<ApplicationUser> _userManager,
-            ICategoryRepository _categoryRepository,
-            ISubCategoryRepository _subCategoryRepository
+        public BookController(IBookRepository BookRepository,
+            IWebHostEnvironment webHostEnvironment,
+            UserManager<ApplicationUser> userManager,
+            ICategoryRepository categoryRepository,
+            ISubCategoryRepository subCategoryRepository
             )
         {
-            BookRepository = _BookRepository;
-            webHostEnvironment = _webHostEnvironment;
-            userManager = _userManager;
-            categoryRepository = _categoryRepository;
-            subCategoryRepository = _subCategoryRepository;
-
-         
+            _bookRepository = BookRepository;
+            _webHostEnvironment = webHostEnvironment;
+            _userManager = userManager;
+            _categoryRepository = categoryRepository;
+            _subCategoryRepository = subCategoryRepository;
         }
 
         [HttpGet]
@@ -42,7 +42,7 @@ namespace Educational_Medical_platform.Controllers
         {
             try
             {
-                List<Book> books = (List<Book>)BookRepository.FindAll();
+                List<Book> books = (List<Book>)_bookRepository.FindAll();
 
                 List<BookDTO> bookDTOs = books.Select(book => new BookDTO
                 {
@@ -53,13 +53,13 @@ namespace Educational_Medical_platform.Controllers
                     Url = book.Url,
                     SubCategoryId = book.SubCategoryId,
                     CategoryId = book.CategoryId,
-                    CreatedDate=book.PublishDate,
+                    CreatedDate = book.PublishDate,
                     PublisherName = book.PublisherName,
                     PublisherRole = book.PublisherRole,
 
                 }).ToList();
 
-                if (bookDTOs is null )
+                if (bookDTOs is null)
                 {
                     return new GeneralResponse()
                     {
@@ -87,12 +87,65 @@ namespace Educational_Medical_platform.Controllers
 
         }
 
+        [HttpGet("GetAllBooksPaginated")]
+        public ActionResult<GeneralResponse> GetAllBooksPaginated(int page = 1, int pageSize = 10)
+        {
+            try
+            {
+                var booksPaginatedList = _bookRepository.FindPaginated(page: page, pageSize: pageSize);
+
+                if (booksPaginatedList == null || !booksPaginatedList.Items.Any())
+                {
+                    return new GeneralResponse
+                    {
+                        IsSuccess = true,
+                        Data = new List<BookDTO>(), 
+                        Message = "There are no books available."
+                    };
+                }
+
+                var bookDTOs = booksPaginatedList.Items.Select(book => new BookDTO()
+                {
+                    Id = book.Id,
+                    Title = book.Title,
+                    Description = book.Description,
+                    ThumbnailURL = book.ThumbnailURL,
+                    Url = book.Url,
+                    SubCategoryId = book.SubCategoryId,
+                    CategoryId = book.CategoryId,
+                    CreatedDate = book.PublishDate,
+                    PublisherName = book.PublisherName,
+                    PublisherRole = book.PublisherRole,
+                }).ToList();
+
+                return new GeneralResponse
+                {
+                    IsSuccess = true,
+                    Data = new PaginatedListDTO<BookDTO>
+                    {
+                        CurrentPage = booksPaginatedList.CurrentPage, 
+                        Items = bookDTOs,
+                        TotalItems = booksPaginatedList.TotalItems,
+                        TotalPages = booksPaginatedList.TotalPages,
+                    },
+                };
+            }
+            catch (Exception ex)
+            {
+                return new GeneralResponse
+                {
+                    IsSuccess = false,
+                    Message = $"An error occurred: {ex.Message}"
+                };
+            }
+        }
+
         [HttpGet("{id}")]
         public ActionResult<GeneralResponse> GetBookById(int id)
         {
             try
             {
-                Book book = BookRepository.GetById(id);
+                Book book = _bookRepository.GetById(id);
 
                 if (book == null)
                 {
@@ -136,11 +189,11 @@ namespace Educational_Medical_platform.Controllers
         }
 
         [HttpPost]
-        public async Task <ActionResult<GeneralResponse>> AddBook([FromForm] BookDTO bookDTO)
+        public async Task<ActionResult<GeneralResponse>> AddBook([FromForm] BookDTO bookDTO)
         {
             try
             {
-                string uploadpath = Path.Combine(webHostEnvironment.WebRootPath, "Images","Book");
+                string uploadpath = Path.Combine(_webHostEnvironment.WebRootPath, "Images", "Book");
                 string imagename = Guid.NewGuid().ToString() + "_" + bookDTO.Thumbnail.FileName;
                 string filepath = Path.Combine(uploadpath, imagename);
                 using (FileStream fileStream = new FileStream(filepath, FileMode.Create))
@@ -150,7 +203,7 @@ namespace Educational_Medical_platform.Controllers
                 bookDTO.ThumbnailURL = imagename;
                 if (ModelState.IsValid)
                 {
-                    var existinguser = await userManager.FindByIdAsync(bookDTO.UserID);
+                    var existinguser = await _userManager.FindByIdAsync(bookDTO.UserID);
 
                     if (existinguser == null)
                     {
@@ -163,8 +216,8 @@ namespace Educational_Medical_platform.Controllers
 
                     //Check if Category ID and Sub Category Id are Related to Books or not 
 
-                    Category category = categoryRepository.GetById((int)bookDTO.CategoryId);
-                    SubCategory subCategory = subCategoryRepository.GetById((int)bookDTO.SubCategoryId);
+                    Category category = _categoryRepository.GetById((int)bookDTO.CategoryId);
+                    SubCategory subCategory = _subCategoryRepository.GetById((int)bookDTO.SubCategoryId);
                     if (category.Type != CategoryType.Books || subCategory.Type != SubCategoryType.Books)
                     {
                         return new GeneralResponse()
@@ -174,7 +227,7 @@ namespace Educational_Medical_platform.Controllers
                         };
 
                     }
-                    var roles = await userManager.GetRolesAsync(existinguser);
+                    var roles = await _userManager.GetRolesAsync(existinguser);
 
                     Book book = new Book
                     {
@@ -185,13 +238,13 @@ namespace Educational_Medical_platform.Controllers
                         SubCategoryId = bookDTO.SubCategoryId,
                         CategoryId = bookDTO.CategoryId,
                         PublishDate = bookDTO.CreatedDate,
-                        PublisherName=existinguser.UserName,
-                        PublisherRole=roles.FirstOrDefault()
+                        PublisherName = existinguser.UserName,
+                        PublisherRole = roles.FirstOrDefault()
                     };
-                   
-                  Book addedBook = BookRepository.Add(book);
 
-                    BookRepository.save();
+                    Book addedBook = _bookRepository.Add(book);
+
+                    _bookRepository.save();
 
                     BookDTO addedBookDTO = new BookDTO
                     {
@@ -221,11 +274,11 @@ namespace Educational_Medical_platform.Controllers
                         Message = "Invalid book data"
                     };
                 }
-               
+
             }
             catch (Exception ex)
             {
-                return  new GeneralResponse
+                return new GeneralResponse
                 {
                     IsSuccess = false,
                     Message = $"An error occurred: {ex.Message}"
@@ -238,7 +291,7 @@ namespace Educational_Medical_platform.Controllers
         {
             try
             {
-                Book existingBook = BookRepository.GetById(id);
+                Book existingBook = _bookRepository.GetById(id);
 
                 if (existingBook == null)
                 {
@@ -251,7 +304,7 @@ namespace Educational_Medical_platform.Controllers
 
                 if (bookDTO.Thumbnail != null)
                 {
-                    string uploadpath = Path.Combine(webHostEnvironment.WebRootPath, "Images", "Book");
+                    string uploadpath = Path.Combine(_webHostEnvironment.WebRootPath, "Images", "Book");
                     string imagename = Guid.NewGuid().ToString() + "_" + bookDTO.Thumbnail.FileName;
                     string filepath = Path.Combine(uploadpath, imagename);
                     using (FileStream fileStream = new FileStream(filepath, FileMode.Create))
@@ -260,13 +313,13 @@ namespace Educational_Medical_platform.Controllers
                     }
                     bookDTO.ThumbnailURL = imagename;
 
-                   
+
                 }
 
                 //Check if Category ID and Sub Category Id are Related to Books or not 
 
-                Category category = categoryRepository.GetById((int)bookDTO.CategoryId);
-                SubCategory subCategory = subCategoryRepository.GetById((int)bookDTO.SubCategoryId);
+                Category category = _categoryRepository.GetById((int)bookDTO.CategoryId);
+                SubCategory subCategory = _subCategoryRepository.GetById((int)bookDTO.SubCategoryId);
                 if (category.Type != CategoryType.Books || subCategory.Type != SubCategoryType.Books)
                 {
                     return new GeneralResponse()
@@ -288,13 +341,13 @@ namespace Educational_Medical_platform.Controllers
                     existingBook.Url = bookDTO.Url;
                     existingBook.SubCategoryId = bookDTO.SubCategoryId;
                     existingBook.CategoryId = bookDTO.CategoryId;
-                    existingBook.PublisherRole=bookDTO.PublisherRole ?? existingBook.PublisherRole;
+                    existingBook.PublisherRole = bookDTO.PublisherRole ?? existingBook.PublisherRole;
                     existingBook.PublisherName = bookDTO.PublisherName ?? existingBook.PublisherName;
                     existingBook.PublishDate = bookDTO.CreatedDate;
-                    BookRepository.Update(existingBook);  
-                    BookRepository.save();  
+                    _bookRepository.Update(existingBook);
+                    _bookRepository.save();
 
-                    
+
                     BookDTO updatedBookDTO = new BookDTO
                     {
                         Id = existingBook.Id,
@@ -340,7 +393,7 @@ namespace Educational_Medical_platform.Controllers
         {
             try
             {
-                 Book existingBook = BookRepository.GetById(id);
+                Book existingBook = _bookRepository.GetById(id);
 
                 if (existingBook == null)
                 {
@@ -351,8 +404,8 @@ namespace Educational_Medical_platform.Controllers
                     };
                 }
 
-                 BookRepository.Delete(existingBook);
-                BookRepository.save();  
+                _bookRepository.Delete(existingBook);
+                _bookRepository.save();
 
                 return new GeneralResponse
                 {
