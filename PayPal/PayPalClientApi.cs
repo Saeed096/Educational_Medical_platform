@@ -3,10 +3,12 @@ using Educational_Medical_platform.Helpers;
 using Educational_Medical_platform.Models;
 using Educational_Medical_platform.PayPal.Models;
 using Educational_Medical_platform.Repositories.Interfaces;
+using Microsoft.AspNetCore.Identity;
 using Newtonsoft.Json;
 using PayPal.Configuration;
 using PayPal.Models.Requests;
 using PayPal.Models.Responses;
+using Shoghlana.Core.Models;
 using System.Net.Http.Headers;
 using System.Text;
 
@@ -19,15 +21,18 @@ namespace Educational_Medical_platform.PayPal
         private DateTime _tokenExpiration;
         private readonly IUserSubscribtionRipository _userSubscribtionRipository;
         private readonly IPlatformRepository _platformRepository;
+        private readonly UserManager<ApplicationUser> _userManager;
 
         public PayPalClientApi(
             IUserSubscribtionRipository userSubscribtionRipository,
-            IPlatformRepository platformRepository)
+            IPlatformRepository platformRepository,
+            UserManager<ApplicationUser> userManager)
         {
             _client = new HttpClient();
             InitializeHttpClient().Wait();
             _userSubscribtionRipository = userSubscribtionRipository;
             _platformRepository = platformRepository;
+            this._userManager = userManager;
         }
 
         private async Task InitializeHttpClient()
@@ -217,13 +222,19 @@ namespace Educational_Medical_platform.PayPal
 
         public async Task<CreateSubscriptionResponse?> CreateSubscriptionAsync(CreateSubscribtionDTO request)
         {
+            ApplicationUser? user = await _userManager.FindByIdAsync(request.UserId);
+            if(user == null)
+            {
+                return null;
+            }
+
             EnsureHttpClientCreated();
             await EnsureValidAccessTokenAsync();
 
-            // Ensure the platform product exists
+            // Ensure the platform product exists and valid => unless Create new one
             var platformProductResponse = await EnsurePlatformProductCreatedAsync();
 
-            // Ensure the plan exists (you'd implement similar logic as for the product)
+            // Ensure the plan exists and valid => unless Create new one
             var planResponse = await EnsurePlatformPlanCreatedAsync(platformProductResponse.id);
 
             // Create the subscription
@@ -479,4 +490,4 @@ namespace Educational_Medical_platform.PayPal
             }
         }
     }
-}   
+}

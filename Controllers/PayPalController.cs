@@ -1,9 +1,11 @@
 ﻿using Educational_Medical_platform.DTO.PayPal;
 using Educational_Medical_platform.PayPal;
 using Educational_Medical_platform.Repositories.Interfaces;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using PayPal.Models;
 using Shoghlana.Api.Response;
+using Shoghlana.Core.Models;
 using System.Text.Json;
 
 namespace Educational_Medical_platform.Controllers
@@ -14,14 +16,16 @@ namespace Educational_Medical_platform.Controllers
     {
         private readonly PayPalClientApi _client;
         private readonly IUserSubscribtionRipository _userSubscribtionRipository;
-        private readonly IPlatformRepository _platformRepository;
 
-        public PayPalController(IUserSubscribtionRipository userSubscribtionRipository, IPlatformRepository platformRepository)
+        public PayPalController(
+            IUserSubscribtionRipository userSubscribtionRipository,
+            IPlatformRepository platformRepository,
+            UserManager<ApplicationUser> userManager)
         {
-            _client = new PayPalClientApi(userSubscribtionRipository, platformRepository);
+            _client = new PayPalClientApi(userSubscribtionRipository, platformRepository, userManager);
 
             _userSubscribtionRipository = userSubscribtionRipository;
-            this._platformRepository = platformRepository;
+
         }
 
         [HttpGet("/GetAccessToken")]
@@ -114,4 +118,4 @@ namespace Educational_Medical_platform.Controllers
         }
 
     }
-    }
+}
