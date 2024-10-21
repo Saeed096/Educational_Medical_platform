@@ -2,7 +2,9 @@
 {
     public class CreateSubscribtionDTO
     {
-        public string PlanId { get; set; }
+        public string UserId { get; set; }
+
+        //public string PlanId { get; set; }
 
         public string SubscriberEmail { get; set; }
 

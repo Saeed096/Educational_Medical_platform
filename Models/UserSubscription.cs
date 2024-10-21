@@ -1,9 +1,10 @@
-﻿using Shoghlana.Core.Models;
+﻿using Educational_Medical_platform.Helpers;
+using Shoghlana.Core.Models;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Educational_Medical_platform.Models
 {
-    public class UserSubscriptions
+    public class UserSubscription
     {
         public int Id { get; set; }
 
@@ -11,9 +12,9 @@ namespace Educational_Medical_platform.Models
        
         public DateTime EndDate { get; set; }
 
-        public string Status { get; set; }
-
         public DateTime CreatedAt { get; set; }
+
+        public SubscriptionStatus Status { get; set; }
 
         //---------------------------------------------------
 
@@ -24,6 +25,6 @@ namespace Educational_Medical_platform.Models
 
         //---------------------------------------------------
 
-        public int SubscriptionPlanId { get; set; }
+        public string SubscriptionPlanId { get; set; }
     }
 }

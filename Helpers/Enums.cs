@@ -99,4 +99,37 @@ namespace Educational_Medical_platform.Helpers
         [Display(Name = "Hard Level")]
         Hard = 2,
     }
+
+    public enum SubscriptionStatus
+    {
+        [Display(Name = "Active")]
+        ACTIVE = 0,
+
+        [Display(Name = "Approval Pending")]
+        APPROVAL_PENDING = 1,
+
+        [Display(Name = "Approved")]
+        APPROVED = 2,
+
+        [Display(Name = "Suspended")]
+        SUSPENDED = 3,
+
+        [Display(Name = "Cancelled")]
+        CANCELLED = 4,
+
+        [Display(Name = "Expired")]
+        EXPIRED = 5,
+
+        [Display(Name = "Incomplete")]
+        INCOMPLETE = 6,
+
+        [Display(Name = "Incomplete Expired")]
+        INCOMPLETE_EXPIRED = 7,
+
+        [Display(Name = "Failed")]
+        FAILED = 8,
+
+        [Display(Name = "Pending")]
+        PENDING = 9
+    }
 }

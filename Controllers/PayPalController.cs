@@ -1,10 +1,8 @@
 ﻿using Educational_Medical_platform.DTO.PayPal;
 using Educational_Medical_platform.PayPal;
-using Microsoft.AspNetCore.Http;
+using Educational_Medical_platform.Repositories.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Shoghlana.Api.Response;
-using System.Linq.Expressions;
 
 namespace Educational_Medical_platform.Controllers
 {
@@ -13,10 +11,15 @@ namespace Educational_Medical_platform.Controllers
     public class PayPalController : ControllerBase
     {
         private readonly PayPalClientApi _client;
+        private readonly IUserSubscribtionRipository _userSubscribtionRipository;
+        private readonly IPlatformRepository _platformRepository;
 
-        public PayPalController()
+        public PayPalController(IUserSubscribtionRipository userSubscribtionRipository , IPlatformRepository platformRepository)
         {
-            _client = new PayPalClientApi();
+            _client = new PayPalClientApi(userSubscribtionRipository , platformRepository);
+
+            _userSubscribtionRipository = userSubscribtionRipository;
+            this._platformRepository = platformRepository;
         }
 
         [HttpGet("/GetAccessToken")]
@@ -67,15 +70,14 @@ namespace Educational_Medical_platform.Controllers
             };
         }
 
-
         [HttpPost("/CreateSubscribtion")]
         public async Task<ActionResult<GeneralResponse>> CreateSubscribtion(CreateSubscribtionDTO createSubscribtionDTO)
         {
-            var response = await _client.CreateSubscribtion(createSubscribtionDTO);
+            var response = await _client.CreateSubscriptionAsync(createSubscribtionDTO);
 
             return new GeneralResponse
             {
-                IsSuccess = response?.status != null ? true : false,
+                IsSuccess = response == null ? false : true,
                 Data = response
             };
         }
