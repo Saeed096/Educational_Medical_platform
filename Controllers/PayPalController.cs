@@ -2,7 +2,9 @@
 using Educational_Medical_platform.PayPal;
 using Educational_Medical_platform.Repositories.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using PayPal.Models;
 using Shoghlana.Api.Response;
+using System.Text.Json;
 
 namespace Educational_Medical_platform.Controllers
 {
@@ -14,9 +16,9 @@ namespace Educational_Medical_platform.Controllers
         private readonly IUserSubscribtionRipository _userSubscribtionRipository;
         private readonly IPlatformRepository _platformRepository;
 
-        public PayPalController(IUserSubscribtionRipository userSubscribtionRipository , IPlatformRepository platformRepository)
+        public PayPalController(IUserSubscribtionRipository userSubscribtionRipository, IPlatformRepository platformRepository)
         {
-            _client = new PayPalClientApi(userSubscribtionRipository , platformRepository);
+            _client = new PayPalClientApi(userSubscribtionRipository, platformRepository);
 
             _userSubscribtionRipository = userSubscribtionRipository;
             this._platformRepository = platformRepository;
@@ -81,5 +83,35 @@ namespace Educational_Medical_platform.Controllers
                 Data = response
             };
         }
+
+        // Webhook endpoint to receive PayPal notifications
+        [HttpPost("/HandlePayPalWebhook")]
+        public async Task<IActionResult> HandlePayPalWebhook([FromBody] WebHookEvent webhookEvent)
+        {
+            if (webhookEvent.event_type == "BILLING.SUBSCRIPTION.ACTIVATED")
+            {
+                await HandleSubscriptionActivated(webhookEvent);
+            }
+
+            return Ok();
+        }
+
+        private async Task HandleSubscriptionActivated(WebHookEvent webhookEvent)
+        {
+            var subscriptionId = webhookEvent.resource.id;  // Subscription ID is in resource.id
+            var userSubscription = _userSubscribtionRipository
+                                   .Find(us => us.SubscriptionPlanId == subscriptionId);
+
+            if (userSubscription != null)
+            {
+                userSubscription.Status = Helpers.SubscriptionStatus.ACTIVE;
+                userSubscription.StartDate = DateTime.Now;
+                userSubscription.EndDate = DateTime.Now.AddMonths(12);
+
+                _userSubscribtionRipository.Update(userSubscription);
+                await _userSubscribtionRipository.SaveAsync();
+            }
+        }
+
     }
 }

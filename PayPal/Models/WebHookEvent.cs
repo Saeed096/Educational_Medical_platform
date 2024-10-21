@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,6 +20,30 @@ namespace PayPal.Models
 
     public class Resource
     {
-        // It's attributes can be different on event type
+        public string id { get; set; }  
+        public string plan_id { get; set; }
+        public string status { get; set; }
+        public Subscriber subscriber { get; set; }
+        public DateTime start_time { get; set; }
+        public DateTime update_time { get; set; }
+        public BillingInfo billing_info { get; set; }
+    }
+    public class Subscriber
+    {
+        public string email_address { get; set; }
+        public string payer_id { get; set; }
+        public Name name { get; set; }
+    }
+
+    public class Name
+    {
+        public string given_name { get; set; }
+        public string surname { get; set; }
+    }
+
+    public class BillingInfo
+    {
+        public decimal outstanding_balance { get; set; }
+        public DateTime next_billing_time { get; set; }
     }
 }
