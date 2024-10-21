@@ -478,6 +478,5 @@ namespace Educational_Medical_platform.PayPal
                 return null;
             }
         }
-
     }
-}
+}   
