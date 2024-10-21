@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Shoghlana.EF;
 
@@ -11,9 +12,11 @@ using Shoghlana.EF;
 namespace Educational_Medical_platform.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    partial class ApplicationDBContextModelSnapshot : ModelSnapshot
+    [Migration("20241020174336_AddedUserSubscribtionsTable")]
+    partial class AddedUserSubscribtionsTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1096,55 +1099,6 @@ namespace Educational_Medical_platform.Migrations
                         });
                 });
 
-            modelBuilder.Entity("Educational_Medical_platform.Models.PlatformData", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("PlanDescription")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<decimal?>("PlanFixedPricePerMonth")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<string>("PlanId")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PlanName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<decimal?>("PlanSetupFee")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal?>("PlanTaxesPercentage")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<string>("ProductDescribtion")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ProductId")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ProductName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("platformData");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            PlanFixedPricePerMonth = 20m,
-                            PlanSetupFee = 2m,
-                            PlanTaxesPercentage = 10m
-                        });
-                });
-
             modelBuilder.Entity("Educational_Medical_platform.Models.Question", b =>
                 {
                     b.Property<int>("Id")
@@ -1679,7 +1633,7 @@ namespace Educational_Medical_platform.Migrations
                         });
                 });
 
-            modelBuilder.Entity("Educational_Medical_platform.Models.UserSubscription", b =>
+            modelBuilder.Entity("Educational_Medical_platform.Models.UserSubscriptions", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -1693,15 +1647,18 @@ namespace Educational_Medical_platform.Migrations
                     b.Property<DateTime>("EndDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<int>("Satatus")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
-
-                    b.Property<string>("SubscriptionPlanId")
+                    b.Property<string>("Status")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("SubscriptionPlanId")
+                        .HasColumnType("int");
 
                     b.Property<string>("UserId")
                         .IsRequired()
@@ -2046,7 +2003,7 @@ namespace Educational_Medical_platform.Migrations
                         {
                             Id = "1a111a11-1111-1111-1111-111111111111",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "2ba7c20a-e42c-40c9-b4df-da122ce147e1",
+                            ConcurrencyStamp = "11de925b-9462-4d74-b24f-ca625f331709",
                             Email = "Ehab_Naser@example.com",
                             EmailConfirmed = true,
                             FirstName = "Ehab",
@@ -2055,7 +2012,7 @@ namespace Educational_Medical_platform.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "EHAB_NASER@EXAMPLE.COM",
                             NormalizedUserName = "EHAB_NASER",
-                            PasswordHash = "AQAAAAIAAYagAAAAEMsihk8i4tuxKwbmHiLB9TdxnbQuuR9uy/BuZ7cYIaVClPOX1USQQx62m7u4jJTwcg==",
+                            PasswordHash = "AQAAAAIAAYagAAAAELJfx6zb0IlLrbphGFIHVYw49AX7Miztt2tRJjoxfXSpyMEZ1srBEdLjLf9z83/nkw==",
                             PhoneNumber = "011548726155",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "9f9ef764-d632-42d2-99ee-93v2410d8ae0",
@@ -2066,7 +2023,7 @@ namespace Educational_Medical_platform.Migrations
                         {
                             Id = "2b222b22-2222-2222-2222-222222222222",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "bcf510e1-d8d0-40f0-9d25-7f8b730234a8",
+                            ConcurrencyStamp = "6d496d31-81d7-432c-ba9b-e980eb8b1a18",
                             Email = "Mohamed_Galal@example.com",
                             EmailConfirmed = true,
                             FirstName = "Mohamed",
@@ -2075,7 +2032,7 @@ namespace Educational_Medical_platform.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "MOHAMED_GALAL@EXAMPLE.COM",
                             NormalizedUserName = "MOHAMED_GALAL",
-                            PasswordHash = "AQAAAAIAAYagAAAAEGq+yRrv0Amyye1OqfyReUCs0OzLoxSV1VmJ+HDRZdHxh6qhkfoGjjzmGgZfekguYA==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEOF9Bb5bGl8JSkzIbBndFqfTktwy1b0RtpVBx6oAWUSMvBhgyikqzC0RyPysX6Id5w==",
                             PhoneNumber = "01054871566",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "9f9ed761-d631-42d2-99ee-93v2420d8ae0",
@@ -2086,7 +2043,7 @@ namespace Educational_Medical_platform.Migrations
                         {
                             Id = "3c333c33-3333-3333-3333-333333333333",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "11b9f8d5-80e3-495b-98bc-67e709211bfb",
+                            ConcurrencyStamp = "90c5c503-fa70-47aa-8df2-29fbecdfbb3d",
                             Email = "Alaa_Test@example.com",
                             EmailConfirmed = true,
                             FirstName = "Alaa",
@@ -2095,7 +2052,7 @@ namespace Educational_Medical_platform.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "ALAA_AHMED@EXAMPLE.COM",
                             NormalizedUserName = "ALAA_AHMED",
-                            PasswordHash = "AQAAAAIAAYagAAAAEGABFQlgt8MKi6f6i1bdVeX5f99LzgyVPe5Ly+HcEmIX5l5QSFiJxgQsVv+K6ksRwg==",
+                            PasswordHash = "AQAAAAIAAYagAAAAELVDbJ6SP9xCiPG7M33zb93F40p8kTpf9ACQCzpNjDFvEugw4VtUsLiUBWQKC/wGVA==",
                             PhoneNumber = "01225193482",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "9f1ed761-a631-42dq-99ee-93z2420d8aeq",
@@ -2288,7 +2245,7 @@ namespace Educational_Medical_platform.Migrations
                     b.Navigation("Category");
                 });
 
-            modelBuilder.Entity("Educational_Medical_platform.Models.UserSubscription", b =>
+            modelBuilder.Entity("Educational_Medical_platform.Models.UserSubscriptions", b =>
                 {
                     b.HasOne("Shoghlana.Core.Models.ApplicationUser", "User")
                         .WithMany()

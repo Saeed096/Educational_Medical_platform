@@ -33,6 +33,9 @@ namespace Shoghlana.EF
         public DbSet<User_Enrolled_Courses> UserEnrolledCourses { get; set; }
         public DbSet<Blog_User_Likes> Blog_User_Likes { get; set; }
 
+        public DbSet<UserSubscription> UserSubscriptions { get; set; }
+
+        public DbSet<PlatformData> platformData { get; set; }
 
         public ApplicationDBContext(DbContextOptions<ApplicationDBContext> options) : base(options) { }
 

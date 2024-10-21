@@ -1,10 +1,12 @@
 ﻿using Educational_Medical_platform.DTO.PayPal;
+using Educational_Medical_platform.Helpers;
+using Educational_Medical_platform.Models;
 using Educational_Medical_platform.PayPal.Models;
+using Educational_Medical_platform.Repositories.Interfaces;
 using Newtonsoft.Json;
 using PayPal.Configuration;
 using PayPal.Models.Requests;
 using PayPal.Models.Responses;
-using System.Net;
 using System.Net.Http.Headers;
 using System.Text;
 
@@ -13,15 +15,19 @@ namespace Educational_Medical_platform.PayPal
     public class PayPalClientApi
     {
         private HttpClient? _client;
-
         private string? _accessToken;
-
         private DateTime _tokenExpiration;
+        private readonly IUserSubscribtionRipository _userSubscribtionRipository;
+        private readonly IPlatformRepository _platformRepository;
 
-        public PayPalClientApi()
+        public PayPalClientApi(
+            IUserSubscribtionRipository userSubscribtionRipository,
+            IPlatformRepository platformRepository)
         {
             _client = new HttpClient();
             InitializeHttpClient().Wait();
+            _userSubscribtionRipository = userSubscribtionRipository;
+            _platformRepository = platformRepository;
         }
 
         private async Task InitializeHttpClient()
@@ -44,6 +50,7 @@ namespace Educational_Medical_platform.PayPal
                     throw new InvalidOperationException("Failed to retrieve access token.");
                 }
             }
+
             SetAuthorizationHeader(_accessToken);
         }
 
@@ -191,144 +198,285 @@ namespace Educational_Medical_platform.PayPal
             return result;
         }
 
-        public async Task<CreatePlanResponse> GetPlanDetails(string planId)
+        //public async Task<CreatePlanResponse> GetPlanDetails(string planId)
+        //{
+        //    EnsureHttpClientCreated();
+
+        //    await EnsureValidAccessTokenAsync();
+
+        //   var planId = await EnsurePlatformPlanCreatedAsync();
+
+        //    var response = await _client.GetAsync($"{ConfigHelper.BaseUrl}/v1/billing/plans/{planId}");
+
+        //    var responseAsString = await response.Content.ReadAsStringAsync();
+
+        //    var result = JsonConvert.DeserializeObject<CreatePlanResponse>(responseAsString);
+
+        //    return result;
+        //}
+
+        public async Task<CreateSubscriptionResponse?> CreateSubscriptionAsync(CreateSubscribtionDTO request)
         {
             EnsureHttpClientCreated();
+            await EnsureValidAccessTokenAsync();
 
-            var response = await _client.GetAsync($"{ConfigHelper.BaseUrl}/v1/billing/plans/{planId}");
+            // Ensure the platform product exists
+            var platformProductResponse = await EnsurePlatformProductCreatedAsync();
 
-            var responseAsString = await response.Content.ReadAsStringAsync();
+            // Ensure the plan exists (you'd implement similar logic as for the product)
+            var planResponse = await EnsurePlatformPlanCreatedAsync(platformProductResponse.id);
 
-            var result = JsonConvert.DeserializeObject<CreatePlanResponse>(responseAsString);
-
-            return result;
-        }
-
-        public async Task<CreateSubscriptionResponse> CreateSubscription(CreateSubscriptionRequest request)
-        {
-            EnsureHttpClientCreated();
-
-            var requestContent = JsonConvert.SerializeObject(request);
-
-            var httpRequestMessage = new HttpRequestMessage
+            // Create the subscription
+            var newSubscriptionRequestBody = new CreateSubscriptionRequest
             {
-                Content = new StringContent(requestContent, Encoding.UTF8, "application/json")
+                plan_id = planResponse.id,
+                subscriber = new Subscriber
+                {
+                    name = new Name
+                    {
+                        given_name = request.SubscriberFirstName,
+                        surname = request.SubscriberLastName
+                    },
+                    email_address = request.SubscriberEmail
+                },
+                application_context = new ApplicationContext
+                {
+                    brand_name = "MedicalHub Platform",
+                    shipping_preference = "NO_SHIPPING",
+                    locale = "en-US",
+                    user_action = "SUBSCRIBE_NOW",
+                    payment_method = new PaymentMethod
+                    {
+                        payer_selected = "PAYPAL",
+                        payee_preferred = "IMMEDIATE_PAYMENT_REQUIRED"
+                    },
+                    return_url = "https://example.com/return",
+                    cancel_url = "https://example.com/cancel"
+                }
             };
 
-            httpRequestMessage.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            var requestContent = JsonConvert.SerializeObject(newSubscriptionRequestBody);
+            var response = await _client.PostAsync($"{ConfigHelper.BaseUrl}/v1/billing/subscriptions", new StringContent(requestContent, Encoding.UTF8, "application/json"));
 
-            var response = await _client.PostAsync($"{ConfigHelper.BaseUrl}/v1/billing/subscriptions", httpRequestMessage.Content);
+            if (response.IsSuccessStatusCode)
+            {
+                var responseAsString = await response.Content.ReadAsStringAsync();
+                CreateSubscriptionResponse subscriptionResponse = JsonConvert.DeserializeObject<CreateSubscriptionResponse>(responseAsString);
+
+                // Save the subscription in the database
+                var userSubscription = new UserSubscription
+                {
+                    CreatedAt = DateTime.Now,
+                    StartDate = subscriptionResponse.start_time,
+                    EndDate = DateTime.Now.AddMonths(12),
+
+                    UserId = request.UserId,
+                    Status = SubscriptionStatus.APPROVAL_PENDING,
+                    SubscriptionPlanId = subscriptionResponse.id
+                };
+
+                await _userSubscribtionRipository.AddAsync(userSubscription);
+                await _userSubscribtionRipository.SaveAsync();
+
+                return subscriptionResponse;
+            }
+            else
+            {
+                // Handle failure case here
+                return null;
+            }
+        }
+
+        //-----------------------------------------------------------------
+
+        private async Task<CreateProductResponse?> EnsurePlatformProductCreatedAsync()
+        {
+            // Retrieve platform data from the local database
+            PlatformData? platformData = _platformRepository.Find();
+
+            if (platformData == null)
+            {
+                platformData = new PlatformData();
+
+                _platformRepository.Add(platformData);
+                await _platformRepository.SaveAsync();
+            }
+
+            // If ProductId is not found locally, create a new product
+            if (string.IsNullOrEmpty(platformData?.ProductId))
+            {
+                var createdProduct = await CreatePlatformProductAsync();
+
+                // Store the newly created product ID in your database
+                platformData.ProductId = createdProduct.id;
+                platformData.ProductName = createdProduct.name;
+                platformData.ProductDescribtion = createdProduct.description;
+
+                _platformRepository.Update(platformData);
+                await _platformRepository.SaveAsync();
+
+                return createdProduct;
+            }
+
+            // Call PayPal API to check if the product exists
+            var response = await _client.GetAsync($"{ConfigHelper.BaseUrl}/v1/catalogs/products/{platformData.ProductId}");
+            if (response.IsSuccessStatusCode)
+            {
+                // Product exists, return response as no new product creation is required
+                return new CreateProductResponse()
+                {
+                    id = platformData.ProductId,
+                    name = platformData?.ProductName ?? string.Empty,
+                    description = platformData?.ProductDescribtion ?? string.Empty,
+                };
+            }
+
+            // If PayPal product check fails, create a new product
+            return await CreatePlatformProductAsync();
+        }
+
+        private async Task<CreateProductResponse> CreatePlatformProductAsync()
+        {
+            var newProduct = new CreateProductRequest
+            {
+                name = "MedicalHub Platform",
+                description = "MedicalHub Platform Subscription",
+                type = "DIGITAL",
+                category = "ACADEMIC_SOFTWARE"
+            };
+
+            var jsonContent = JsonConvert.SerializeObject(newProduct);
+            var httpContent = new StringContent(jsonContent, Encoding.UTF8, "application/json");
+            var response = await _client.PostAsync($"{ConfigHelper.BaseUrl}/v1/catalogs/products", httpContent);
 
             var responseAsString = await response.Content.ReadAsStringAsync();
-
-            var result = JsonConvert.DeserializeObject<CreateSubscriptionResponse>(responseAsString);
+            CreateProductResponse? result = JsonConvert.DeserializeObject<CreateProductResponse>(responseAsString);
 
             return result;
         }
 
-       //    public async Task<bool> ActiveSubscription(string id, SubscriptionStatusChangeRequest request)
-    //    {
-    //        EnsureHttpClientCreated();
+        private async Task<CreatePlanResponse> EnsurePlatformPlanCreatedAsync(string productId)
+        {
+            // Check your database for the existing plan ID
+            var platformData = _platformRepository.Find();
 
+            if (platformData == null)
+            {
+                platformData = new PlatformData();
 
-    //        var requestContent = JsonConvert.SerializeObject(request);
+                platformData.ProductId = productId;
 
-    //        var httpRequestMessage = new HttpRequestMessage
-    //        {
-    //            Content = new StringContent(requestContent, Encoding.UTF8, "application/json")
-    //        };
+                _platformRepository.Add(platformData);
+                await _platformRepository.SaveAsync();
+            }
 
-    //        httpRequestMessage.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            if (string.IsNullOrEmpty(platformData.PlanId))
+            {
+                CreatePlanResponse createPlanResponse = await CreatePlatformPlanAsync(productId);
 
-    //        var response = await _client.PostAsync($"{ConfigHelper.BaseUrl}/v1/billing/subscriptions/{id}/activate", httpRequestMessage.Content);
+                return createPlanResponse;
+            }
 
-    //        return response.StatusCode == HttpStatusCode.NoContent;
-    //    }
+            // Call PayPal API to check the plan
+            var response = await _client.GetAsync($"{ConfigHelper.BaseUrl}/v1/billing/plans/{platformData.PlanId}");
+            if (response.IsSuccessStatusCode)
+            {
+                var responseAsString = await response.Content.ReadAsStringAsync();
+                CreatePlanResponse? planResponse = JsonConvert.DeserializeObject<CreatePlanResponse>(responseAsString);
 
-    //    public async Task<bool> SuspendSubscription(string id, SubscriptionStatusChangeRequest request)
-    //    {
-    //        EnsureHttpClientCreated();
+                platformData.PlanId = planResponse.id;
+                platformData.PlanName = planResponse.name;
+                platformData.PlanDescription = planResponse.description;
+                platformData.PlanFixedPricePerMonth = decimal.Parse(planResponse.billing_cycles.FirstOrDefault().pricing_scheme.fixed_price.value);
 
-    //        var requestContent = JsonConvert.SerializeObject(request);
+                await _platformRepository.SaveAsync();
 
-    //        var httpRequestMessage = new HttpRequestMessage
-    //        {
-    //            Content = new StringContent(requestContent, Encoding.UTF8, "application/json")
-    //        };
+                // Plan exists on PayPal, return it
+                return planResponse;
+            }
+            else
+            {
+                var newPlanResponse = await CreatePlatformPlanAsync(productId);
 
-    //        httpRequestMessage.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                var responseAsString = await response.Content.ReadAsStringAsync();
+                CreatePlanResponse? planResponse = JsonConvert.DeserializeObject<CreatePlanResponse>(responseAsString);
 
-    //        var response = await _client.PostAsync($"{ConfigHelper.BaseUrl}/v1/billing/subscriptions/{id}/suspend", httpRequestMessage.Content);
+                platformData.PlanId = planResponse.id;
+                platformData.PlanName = planResponse.name;
+                platformData.PlanDescription = planResponse.description;
+                platformData.PlanFixedPricePerMonth = decimal.Parse(planResponse.billing_cycles.FirstOrDefault().pricing_scheme.fixed_price.value);
 
-    //        return response.StatusCode == HttpStatusCode.NoContent;
-    //    }
+                await _platformRepository.SaveAsync();
 
-    //    public async Task<bool> CancelSubscription(string id, SubscriptionStatusChangeRequest request)
-    //    {
-    //        EnsureHttpClientCreated();
+                return newPlanResponse;
+            }
+        }
 
-    //        var requestContent = JsonConvert.SerializeObject(request);
+        private async Task<CreatePlanResponse> CreatePlatformPlanAsync(string productId)
+        {
+            PlatformData? platformData = _platformRepository.Find();
 
-    //        var httpRequestMessage = new HttpRequestMessage
-    //        {
-    //            Content = new StringContent(requestContent, Encoding.UTF8, "application/json")
-    //        };
+            var newPlan = new CreatePlanRequest
+            {
+                product_id = productId,
+                name = "MedicalHub Platform Monthly Plan",
+                description = "Monthly subscription to MedicalHub",
+                billing_cycles = new List<BillingCycle>
+                {
+                    new BillingCycle
+                    {
+                        frequency = new Frequency
+                        {
+                            interval_unit = "MONTH",
+                            interval_count = 1
+                        },
+                        tenure_type = "REGULAR",
+                        sequence = 1,
+                        total_cycles = 12,
+                        pricing_scheme = new PricingScheme
+                        {
+                            fixed_price = new FixedPrice
+                            {
+                                currency_code = "USD",
+                                value = platformData?.PlanFixedPricePerMonth?.ToString() ?? "20"
+                            }
+                        }
+                    }
+                },
+                payment_preferences = new PaymentPreferences
+                {
+                    auto_bill_outstanding = true,
+                    setup_fee = new SetupFee
+                    {
+                        currency_code = "USD",
+                        value = platformData?.PlanSetupFee?.ToString() ?? "2"
+                    },
+                    setup_fee_failure_action = "CONTINUE",
+                    payment_failure_threshold = 3
+                },
+                taxes = new Taxes
+                {
+                    percentage = platformData?.PlanTaxesPercentage?.ToString() ?? "10",
+                    inclusive = false
+                }
+            };
 
-    //        httpRequestMessage.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            var jsonContent = JsonConvert.SerializeObject(newPlan);
+            var httpContent = new StringContent(jsonContent, Encoding.UTF8, "application/json");
+            var response = await _client.PostAsync($"{ConfigHelper.BaseUrl}/v1/billing/plans", httpContent);
 
-    //        var response = await _client.PostAsync($"{ConfigHelper.BaseUrl}/v1/billing/subscriptions/{id}/cancel", httpRequestMessage.Content);
+            var responseAsString = await response.Content.ReadAsStringAsync();
+            var planResponse = JsonConvert.DeserializeObject<CreatePlanResponse>(responseAsString);
 
-    //        return response.StatusCode == HttpStatusCode.NoContent;
-    //    }
+            if (response.IsSuccessStatusCode)
+            {
+                return planResponse;
 
-    //    public async Task<bool> RefundSubscriptionAmount(string refundUrl, RefundRequest request)
-    //    {
-    //        EnsureHttpClientCreated();
-
-    //        var requestContent = JsonConvert.SerializeObject(request);
-
-    //        var httpRequestMessage = new HttpRequestMessage
-    //        {
-    //            Content = new StringContent(requestContent, Encoding.UTF8, "application/json")
-    //        };
-
-    //        httpRequestMessage.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-
-    //        var response = await _client.PostAsync(refundUrl, httpRequestMessage.Content);
-
-    //        return response.StatusCode == HttpStatusCode.NoContent;
-    //    }
-
-    //    public async Task<bool> VerifyEvent(string json, IHeaderDictionary headerDictionary)
-    //    {
-    //        // !!IMPORTANT!!
-    //        // Without this direct JSON serialization, PayPal WILL ALWAYS return verification_status = "FAILURE".
-    //        // This is probably because the order of the fields are different and PayPal does not sort them. 
-    //        var paypalVerifyRequestJsonString = $@"{{
-				//""transmission_id"": ""{headerDictionary["PAYPAL-TRANSMISSION-ID"][0]}"",
-				//""transmission_time"": ""{headerDictionary["PAYPAL-TRANSMISSION-TIME"][0]}"",
-				//""cert_url"": ""{headerDictionary["PAYPAL-CERT-URL"][0]}"",
-				//""auth_algo"": ""{headerDictionary["PAYPAL-AUTH-ALGO"][0]}"",
-				//""transmission_sig"": ""{headerDictionary["PAYPAL-TRANSMISSION-SIG"][0]}"",
-				//""webhook_id"": ""6WC685942N447610S"",
-				//""webhook_event"": {json}
-				//}}";
-
-    //        var content = new StringContent(paypalVerifyRequestJsonString, Encoding.UTF8, "application/json");
-
-    //        var resultResponse = await _client.PostAsync($"{ConfigHelper.BaseUrl}/v1/notifications/verify-webhook-signature", content);
-
-    //        var responseBody = await resultResponse.Content.ReadAsStringAsync();
-
-    //        var verifyWebhookResponse = JsonConvert.DeserializeObject<WebHookVerificationResponse>(responseBody);
-
-    //        if (verifyWebhookResponse.verification_status != "SUCCESS")
-    //        {
-    //            return false;
-    //        }
-
-    //        return true;
-    //    }
- 
+            }
+            else
+            {
+                return null;
+            }
+        }
     }
 }   
