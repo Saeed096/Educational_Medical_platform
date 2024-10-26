@@ -237,7 +237,7 @@ namespace Educational_Medical_platform.Controllers
 
                 var createdTest = _standardTestRepository.Add(standardTest);
 
-                _standardTestRepository.save();
+                _standardTestRepository.Save();
 
                 var createdTestDTO = new StandardTestDTO
                 {
@@ -379,7 +379,7 @@ namespace Educational_Medical_platform.Controllers
 
                 var updatedTest = _standardTestRepository.Update(existingTest);
 
-                _standardTestRepository.save();
+                _standardTestRepository.Save();
 
                 var updatedTestDTO = new StandardTestDTO
                 {

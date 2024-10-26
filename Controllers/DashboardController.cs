@@ -1,9 +1,9 @@
-﻿using Educational_Medical_platform.DTO.Course.Objectives;
+﻿using Educational_Medical_platform.DTO.Course;
+using Educational_Medical_platform.DTO.Course.Objectives;
 using Educational_Medical_platform.DTO.Course.Requirments;
-using Educational_Medical_platform.DTO.Course;
+using Educational_Medical_platform.DTO.User;
 using Educational_Medical_platform.Helpers;
 using Educational_Medical_platform.Models;
-using Educational_Medical_platform.Repositories.Implementations;
 using Educational_Medical_platform.Repositories.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -28,6 +28,7 @@ namespace Educational_Medical_platform.Controllers
         private readonly ICourseRequirementsRepository _courseRequirementsRepository;
         private readonly IQuestionRepository _questionRepository;
         private readonly IVideoRepository _videoRepository;
+        private readonly IUserLocalSubscribtionRepository _userLocalSubscribtionRepository;
 
         private readonly string _imagesPath;
         private readonly string _videosPath;
@@ -48,6 +49,8 @@ namespace Educational_Medical_platform.Controllers
             ICourseRequirementsRepository courseRequirementsRepository,
             IQuestionRepository questionRepository,
             IVideoRepository videoRepository,
+            IUserLocalSubscribtionRepository userLocalSubscribtionRepository,
+
             UserManager<ApplicationUser> userManager
             )
         {
@@ -62,8 +65,8 @@ namespace Educational_Medical_platform.Controllers
             _courseRequirementsRepository = courseRequirementsRepository;
             _questionRepository = questionRepository;
             _videoRepository = videoRepository;
+            _userLocalSubscribtionRepository = userLocalSubscribtionRepository;
             _userManager = userManager;
-
 
             _imagesPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Images", "Courses");
             _videosPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Videos", "Courses");
@@ -645,7 +648,7 @@ namespace Educational_Medical_platform.Controllers
 
             course.Status = CourseStatus.Approved;
 
-            _courseRepository.save();
+            _courseRepository.Save();
 
             return new GeneralResponse()
             {
@@ -671,7 +674,7 @@ namespace Educational_Medical_platform.Controllers
             course.Status = CourseStatus.Rejected;
             course.RejectedReason = rejectionReason;
 
-            _courseRepository.save();
+            _courseRepository.Save();
 
             return new GeneralResponse()
             {
@@ -706,13 +709,13 @@ namespace Educational_Medical_platform.Controllers
             if (course?.Requirements != null || course?.Requirements?.Count() == 0)
             {
                 _courseRequirementsRepository.DeleteRange(course.Requirements);
-                _courseRequirementsRepository.save();
+                _courseRequirementsRepository.Save();
             }
 
             if (course?.Objectives != null || course?.Objectives?.Count() == 0)
             {
                 _courseObjectiveRepository.DeleteRange(course.Objectives);
-                _courseObjectiveRepository.save();
+                _courseObjectiveRepository.Save();
             }
 
 
@@ -741,7 +744,7 @@ namespace Educational_Medical_platform.Controllers
             }
 
             _videoRepository.DeleteRange(course.Videos);
-            _videoRepository.save();
+            _videoRepository.Save();
 
             var questions = _questionRepository.FindAll(criteria: q => q.CourseId == course.Id, includes: ["Answers"]);
 
@@ -913,7 +916,6 @@ namespace Educational_Medical_platform.Controllers
             };
         }
 
-
         [HttpPost("RejectPendingApprovalEnrollRequests")]
         public async Task<ActionResult<GeneralResponse>> RejectPendingApprovalEnrollRequests(ApproveEnrollCourseRequest approveEnrollRequest)
         {
@@ -1004,6 +1006,139 @@ namespace Educational_Medical_platform.Controllers
             };
         }
 
-        //**********************************************************************************************************************
+        //******************************************** Local Subscribtions Actions *********************************************************
+
+        [HttpGet("GetPendingApprovalLocalSubscriptions")]
+        public ActionResult<GeneralResponse> GetPendingApprovalLocalSubscriptions()
+        {
+            List<UserLocalSubscribtion> UserLocalSubscribtions = _userLocalSubscribtionRepository
+                               .FindAll(criteria: us => us.Status == LocalSubscribtionStatus.PendingApproval)
+                               .ToList();
+
+            List<GetUserLocalSubscribtionDTO> subscriptionsRequestsDTO = UserLocalSubscribtions.Select(
+                subscribtionRequest => new GetUserLocalSubscribtionDTO
+                {
+                    Id = subscribtionRequest.Id,
+                    UserId = subscribtionRequest.UserId,
+
+                    Status = subscribtionRequest.Status,
+                    StatusName = subscribtionRequest.Status.GetDisplayName(),
+
+                    TransactionImageURL = subscribtionRequest.TransactionImageURL,
+                })
+            .OrderByDescending(req => req.Id)
+            .ToList();
+
+            return new GeneralResponse()
+            {
+                IsSuccess = true,
+                Data = subscriptionsRequestsDTO
+            };
+        }
+
+
+        [HttpGet("GetAllLocalSubscriptionsRequests")]
+        public ActionResult<GeneralResponse> GetAllLocalSubscriptionsRequests()
+        {
+            List<UserLocalSubscribtion> UserLocalSubscribtions = _userLocalSubscribtionRepository
+                                                                  .FindAll().ToList();
+
+            List<GetUserLocalSubscribtionDTO> subscriptionsRequestsDTO = UserLocalSubscribtions.Select(
+                subscribtionRequest => new GetUserLocalSubscribtionDTO
+                {
+                    Id = subscribtionRequest.Id,
+                    UserId = subscribtionRequest.UserId,
+
+                    Status = subscribtionRequest.Status,
+                    StatusName = subscribtionRequest.Status.GetDisplayName(),
+
+                    TransactionImageURL = subscribtionRequest.TransactionImageURL,
+                })
+            .OrderByDescending(req => req.Id)
+            .ToList();
+
+            return new GeneralResponse()
+            {
+                IsSuccess = true,
+                Data = subscriptionsRequestsDTO
+            };
+        }
+
+
+        [HttpPost("ApproveLocalSubscriptionRequest")]
+        public async Task<ActionResult<GeneralResponse>> ApproveLocalSubscriptionRequest(int localSubscriptionId)
+        {
+            UserLocalSubscribtion? UserLocalSubscribtion = _userLocalSubscribtionRepository
+                                .Find(criteria: us => us.Id == localSubscriptionId,
+                                includes: ["User"]);
+
+            if (UserLocalSubscribtion == null)
+            {
+                return new GeneralResponse
+                {
+                    IsSuccess = false,
+                    Message = $"There is no Subscription Request found with this Id : {localSubscriptionId}"
+                };
+            }
+
+            if (UserLocalSubscribtion.Status != LocalSubscribtionStatus.PendingApproval)
+            {
+                return new GeneralResponse
+                {
+                    IsSuccess = false,
+                    Message = $"This request status is not pending Approval , his current status is : {UserLocalSubscribtion.Status.GetDisplayName()}"
+                };
+            }
+
+            UserLocalSubscribtion.Status = LocalSubscribtionStatus.Approved;
+            UserLocalSubscribtion.User.IsSubscribedToPlatform = true;
+            UserLocalSubscribtion.User.SubscriptionMethod = SubscriptionMethod.Local;
+
+            await _userEnrolledCoursesRepository.SaveAsync(); // will also save the user data because it has nav prop to him :D
+
+            return new GeneralResponse()
+            {
+                IsSuccess = true,
+                Message = "Subscription Request Approved Succssfully"
+            };
+        }
+
+        [HttpPost("RejectLocalSubscriptionRequest")]
+        public async Task<ActionResult<GeneralResponse>> RejectLocalSubscriptionRequest(int localSubscriptionId)
+        {
+            UserLocalSubscribtion? UserLocalSubscribtion = _userLocalSubscribtionRepository
+                                .Find(criteria: us => us.Id == localSubscriptionId,
+                                includes: ["User"]);
+
+            if (UserLocalSubscribtion == null)
+            {
+                return new GeneralResponse
+                {
+                    IsSuccess = false,
+                    Message = $"There is no Subscription Request found with this Id : {localSubscriptionId}"
+                };
+            }
+
+            if (UserLocalSubscribtion.Status != LocalSubscribtionStatus.PendingApproval)
+            {
+                return new GeneralResponse
+                {
+                    IsSuccess = false,
+                    Message = $"This request status is not pending Approval , his current status is : {UserLocalSubscribtion.Status.GetDisplayName()}"
+                };
+            }
+
+            UserLocalSubscribtion.Status = LocalSubscribtionStatus.Rejected;
+            UserLocalSubscribtion.User.IsSubscribedToPlatform = true;
+            UserLocalSubscribtion.User.SubscriptionMethod = SubscriptionMethod.Local;
+
+            await _userEnrolledCoursesRepository.SaveAsync(); // will also save the user data because it has nav prop to him :D
+
+            return new GeneralResponse()
+            {
+                IsSuccess = true,
+                Message = "Subscription Request Rejected Succssfully"
+            };
+        }
     }
 }

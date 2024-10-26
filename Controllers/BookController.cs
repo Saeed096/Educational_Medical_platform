@@ -244,7 +244,7 @@ namespace Educational_Medical_platform.Controllers
 
                     Book addedBook = _bookRepository.Add(book);
 
-                    _bookRepository.save();
+                    _bookRepository.Save();
 
                     BookDTO addedBookDTO = new BookDTO
                     {
@@ -345,7 +345,7 @@ namespace Educational_Medical_platform.Controllers
                     existingBook.PublisherName = bookDTO.PublisherName ?? existingBook.PublisherName;
                     existingBook.PublishDate = bookDTO.CreatedDate;
                     _bookRepository.Update(existingBook);
-                    _bookRepository.save();
+                    _bookRepository.Save();
 
 
                     BookDTO updatedBookDTO = new BookDTO
@@ -405,7 +405,7 @@ namespace Educational_Medical_platform.Controllers
                 }
 
                 _bookRepository.Delete(existingBook);
-                _bookRepository.save();
+                _bookRepository.Save();
 
                 return new GeneralResponse
                 {

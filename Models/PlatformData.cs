@@ -22,5 +22,8 @@ namespace Educational_Medical_platform.Models
         
         [Column(TypeName = "decimal(10, 2)")]
         public decimal? PlanTaxesPercentage { get; set; }
+
+        //===========================================
+
     }
 }

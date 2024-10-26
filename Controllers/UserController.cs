@@ -24,25 +24,35 @@ namespace Educational_Medical_platform.Controllers
     public class UserController : ControllerBase
     {
         private readonly UserManager<ApplicationUser> _userManager;
+
         private readonly IEmailService _emailService;
         private readonly IConfiguration _configuration;
         private readonly IApplicationUserRepository _applicationUserRepository;
-        private readonly string _imagesPath;
+        private readonly IUserLocalSubscribtionRepository _userLocalSubscribtion;
 
+        private readonly string _imagesPath;
+        private readonly long _maxImageSize;
 
         public UserController(
             UserManager<ApplicationUser> userManager,
             IEmailService emailService,
-            IConfiguration configuration , 
-            IApplicationUserRepository applicationUserRepository
+            IConfiguration configuration,
+            IApplicationUserRepository applicationUserRepository,
+            IUserLocalSubscribtionRepository userLocalSubscribtion
             )
         {
             _userManager = userManager;
             _emailService = emailService;
             _configuration = configuration;
-            this._applicationUserRepository = applicationUserRepository;
+            _applicationUserRepository = applicationUserRepository;
+            _userLocalSubscribtion = userLocalSubscribtion;
+
             _imagesPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Images", "Users");
+
+            _maxImageSize = 2 * 1024 * 1024;  // 2 MB
         }
+
+        //====================================> User Authentication <========================================
 
         [HttpPost("register")]
         public async Task<ActionResult<GeneralResponse>> Register(RegisterDTO userDTO)
@@ -94,7 +104,7 @@ namespace Educational_Medical_platform.Controllers
 
             IdentityResult addRoleResult = new IdentityResult();
 
-            addRoleResult = await _userManager.AddToRoleAsync(applicationUser , "USER");
+            addRoleResult = await _userManager.AddToRoleAsync(applicationUser, "USER");
 
             if (!addRoleResult.Succeeded)
             {
@@ -464,6 +474,8 @@ namespace Educational_Medical_platform.Controllers
             }
         }
 
+        //=======================================> User Profile <==============================================
+
         [HttpPut("update/{userId}")]
         public async Task<ActionResult<GeneralResponse>> UpdateUser(string userId, [FromForm] UpdateUserDTO updateUserDTO)
         {
@@ -530,7 +542,7 @@ namespace Educational_Medical_platform.Controllers
                     await updateUserDTO.Image.CopyToAsync(stream);
                 }
 
-                user.ImageUrl = $"/Images/Users/{fileName}"; // Assuming you have an ImageURL property in ApplicationUser
+                user.ImageUrl = $"/Images/Users/{fileName}";
             }
 
             var updateResult = await _userManager.UpdateAsync(user);
@@ -553,6 +565,9 @@ namespace Educational_Medical_platform.Controllers
                 Message = "User information updated successfully."
             };
         }
+
+        //=======================================> Dashboard <=================================================
+
         [HttpGet("GetAllUsersPaginated")]
         public ActionResult<GeneralResponse> GetAllUsersPaginated(int page = 1, int pageSize = 10)
         {
@@ -592,5 +607,88 @@ namespace Educational_Medical_platform.Controllers
             };
         }
 
+        //====================================> Platform Subscribtion <=========================================
+
+        [HttpPost("RequestSubscribtionLocally")]
+        public async Task<ActionResult<GeneralResponse>> RequestSubscribtionLocally(RequestSubscribtionDTO requestSubscribtion)
+        {
+            var user = await _userManager.FindByIdAsync(requestSubscribtion.UserId);
+            if (user == null)
+            {
+                return new GeneralResponse
+                {
+                    IsSuccess = false,
+                    Message = $"There is no user found with this ID : {requestSubscribtion.UserId}"
+                };
+            }
+
+            if (user.IsSubscribedToPlatform)
+            {
+                return new GeneralResponse
+                {
+                    IsSuccess = false,
+                    Message = $"This user is already subscribed to platform ," +
+                    $" and his subscribtion method is : {user?.SubscriptionMethod?.GetDisplayName()}"
+                };
+            }
+
+            var userLocalSubscriptionFromDB = _userLocalSubscribtion.Find(us => us.UserId == requestSubscribtion.UserId);
+            if (userLocalSubscriptionFromDB != null)
+            {
+                return new GeneralResponse
+                {
+                    IsSuccess = false,
+                    Message = $"This Request is already Existed , And it's status is : {userLocalSubscriptionFromDB.Status.GetDisplayName()}",
+                };
+            }
+
+            // Validate that the file is an image by checking the MIME type
+            if (!requestSubscribtion.TransactionImage.ContentType.StartsWith("image/"))
+            {
+                return new GeneralResponse()
+                {
+                    IsSuccess = false,
+                    Message = "The uploaded file is not a valid image.",
+                    Status = 409
+                };
+            }
+
+            if (requestSubscribtion.TransactionImage.Length > _maxImageSize)
+            {
+                return new GeneralResponse()
+                {
+                    IsSuccess = false,
+                    Message = "Image size exceeds the maximum allowed size of 2MB.",
+                    Status = 410
+                };
+            }
+
+            var fileName = $"{Path.GetFileNameWithoutExtension(requestSubscribtion.TransactionImage.FileName)}_{Guid.NewGuid()}{Path.GetExtension(requestSubscribtion.TransactionImage.FileName)}";
+            var filePath = Path.Combine(_imagesPath, fileName);
+
+            // Save the image
+            using (var stream = new FileStream(filePath, FileMode.Create))
+            {
+                await requestSubscribtion.TransactionImage.CopyToAsync(stream);
+            }
+
+            requestSubscribtion.TransactionImage = null; // Remove the image from DTO after saving => Good practice
+
+            UserLocalSubscribtion userLocalSubscribtion = new UserLocalSubscribtion
+            {
+                UserId = user.Id,
+                TransactionImageURL = $"Images/Users/{fileName}",
+                Status = LocalSubscribtionStatus.PendingApproval,
+            };
+
+            await _userLocalSubscribtion.AddAsync(userLocalSubscribtion);
+            await _userLocalSubscribtion.SaveAsync();
+
+            return new GeneralResponse
+            {
+                IsSuccess = true,
+                Message = "Local Subscription request is created successfully , And now it's pending Approval by the Admin"
+            };
+        }
     }
 }

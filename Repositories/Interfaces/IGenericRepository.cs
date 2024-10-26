@@ -52,7 +52,7 @@ namespace Shoghlana.Core.Interfaces
 
         //-------------------------------------------------------------------------
 
-        public void save();
+        public void Save();
 
         public Task SaveAsync();
     }

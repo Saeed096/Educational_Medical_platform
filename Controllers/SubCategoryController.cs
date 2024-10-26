@@ -303,7 +303,7 @@ namespace Educational_Medical_platform.Controllers
 
 
                     SubCategory addedSubCategory = SubCategoryRepository.Add(Subcategory);
-                    SubCategoryRepository.save();
+                    SubCategoryRepository.Save();
 
                     SubCategoryDTO addedSubCategoryDTO = new SubCategoryDTO
                     {
@@ -355,7 +355,7 @@ namespace Educational_Medical_platform.Controllers
                 }
 
                 SubCategoryRepository.Delete(existingSubCategory);
-                SubCategoryRepository.save();
+                SubCategoryRepository.Save();
 
                 return new GeneralResponse
                 {

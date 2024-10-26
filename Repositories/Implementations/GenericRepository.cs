@@ -274,7 +274,7 @@ namespace Shoghlana.EF.Repository
 
         //----------------------------------------------------------
 
-        public void save()
+        public void Save()
         {
             context.SaveChanges();
         }

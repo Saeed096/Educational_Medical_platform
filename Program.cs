@@ -65,6 +65,7 @@ namespace Educational_Medical_platform
 
             builder.Services.AddScoped<IUserSubscribtionRipository, UserSubscribtionRipository>();
             builder.Services.AddScoped<IPlatformRepository, PlatformRepository>();
+            builder.Services.AddScoped<IUserLocalSubscribtionRepository, UserLocalSubscribtionRepository>();
 
             #endregion
 

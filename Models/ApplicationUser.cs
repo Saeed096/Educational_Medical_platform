@@ -1,4 +1,5 @@
-﻿using Educational_Medical_platform.Models;
+﻿using Educational_Medical_platform.Helpers;
+using Educational_Medical_platform.Models;
 using Microsoft.AspNetCore.Identity;
 using System.ComponentModel.DataAnnotations;
 
@@ -28,5 +29,7 @@ namespace Shoghlana.Core.Models
         public List<Book>? Books { get; set; }
 
         public bool IsSubscribedToPlatform { get; set; } = false;
+
+        public SubscriptionMethod? SubscriptionMethod { get; set; } = null;
     }
 }

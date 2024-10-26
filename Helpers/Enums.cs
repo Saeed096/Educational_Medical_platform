@@ -23,8 +23,6 @@ namespace Educational_Medical_platform.Helpers
         Admin = 2,
     }
 
-
-
     public enum CategoryType
     {
         [Display(Name = "Course Category")]
@@ -112,6 +110,29 @@ namespace Educational_Medical_platform.Helpers
         Hard = 2,
     }
 
+    public enum SubscriptionMethod
+    {
+        [Display(Name = "Local")]
+        Local = 0,
+
+        [Display(Name = "Paypal")]
+        Paypal = 1,
+    }
+
+    public enum LocalSubscribtionStatus
+    {
+        [Display(Name = "Pending Approval")]
+        PendingApproval = 0,
+
+        [Display(Name = "Approved")]
+        Approved = 1,
+
+        [Display(Name = "Rejected")]
+        Rejected = 2,
+    }
+
+    #region Paypal
+
     public enum SubscriptionStatus
     {
         [Display(Name = "Active")]
@@ -143,5 +164,6 @@ namespace Educational_Medical_platform.Helpers
 
         [Display(Name = "Pending")]
         PENDING = 9
-    }
+    } 
+    #endregion
 }

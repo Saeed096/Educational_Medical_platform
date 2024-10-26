@@ -250,7 +250,7 @@ namespace Educational_Medical_platform.Controllers
                     };
 
                     Category addedCategory = CategoryRepository.Add(category);
-                    CategoryRepository.save(); 
+                    CategoryRepository.Save(); 
 
                     CategoryDTO addedCategoryDTO = new CategoryDTO
                     {
@@ -305,7 +305,7 @@ namespace Educational_Medical_platform.Controllers
                     existingCategory.Type = categoryDTO.Type;
 
                     CategoryRepository.Update(existingCategory);
-                    CategoryRepository.save(); 
+                    CategoryRepository.Save(); 
 
                     CategoryDTO updatedCategoryDTO = new CategoryDTO
                     {
@@ -355,7 +355,7 @@ namespace Educational_Medical_platform.Controllers
                 }
 
                 CategoryRepository.Delete(existingCategory);
-                CategoryRepository.save(); 
+                CategoryRepository.Save(); 
 
                 return new GeneralResponse
                 {

@@ -25,9 +25,6 @@ namespace Shoghlana.EF
 
         public DbSet<StandardTest> StandardTests { get; set; } 
 
-        //public DbSet<Student> Students { get; set; } 
-        //public DbSet<Instructor> Supervisors { get; set; } 
-
         public DbSet<Video> Videos { get; set; }
 
         public DbSet<User_Enrolled_Courses> UserEnrolledCourses { get; set; }
@@ -36,6 +33,8 @@ namespace Shoghlana.EF
         public DbSet<UserSubscription> UserSubscriptions { get; set; }
 
         public DbSet<PlatformData> platformData { get; set; }
+
+        public DbSet<UserLocalSubscribtion> UserLocalSubscribtions { get; set; }
 
         public ApplicationDBContext(DbContextOptions<ApplicationDBContext> options) : base(options) { }
 
