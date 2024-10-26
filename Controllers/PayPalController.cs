@@ -1,4 +1,5 @@
-﻿using Educational_Medical_platform.DTO.PayPal;
+﻿using Educational_Medical_platform.DTO.Course;
+using Educational_Medical_platform.DTO.PayPal;
 using Educational_Medical_platform.PayPal;
 using Educational_Medical_platform.Repositories.Interfaces;
 using Microsoft.AspNetCore.Identity;
@@ -6,7 +7,6 @@ using Microsoft.AspNetCore.Mvc;
 using PayPal.Models;
 using Shoghlana.Api.Response;
 using Shoghlana.Core.Models;
-using System.Text.Json;
 
 namespace Educational_Medical_platform.Controllers
 {
@@ -20,12 +20,12 @@ namespace Educational_Medical_platform.Controllers
         public PayPalController(
             IUserSubscribtionRipository userSubscribtionRipository,
             IPlatformRepository platformRepository,
-            UserManager<ApplicationUser> userManager)
+            UserManager<ApplicationUser> userManager , 
+            ICourseRepository courseRepository)
         {
-            _client = new PayPalClientApi(userSubscribtionRipository, platformRepository, userManager);
+            _client = new PayPalClientApi(userSubscribtionRipository, platformRepository, userManager , courseRepository);
 
             _userSubscribtionRipository = userSubscribtionRipository;
-
         }
 
         [HttpGet("/GetAccessToken")]
@@ -116,6 +116,14 @@ namespace Educational_Medical_platform.Controllers
                 await _userSubscribtionRipository.SaveAsync();
             }
         }
+
+        //=================================================================
+
+        //[HttpPost("/BuyCourse")]
+        //public async Task<ActionResult<GeneralResponse>> BuyCourse(BuyCourseDTO buyCourseDTO)
+        //{
+
+        //}
 
     }
 }

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Shoghlana.EF;
 
@@ -11,9 +12,11 @@ using Shoghlana.EF;
 namespace Educational_Medical_platform.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    partial class ApplicationDBContextModelSnapshot : ModelSnapshot
+    [Migration("20241023191119_CourseProductID")]
+    partial class CourseProductID
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1738,13 +1741,6 @@ namespace Educational_Medical_platform.Migrations
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
-
-                    b.Property<string>("TransactionImageURL")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.HasKey("StudentId", "CourseId");
 
                     b.HasIndex("CourseId");
@@ -2060,7 +2056,7 @@ namespace Educational_Medical_platform.Migrations
                         {
                             Id = "1a111a11-1111-1111-1111-111111111111",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "d4d1b8c8-3150-4ca8-857c-b5098b252033",
+                            ConcurrencyStamp = "e089a036-9330-456b-9738-e1da9d36b659",
                             Email = "Ehab_Naser@example.com",
                             EmailConfirmed = true,
                             FirstName = "Ehab",
@@ -2069,7 +2065,7 @@ namespace Educational_Medical_platform.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "EHAB_NASER@EXAMPLE.COM",
                             NormalizedUserName = "EHAB_NASER",
-                            PasswordHash = "AQAAAAIAAYagAAAAEEy2iPK9vy4fKnOA2aaLhRgC+ZMbWpMw65/NGDk2BsUHQc4f+KdAy/EahM+APzarDQ==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEM9UiRochwFRx71ufeIhy1sNxL0KxGQoVBaaTaCY3al94+DpdMHUsh/R/Dl/PPAmWQ==",
                             PhoneNumber = "011548726155",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "9f9ef764-d632-42d2-99ee-93v2410d8ae0",
@@ -2080,7 +2076,7 @@ namespace Educational_Medical_platform.Migrations
                         {
                             Id = "2b222b22-2222-2222-2222-222222222222",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "90696923-efe2-4e89-b0cf-21c2573a61d6",
+                            ConcurrencyStamp = "c9ee6fca-d507-471f-bd3f-d408028f0d69",
                             Email = "Mohamed_Galal@example.com",
                             EmailConfirmed = true,
                             FirstName = "Mohamed",
@@ -2089,7 +2085,7 @@ namespace Educational_Medical_platform.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "MOHAMED_GALAL@EXAMPLE.COM",
                             NormalizedUserName = "MOHAMED_GALAL",
-                            PasswordHash = "AQAAAAIAAYagAAAAEFbZ7GAmUQRSf/+H6Iw5m30zobLS+t7SE7OcPOR4SStNcrl6obFTdgvTp7VLePQJyw==",
+                            PasswordHash = "AQAAAAIAAYagAAAAELXAlR4KCeeJZyx43pRcd8YBgEX1D/LTFMfOalTLgRSIt1nBhQmZD0yFHSKKjQhrzg==",
                             PhoneNumber = "01054871566",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "9f9ed761-d631-42d2-99ee-93v2420d8ae0",
@@ -2100,7 +2096,7 @@ namespace Educational_Medical_platform.Migrations
                         {
                             Id = "3c333c33-3333-3333-3333-333333333333",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "214857ee-a45d-4b4a-b01e-ffd9a735f799",
+                            ConcurrencyStamp = "f9bb500c-0e29-491b-857a-55f23edca246",
                             Email = "Alaa_Test@example.com",
                             EmailConfirmed = true,
                             FirstName = "Alaa",
@@ -2109,7 +2105,7 @@ namespace Educational_Medical_platform.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "ALAA_AHMED@EXAMPLE.COM",
                             NormalizedUserName = "ALAA_AHMED",
-                            PasswordHash = "AQAAAAIAAYagAAAAENvOUobie0aS9/Nc4A89Wb7HgKs9LvTkI+GjyfbevC7nhRQhxNJwIrElzC23cVa34g==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEFyYbktGssNZqB4mVVwhCB9biBYht4LGCXtIVIg75EJQquOaoOe4aSimgM5Phy2deg==",
                             PhoneNumber = "01225193482",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "9f1ed761-a631-42dq-99ee-93z2420d8aeq",

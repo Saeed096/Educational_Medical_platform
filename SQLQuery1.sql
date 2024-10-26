@@ -1,3 +1,7 @@
 use MedLearnHubDB
 
-select * from books
+select * from platformData
+
+select * from UserSubscriptions
+
+select * from AspNetUsers

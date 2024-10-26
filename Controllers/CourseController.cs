@@ -3,7 +3,6 @@ using Educational_Medical_platform.DTO.Course.Objectives;
 using Educational_Medical_platform.DTO.Course.Requirments;
 using Educational_Medical_platform.Helpers;
 using Educational_Medical_platform.Models;
-using Educational_Medical_platform.Repositories.Implementations;
 using Educational_Medical_platform.Repositories.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -27,6 +26,7 @@ namespace Educational_Medical_platform.Controllers
         private readonly IUserEnrolledCoursesRepository _userEnrolledCoursesRepository;
         private readonly IQuestionRepository _questionRepository;
         private readonly IAnswerRepository _answerRepository;
+
         private readonly string _imagesPath;
         private readonly string _videosPath;
         private readonly long _maxImageSize;
@@ -52,8 +52,8 @@ namespace Educational_Medical_platform.Controllers
             _subCategoryRepository = subCategoryRepository;
             _categoryRepository = categoryRepository;
             _userEnrolledCoursesRepository = userEnrolledCoursesRepository;
-            this._questionRepository = questionRepository;
-            this._answerRepository = answerRepository;
+            _questionRepository = questionRepository;
+            _answerRepository = answerRepository;
 
             _imagesPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Images", "Courses");
             _videosPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Videos", "Courses");
@@ -715,15 +715,26 @@ namespace Educational_Medical_platform.Controllers
         }
 
         [HttpPost("Enroll")]
-        public async Task<ActionResult<GeneralResponse>> EnrollStudentInCourse(string studentId, int courseId)
+        public async Task<ActionResult<GeneralResponse>> EnrollStudentInCourse(string instructorId, string studentId, int courseId)
         {
+            var instructor = await _userManager.FindByIdAsync(instructorId);
+            if (instructor == null)
+            {
+                return new GeneralResponse()
+                {
+                    IsSuccess = false,
+                    Message = $"There is no User found with this ID: {instructorId}",
+                    Status = 406,
+                };
+            }
+
             var student = await _userManager.FindByIdAsync(studentId);
             if (student == null)
             {
                 return new GeneralResponse()
                 {
                     IsSuccess = false,
-                    Message = $"There is no user found with this ID: {studentId}",
+                    Message = $"There is no User found with this ID: {studentId}",
                     Status = 406,
                 };
             }
@@ -750,7 +761,6 @@ namespace Educational_Medical_platform.Controllers
                     Status = 409
                 };
             }
-
 
             if (course.InstructorId == studentId)
             {
@@ -782,7 +792,132 @@ namespace Educational_Medical_platform.Controllers
             };
         }
 
-        [HttpPost]
+        [HttpPost("RequestEnroll")]
+        public async Task<ActionResult<GeneralResponse>> RequestEnrollStudentInCourse(RequestUserEnrollDTO userEnrollDTO)
+        {
+            var instructor = await _userManager.FindByIdAsync(userEnrollDTO.InstructorId);
+            if (instructor == null)
+            {
+                return new GeneralResponse()
+                {
+                    IsSuccess = false,
+                    Message = $"There is no User found with this ID: {userEnrollDTO.InstructorId}",
+                    Status = 406,
+                };
+            }
+
+            var student = await _userManager.FindByIdAsync(userEnrollDTO.StudentId);
+            if (student == null)
+            {
+                return new GeneralResponse()
+                {
+                    IsSuccess = false,
+                    Message = $"There is no User found with this ID: {userEnrollDTO.StudentId}",
+                    Status = 406,
+                };
+            }
+
+            var course = _courseRepository.Find(c => c.Id == userEnrollDTO.CourseId);
+            if (course == null)
+            {
+                return new GeneralResponse()
+                {
+                    IsSuccess = false,
+                    Message = $"There is no course found with this ID: {userEnrollDTO.CourseId}",
+                    Status = 407,
+                };
+            }
+
+            // Check if the student is already enrolled in the course
+            var enrollmentExists = _userEnrolledCoursesRepository
+                .Find(c => c.StudentId == userEnrollDTO.StudentId && c.CourseId == userEnrollDTO.CourseId);
+            if (enrollmentExists != null)
+            {
+                return new GeneralResponse()
+                {
+                    IsSuccess = false,
+                    Message = "This request is already existed.",
+                    Status = 409
+                };
+            }
+
+            if (course.InstructorId != userEnrollDTO.InstructorId)
+            {
+                return new GeneralResponse
+                {
+                    IsSuccess = false,
+                    Message = "The Given Instructor ID is not the instructor who owns this course",
+                    Status = 406
+                };
+            }
+
+            if (course.InstructorId == userEnrollDTO.StudentId)
+            {
+                return new GeneralResponse
+                {
+                    IsSuccess = false,
+                    Message = "The Instructor Can't Enroll in his Course !",
+                    Status = 406
+                };
+            }
+
+            // Validate that the file is an image by checking the MIME type
+            if (!userEnrollDTO.TransactionImage.ContentType.StartsWith("image/"))
+            {
+                return new GeneralResponse()
+                {
+                    IsSuccess = false,
+                    Message = "The uploaded file is not a valid image.",
+                    Status = 409
+                };
+            }
+
+            // Validate image size (e.g., max 2MB)
+            if (userEnrollDTO.TransactionImage.Length > _maxImageSize)
+            {
+                return new GeneralResponse()
+                {
+                    IsSuccess = false,
+                    Message = "Image size exceeds the maximum allowed size of 2MB.",
+                    Status = 410
+                };
+            }
+
+            // Generate a unique filename
+            var fileName = $"{Path.GetFileNameWithoutExtension(userEnrollDTO.TransactionImage.FileName)}_{Guid.NewGuid()}{Path.GetExtension(userEnrollDTO.TransactionImage.FileName)}";
+            var filePath = Path.Combine(_imagesPath, fileName);
+
+            // Save the image
+            using (var stream = new FileStream(filePath, FileMode.Create))
+            {
+                await userEnrollDTO.TransactionImage.CopyToAsync(stream);
+            }
+
+            userEnrollDTO.TransactionImage = null; // Remove the image from DTO after saving
+
+            var newEnrollment = new User_Enrolled_Courses()
+            {
+                StudentId = userEnrollDTO.StudentId,
+                CourseId = userEnrollDTO.CourseId,
+                Degree = 0,
+                CurrentVideoNumber = 0,
+                StartDate = DateTime.Now,
+                Status = EnrollRequestStatus.PendingApproval,
+                TransactionImageURL = $"/Images/Courses/{fileName}"
+            };
+
+            await _userEnrolledCoursesRepository.AddAsync(newEnrollment);
+            await _userEnrolledCoursesRepository.SaveAsync();
+
+            return new GeneralResponse()
+            {
+                IsSuccess = true,
+                Message = "Request Enroll Created successfully. And Now It's pending Approval By the Admin",
+                Status = 200
+            };
+        }
+
+        [HttpPost("AddCourse")]
         public async Task<ActionResult<GeneralResponse>> AddCourse([FromForm] AddCourseDTO courseDTO)
         {
             // Check if the instructor exists
@@ -1156,7 +1291,7 @@ namespace Educational_Medical_platform.Controllers
 
         //----------------------------------------------------------------------------------------------------------
 
-        [HttpPut]
+        [HttpPut("EditCourse")]
         public async Task<ActionResult<GeneralResponse>> EditCourse([FromForm] EditCourseDTO courseDTO)
         {
             // Check if the course exists
@@ -1345,486 +1480,5 @@ namespace Educational_Medical_platform.Controllers
             };
         }
 
-        //********************************************  Admin Actions *********************************************************
-
-        [HttpGet("PendingApproval")]
-        public ActionResult<GeneralResponse> GetPendingApprovalCourses()
-        {
-            List<Course> courses = _courseRepository.FindAll(criteria: c => c.Status == CourseStatus.PendingApproval, includes: new[] { "Requirements", "Objectives", "Videos", "SubCategory", "Instructor" }).ToList();
-
-            if (courses == null || !courses.Any())
-            {
-                return new GeneralResponse()
-                {
-                    IsSuccess = false,
-                    Message = "There are no courses available"
-                };
-            }
-
-            var courseDTOs = new List<GetCourseDTO>();
-
-            foreach (var course in courses)
-            {
-                GetCourseDTO courseDTO = new GetCourseDTO()
-                {
-                    Id = course.Id,
-
-                    Preview = course.Preview,
-                    Title = course.Title,
-                    DurationInhours = course.DurationInhours,
-                    Price = course.Price,
-
-                    Type = course.Type,
-                    TypeName = course.Type.GetDisplayName(),
-
-                    Status = course.Status,
-                    StatusName = course.Status.GetDisplayName(),
-
-
-                    InstructorId = course.InstructorId,
-                    InstructorFullName = $"{course.Instructor.FirstName} {course.Instructor.LastName}",
-
-                    SubCategoryId = course.SubCategoryId,
-                    SubCategoryName = course.SubCategory.Name,
-
-                    CategoryId = course.SubCategory.CategoryId,
-                    CategoryName = _categoryRepository.GetById(course.SubCategory.CategoryId).Name ?? "NA",
-
-                    ThumbnailURL = course.ThumbnailURL,
-
-                    Requirements = course.Requirements != null && course.Requirements.Any()
-                        ? course.Requirements.Select(req => new GetCourseRequirmentsDTO()
-                        {
-                            Id = req.Id,
-                            CourseId = req.CourseId,
-                            Description = req.Description,
-                        }).ToList()
-                        : new List<GetCourseRequirmentsDTO>(), // Provide an empty list if there are no requirements
-
-                    Objectives = course.Objectives != null && course.Objectives.Any()
-                        ? course.Objectives.Select(req => new GetCourseObjectiveDTO()
-                        {
-                            Id = req.Id,
-                            CourseId = req.CourseId,
-                            Description = req.Description,
-                        }).ToList()
-                        : new List<GetCourseObjectiveDTO>(), // Provide an empty list if there are no Objectives
-
-                    Videos = course.Videos != null && course.Videos.Any()
-                    ? course.Videos.Select(video => new GetVideoDTO()
-                    {
-                        Id = video.Id,
-                        CourseId = video.CourseId,
-                        Description = video.Description,
-                        Number = video.Number,
-                        Title = video.Title,
-                        videoURL = video.videoURL
-                    }).ToList()
-                    : new List<GetVideoDTO>(),
-                };
-
-                courseDTOs.Add(courseDTO);
-            }
-
-            return new GeneralResponse()
-            {
-                IsSuccess = true,
-                Message = "Courses retrieved with Requirments and objectives and VideosURLs successfully.",
-                Data = courseDTOs
-            };
-        }
-
-        [HttpGet("PendingDeletion")]
-        public ActionResult<GeneralResponse> GetPendingDeletionCourses()
-        {
-            List<Course> courses = _courseRepository.FindAll(criteria: c => c.Status == CourseStatus.PendingDeletion, includes: new[] { "Requirements", "Objectives", "Videos", "SubCategory", "Instructor" }).ToList();
-
-            if (courses == null || !courses.Any())
-            {
-                return new GeneralResponse()
-                {
-                    IsSuccess = false,
-                    Message = "There are no courses available"
-                };
-            }
-
-            var courseDTOs = new List<GetCourseDTO>();
-
-            foreach (var course in courses)
-            {
-                GetCourseDTO courseDTO = new GetCourseDTO()
-                {
-                    Id = course.Id,
-
-                    Preview = course.Preview,
-                    Title = course.Title,
-                    DurationInhours = course.DurationInhours,
-                    Price = course.Price,
-                    Type = course.Type,
-                    TypeName = course.Type.GetDisplayName(),
-
-                    Status = course.Status,
-                    StatusName = course.Status.GetDisplayName(),
-
-
-                    InstructorId = course.InstructorId,
-                    InstructorFullName = $"{course.Instructor.FirstName} {course.Instructor.LastName}",
-
-                    SubCategoryId = course.SubCategoryId,
-                    SubCategoryName = course.SubCategory.Name,
-
-                    CategoryId = course.SubCategory.CategoryId,
-                    CategoryName = _categoryRepository.GetById(course.SubCategory.CategoryId).Name ?? "NA",
-
-                    ThumbnailURL = course.ThumbnailURL,
-
-                    Requirements = course.Requirements != null && course.Requirements.Any()
-                        ? course.Requirements.Select(req => new GetCourseRequirmentsDTO()
-                        {
-                            Id = req.Id,
-                            CourseId = req.CourseId,
-                            Description = req.Description,
-                        }).ToList()
-                        : new List<GetCourseRequirmentsDTO>(), // Provide an empty list if there are no requirements
-
-                    Objectives = course.Objectives != null && course.Objectives.Any()
-                        ? course.Objectives.Select(req => new GetCourseObjectiveDTO()
-                        {
-                            Id = req.Id,
-                            CourseId = req.CourseId,
-                            Description = req.Description,
-                        }).ToList()
-                        : new List<GetCourseObjectiveDTO>(), // Provide an empty list if there are no Objectives
-
-                    Videos = course.Videos != null && course.Videos.Any()
-                    ? course.Videos.Select(video => new GetVideoDTO()
-                    {
-                        Id = video.Id,
-                        CourseId = video.CourseId,
-                        Description = video.Description,
-                        Number = video.Number,
-                        Title = video.Title,
-                        videoURL = video.videoURL
-                    }).ToList()
-                    : new List<GetVideoDTO>(),
-                };
-
-                courseDTOs.Add(courseDTO);
-            }
-
-            return new GeneralResponse()
-            {
-                IsSuccess = true,
-                Message = "Courses retrieved with Requirments and objectives and VideosURLs successfully.",
-                Data = courseDTOs
-            };
-        }
-
-        [HttpGet("Approved")]
-        public ActionResult<GeneralResponse> GetApprovedCourses()
-        {
-            List<Course> courses = _courseRepository.FindAll(criteria: c => c.Status == CourseStatus.Approved, includes: new[] { "Requirements", "Objectives", "Videos", "SubCategory", "Instructor" }).ToList();
-
-            if (courses == null || !courses.Any())
-            {
-                return new GeneralResponse()
-                {
-                    IsSuccess = false,
-                    Message = "There are no courses available"
-                };
-            }
-
-            var courseDTOs = new List<GetCourseDTO>();
-
-            foreach (var course in courses)
-            {
-                GetCourseDTO courseDTO = new GetCourseDTO()
-                {
-                    Id = course.Id,
-
-                    Preview = course.Preview,
-                    Title = course.Title,
-                    DurationInhours = course.DurationInhours,
-                    Price = course.Price,
-                    Type = course.Type,
-                    TypeName = course.Type.GetDisplayName(),
-
-                    Status = course.Status,
-                    StatusName = course.Status.GetDisplayName(),
-
-
-                    InstructorId = course.InstructorId,
-                    InstructorFullName = $"{course.Instructor.FirstName} {course.Instructor.LastName}",
-
-                    SubCategoryId = course.SubCategoryId,
-                    SubCategoryName = course.SubCategory.Name,
-
-                    CategoryId = course.SubCategory.CategoryId,
-                    CategoryName = _categoryRepository.GetById(course.SubCategory.CategoryId).Name ?? "NA",
-
-                    ThumbnailURL = course.ThumbnailURL,
-
-                    Requirements = course.Requirements != null && course.Requirements.Any()
-                        ? course.Requirements.Select(req => new GetCourseRequirmentsDTO()
-                        {
-                            Id = req.Id,
-                            CourseId = req.CourseId,
-                            Description = req.Description,
-                        }).ToList()
-                        : new List<GetCourseRequirmentsDTO>(), // Provide an empty list if there are no requirements
-
-                    Objectives = course.Objectives != null && course.Objectives.Any()
-                        ? course.Objectives.Select(req => new GetCourseObjectiveDTO()
-                        {
-                            Id = req.Id,
-                            CourseId = req.CourseId,
-                            Description = req.Description,
-                        }).ToList()
-                        : new List<GetCourseObjectiveDTO>(), // Provide an empty list if there are no Objectives
-
-                    Videos = course.Videos != null && course.Videos.Any()
-                    ? course.Videos.Select(video => new GetVideoDTO()
-                    {
-                        Id = video.Id,
-                        CourseId = video.CourseId,
-                        Description = video.Description,
-                        Number = video.Number,
-                        Title = video.Title,
-                        videoURL = video.videoURL
-                    }).ToList()
-                    : new List<GetVideoDTO>(),
-                };
-
-                courseDTOs.Add(courseDTO);
-            }
-
-            return new GeneralResponse()
-            {
-                IsSuccess = true,
-                Message = "Courses retrieved with Requirments and objectives and VideosURLs successfully.",
-                Data = courseDTOs
-            };
-        }
-
-        [HttpGet("Rejected")]
-        public ActionResult<GeneralResponse> GetRejectedCourses()
-        {
-            List<Course> courses = _courseRepository.FindAll(criteria: c => c.Status == CourseStatus.Rejected, includes: new[] { "Requirements", "Objectives", "Videos", "SubCategory", "Instructor" }).ToList();
-
-            if (courses == null || !courses.Any())
-            {
-                return new GeneralResponse()
-                {
-                    IsSuccess = false,
-                    Message = "There are no courses available"
-                };
-            }
-
-            var courseDTOs = new List<GetCourseDTO>();
-
-            foreach (var course in courses)
-            {
-                GetCourseDTO courseDTO = new GetCourseDTO()
-                {
-                    Id = course.Id,
-
-                    Preview = course.Preview,
-                    Title = course.Title,
-                    DurationInhours = course.DurationInhours,
-                    Price = course.Price,
-                    Type = course.Type,
-                    TypeName = course.Type.GetDisplayName(),
-
-                    Status = course.Status,
-                    StatusName = course.Status.GetDisplayName(),
-                    RejectionReason = course.RejectedReason,
-
-                    InstructorId = course.InstructorId,
-                    InstructorFullName = $"{course.Instructor.FirstName} {course.Instructor.LastName}",
-
-                    SubCategoryId = course.SubCategoryId,
-                    SubCategoryName = course.SubCategory.Name,
-
-                    CategoryId = course.SubCategory.CategoryId,
-                    CategoryName = _categoryRepository.GetById(course.SubCategory.CategoryId).Name ?? "NA",
-
-                    ThumbnailURL = course.ThumbnailURL,
-
-                    Requirements = course.Requirements != null && course.Requirements.Any()
-                        ? course.Requirements.Select(req => new GetCourseRequirmentsDTO()
-                        {
-                            Id = req.Id,
-                            CourseId = req.CourseId,
-                            Description = req.Description,
-                        }).ToList()
-                        : new List<GetCourseRequirmentsDTO>(), // Provide an empty list if there are no requirements
-
-                    Objectives = course.Objectives != null && course.Objectives.Any()
-                        ? course.Objectives.Select(req => new GetCourseObjectiveDTO()
-                        {
-                            Id = req.Id,
-                            CourseId = req.CourseId,
-                            Description = req.Description,
-                        }).ToList()
-                        : new List<GetCourseObjectiveDTO>(), // Provide an empty list if there are no Objectives
-
-                    Videos = course.Videos != null && course.Videos.Any()
-                    ? course.Videos.Select(video => new GetVideoDTO()
-                    {
-                        Id = video.Id,
-                        CourseId = video.CourseId,
-                        Description = video.Description,
-                        Number = video.Number,
-                        Title = video.Title,
-                        videoURL = video.videoURL
-                    }).ToList()
-                    : new List<GetVideoDTO>(),
-                };
-
-                courseDTOs.Add(courseDTO);
-            }
-
-            return new GeneralResponse()
-            {
-                IsSuccess = true,
-                Message = "Courses retrieved with Requirments and objectives and VideosURLs successfully.",
-                Data = courseDTOs
-            };
-        }
-
-        [HttpPost("ApproveAddingCourse/{courseId:int}")]
-        public ActionResult<GeneralResponse> ApproveAddingCourse(int courseId)
-        {
-            var course = _courseRepository.Find(c => c.Id == courseId);
-
-            if (course == null)
-            {
-                return new GeneralResponse()
-                {
-                    IsSuccess = false,
-                    Message = $"No Course found with this ID {courseId}"
-                };
-            }
-
-            course.Status = CourseStatus.Approved;
-
-            _courseRepository.save();
-
-            return new GeneralResponse()
-            {
-                IsSuccess = true,
-                Message = $"Course With ID {courseId} approved Successfully"
-            };
-        }
-
-        [HttpPost("RejectAddingCourse/{courseId:int}")]
-        public ActionResult<GeneralResponse> RejectAddingCourse(int courseId, string? rejectionReason)
-        {
-            var course = _courseRepository.Find(c => c.Id == courseId);
-
-            if (course == null)
-            {
-                return new GeneralResponse()
-                {
-                    IsSuccess = false,
-                    Message = $"No Course found with this ID {courseId}"
-                };
-            }
-
-            course.Status = CourseStatus.Rejected;
-            course.RejectedReason = rejectionReason;
-
-            _courseRepository.save();
-
-            return new GeneralResponse()
-            {
-                IsSuccess = true,
-                Message = $"Course With ID {courseId} Rejected Successfully"
-            };
-        }
-
-        [HttpDelete("{courseId:int}")]
-        public async Task<ActionResult<GeneralResponse>> DeleteCourse(int courseId)
-        {
-            var course = _courseRepository.Find(criteria: c => c.Id == courseId, includes: ["Objectives", "Requirements", "Videos"]);
-            if (course == null)
-            {
-                return new GeneralResponse()
-                {
-                    IsSuccess = false,
-                    Message = $"No course found with ID: {courseId}",
-                    Status = 404,
-                };
-            }
-
-            // Delete related records in the join table (User_Enrolled_Courses)
-            var enrollments = _userEnrolledCoursesRepository.FindAll(criteria: c => c.CourseId == courseId).ToList();
-            if (enrollments.Any())
-            {
-                _userEnrolledCoursesRepository.DeleteRange(enrollments);
-                await _userEnrolledCoursesRepository.SaveAsync();
-            }
-
-
-            if (course?.Requirements != null || course?.Requirements?.Count() == 0)
-            {
-                _courseRequirementsRepository.DeleteRange(course.Requirements);
-                _courseRequirementsRepository.save();
-            }
-
-            if (course?.Objectives != null || course?.Objectives?.Count() == 0)
-            {
-                _courseObjectiveRepository.DeleteRange(course.Objectives);
-                _courseObjectiveRepository.save();
-            }
-
-
-            //  delete the associated image file
-            if (!string.IsNullOrEmpty(course.ThumbnailURL))
-            {
-                var filePath = Path.Combine(_imagesPath, Path.GetFileName(course.ThumbnailURL));
-                if (System.IO.File.Exists(filePath))
-                {
-                    System.IO.File.Delete(filePath);
-                }
-            }
-
-            foreach (Video video in course.Videos)
-            {
-                // delete the old video file from the server
-                var oldFileName = Path.GetFileName(video.videoURL);
-
-                // Construct the full file system path using the _videosPath and the extracted file name
-                var oldFilePath = Path.Combine(_videosPath, oldFileName);
-
-                if (System.IO.File.Exists(oldFilePath))
-                {
-                    System.IO.File.Delete(oldFilePath);
-                }
-            }
-
-            _videoRepository.DeleteRange(course.Videos);
-            _videoRepository.save();
-
-            var questions = _questionRepository.FindAll(criteria: q => q.CourseId == course.Id, includes: ["Answers"]);
-
-            foreach (var question in questions)
-            {
-                _answerRepository.DeleteRange(question.Answers);
-            }
-            _questionRepository.DeleteRange(questions);
-
-            _courseRepository.Delete(course);
-
-            await _courseRepository.SaveAsync();
-
-            return new GeneralResponse()
-            {
-                IsSuccess = true,
-                Message = $"Course with ID ({courseId}) deleted with it's requirments , objectives and videos successfully."
-            };
-        }
-
-        //**********************************************************************************************************************
     }
 }

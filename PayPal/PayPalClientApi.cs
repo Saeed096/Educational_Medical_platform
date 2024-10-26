@@ -1,13 +1,16 @@
-﻿using Educational_Medical_platform.DTO.PayPal;
+﻿using Educational_Medical_platform.DTO.Course;
+using Educational_Medical_platform.DTO.PayPal;
 using Educational_Medical_platform.Helpers;
 using Educational_Medical_platform.Models;
 using Educational_Medical_platform.PayPal.Models;
+using Educational_Medical_platform.PayPal.Models.Responses;
 using Educational_Medical_platform.Repositories.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Newtonsoft.Json;
 using PayPal.Configuration;
 using PayPal.Models.Requests;
 using PayPal.Models.Responses;
+using Shoghlana.Api.Response;
 using Shoghlana.Core.Models;
 using System.Net.Http.Headers;
 using System.Text;
@@ -22,17 +25,21 @@ namespace Educational_Medical_platform.PayPal
         private readonly IUserSubscribtionRipository _userSubscribtionRipository;
         private readonly IPlatformRepository _platformRepository;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly ICourseRepository _courseRepository;
 
         public PayPalClientApi(
             IUserSubscribtionRipository userSubscribtionRipository,
             IPlatformRepository platformRepository,
-            UserManager<ApplicationUser> userManager)
+            UserManager<ApplicationUser> userManager,
+            ICourseRepository courseRepository
+            )
         {
             _client = new HttpClient();
             InitializeHttpClient().Wait();
             _userSubscribtionRipository = userSubscribtionRipository;
             _platformRepository = platformRepository;
-            this._userManager = userManager;
+            _userManager = userManager;
+            _courseRepository = courseRepository;
         }
 
         private async Task InitializeHttpClient()
@@ -203,27 +210,12 @@ namespace Educational_Medical_platform.PayPal
             return result;
         }
 
-        //public async Task<CreatePlanResponse> GetPlanDetails(string planId)
-        //{
-        //    EnsureHttpClientCreated();
-
-        //    await EnsureValidAccessTokenAsync();
-
-        //   var planId = await EnsurePlatformPlanCreatedAsync();
-
-        //    var response = await _client.GetAsync($"{ConfigHelper.BaseUrl}/v1/billing/plans/{planId}");
-
-        //    var responseAsString = await response.Content.ReadAsStringAsync();
-
-        //    var result = JsonConvert.DeserializeObject<CreatePlanResponse>(responseAsString);
-
-        //    return result;
-        //}
+        // -----------------------------------------------------------------
 
         public async Task<CreateSubscriptionResponse?> CreateSubscriptionAsync(CreateSubscribtionDTO request)
         {
             ApplicationUser? user = await _userManager.FindByIdAsync(request.UserId);
-            if(user == null)
+            if (user == null)
             {
                 return null;
             }
@@ -297,8 +289,6 @@ namespace Educational_Medical_platform.PayPal
                 return null;
             }
         }
-
-        //-----------------------------------------------------------------
 
         private async Task<CreateProductResponse?> EnsurePlatformProductCreatedAsync()
         {
@@ -488,6 +478,79 @@ namespace Educational_Medical_platform.PayPal
             {
                 return null;
             }
+        }
+
+        // -----------------------------------------------------------------
+
+        public async Task<GeneralResponse> BuyCourse(BuyCourseDTO buyCourseDTO)
+        {
+            Course? courseFromDB = _courseRepository.Find(c => c.Id == buyCourseDTO.CourseId);
+
+            if(courseFromDB == null)
+            {
+                return new GeneralResponse()
+                {
+                    IsSuccess = false ,
+                    Message = "No course found with this ID"
+                };
+            }
+
+            ApplicationUser? buyerUser = await _userManager.FindByEmailAsync(buyCourseDTO.UserId);
+
+            if (buyerUser == null)
+            {
+                return new GeneralResponse()
+                {
+                    IsSuccess = false,
+                    Message = $"No Buyer User found with this ID : {buyCourseDTO.UserId}"
+                };
+            }
+
+            ApplicationUser? instructorUser = await _userManager.FindByEmailAsync(courseFromDB.InstructorId);
+
+            if (instructorUser == null)
+            {
+                return new GeneralResponse()
+                {
+                    IsSuccess = false,
+                    Message = $"No Instructor User found with this ID : {courseFromDB.InstructorId}"
+                };
+            }
+
+            //---------------------------------------------------------------
+
+            CreateProductResponse createCourseProductResponse = await EnsureCourseProductCreated(courseFromDB);
+
+            CreateOrderResponse? createOrderResponse = await EnsureCourseOrderCreatedAsync(courseFromDB);
+
+            CapturePaymentForOrderResponse? capturePaymentForOrderResponse = await CapturePaymentForOrderAsync(createOrderResponse.id);
+
+            return null;
+        }
+
+        private async Task<CreateProductResponse> EnsureCourseProductCreated(Course courseFromDB)
+        {
+            if(string.IsNullOrEmpty(courseFromDB.PaypalProductId))
+            {
+                CreateProductResponse? createProductResponse = await CreateCourseProductAsync(courseFromDB);
+            }
+
+            throw new NotImplementedException();
+        }
+
+        private Task<CreateProductResponse?> CreateCourseProductAsync(Course courseFromDB)
+        {
+            throw new NotImplementedException();
+        }
+
+        private async Task<CreateOrderResponse?> EnsureCourseOrderCreatedAsync(Course courseFromDB)
+        {
+            throw new NotImplementedException();
+        }
+
+        private async Task<CapturePaymentForOrderResponse?> CapturePaymentForOrderAsync(string id)
+        {
+            throw new NotImplementedException();
         }
     }
 }

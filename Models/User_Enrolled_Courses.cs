@@ -1,10 +1,10 @@
-﻿using Shoghlana.Core.Models;
+﻿using Educational_Medical_platform.Helpers;
+using Shoghlana.Core.Models;
 
 namespace Educational_Medical_platform.Models
 {
     public class User_Enrolled_Courses
     {
-        // comp 1ry key
         public string StudentId { get; set; }
 
         public int CourseId { get; set; }
@@ -24,6 +24,10 @@ namespace Educational_Medical_platform.Models
         public DateTime StartDate { get; set; }
 
         //******************************************
+
+        public EnrollRequestStatus Status { get; set; } = EnrollRequestStatus.PendingApproval;
+
+        public string TransactionImageURL { get; set; } = string.Empty;
 
         //// TODO : Make Logic To handle The current Video each user Stopped at (progress)
 

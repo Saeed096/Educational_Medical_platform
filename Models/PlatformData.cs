@@ -1,4 +1,6 @@
-﻿namespace Educational_Medical_platform.Models
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace Educational_Medical_platform.Models
 {
     public class PlatformData
     {
@@ -12,8 +14,13 @@
         public string? PlanName { get; set; }
         public string? PlanDescription { get; set; }
 
+        [Column(TypeName = "decimal(10, 2)")]
         public decimal? PlanFixedPricePerMonth { get; set; }
+       
+        [Column(TypeName = "decimal(10, 2)")]
         public decimal? PlanSetupFee { get; set; }
+        
+        [Column(TypeName = "decimal(10, 2)")]
         public decimal? PlanTaxesPercentage { get; set; }
     }
 }

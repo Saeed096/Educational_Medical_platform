@@ -79,6 +79,18 @@ namespace Educational_Medical_platform.Helpers
         Rejected = 3,
     }
 
+    public enum EnrollRequestStatus
+    {
+        [Display(Name = "Pending Approval")]
+        PendingApproval = 0,
+
+        [Display(Name = "Approved")]
+        Approved = 1,
+
+        [Display(Name = "Rejected")]
+        Rejected = 2,
+    }
+
     public enum TestType
     {
         [Display(Name = "Free Test")]

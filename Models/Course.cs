@@ -10,6 +10,8 @@ namespace Educational_Medical_platform.Models
         [Key]
         public int Id { get; set; }
 
+        public string PaypalProductId { get; set; } = string.Empty;
+
         public String Title { get; set; }
 
         [Column(TypeName = "decimal(10, 2)")]
