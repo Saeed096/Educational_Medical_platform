@@ -714,83 +714,83 @@ namespace Educational_Medical_platform.Controllers
             };
         }
 
-        [HttpPost("Enroll")]
-        public async Task<ActionResult<GeneralResponse>> EnrollStudentInCourse(string instructorId, string studentId, int courseId)
-        {
-            var instructor = await _userManager.FindByIdAsync(instructorId);
-            if (instructor == null)
-            {
-                return new GeneralResponse()
-                {
-                    IsSuccess = false,
-                    Message = $"There is no User found with this ID: {instructorId}",
-                    Status = 406,
-                };
-            }
+        //[HttpPost("Enroll")]
+        //public async Task<ActionResult<GeneralResponse>> EnrollStudentInCourse(string instructorId, string studentId, int courseId)
+        //{
+        //    var instructor = await _userManager.FindByIdAsync(instructorId);
+        //    if (instructor == null)
+        //    {
+        //        return new GeneralResponse()
+        //        {
+        //            IsSuccess = false,
+        //            Message = $"There is no User found with this ID: {instructorId}",
+        //            Status = 406,
+        //        };
+        //    }
 
-            var student = await _userManager.FindByIdAsync(studentId);
-            if (student == null)
-            {
-                return new GeneralResponse()
-                {
-                    IsSuccess = false,
-                    Message = $"There is no User found with this ID: {studentId}",
-                    Status = 406,
-                };
-            }
+        //    var student = await _userManager.FindByIdAsync(studentId);
+        //    if (student == null)
+        //    {
+        //        return new GeneralResponse()
+        //        {
+        //            IsSuccess = false,
+        //            Message = $"There is no User found with this ID: {studentId}",
+        //            Status = 406,
+        //        };
+        //    }
 
-            var course = _courseRepository.Find(c => c.Id == courseId);
-            if (course == null)
-            {
-                return new GeneralResponse()
-                {
-                    IsSuccess = false,
-                    Message = $"There is no course found with this ID: {courseId}",
-                    Status = 407,
-                };
-            }
+        //    var course = _courseRepository.Find(c => c.Id == courseId);
+        //    if (course == null)
+        //    {
+        //        return new GeneralResponse()
+        //        {
+        //            IsSuccess = false,
+        //            Message = $"There is no course found with this ID: {courseId}",
+        //            Status = 407,
+        //        };
+        //    }
 
-            // Check if the student is already enrolled in the course
-            var enrollmentExists = _userEnrolledCoursesRepository.Find(c => c.StudentId == studentId && c.CourseId == courseId);
-            if (enrollmentExists != null)
-            {
-                return new GeneralResponse()
-                {
-                    IsSuccess = false,
-                    Message = "Student is already enrolled in this course.",
-                    Status = 409
-                };
-            }
+        //    // Check if the student is already enrolled in the course
+        //    var enrollmentExists = _userEnrolledCoursesRepository.Find(c => c.StudentId == studentId && c.CourseId == courseId);
+        //    if (enrollmentExists != null)
+        //    {
+        //        return new GeneralResponse()
+        //        {
+        //            IsSuccess = false,
+        //            Message = "Student is already enrolled in this course.",
+        //            Status = 409
+        //        };
+        //    }
 
-            if (course.InstructorId == studentId)
-            {
-                return new GeneralResponse
-                {
-                    IsSuccess = false,
-                    Message = "The Instructor Can't Enroll in his Course !",
-                    Status = 406
-                };
-            }
+        //    if (course.InstructorId == studentId)
+        //    {
+        //        return new GeneralResponse
+        //        {
+        //            IsSuccess = false,
+        //            Message = "The Instructor Can't Enroll in his Course !",
+        //            Status = 406
+        //        };
+        //    }
 
-            var newEnrollment = new User_Enrolled_Courses()
-            {
-                StudentId = studentId,
-                CourseId = courseId,
-                Degree = 0,
-                CurrentVideoNumber = 0,
-                StartDate = DateTime.Now
-            };
+        //    var newEnrollment = new User_Enrolled_Courses()
+        //    {
+        //        StudentId = studentId,
+        //        CourseId = courseId,
+        //        Degree = 0,
+        //        CurrentVideoNumber = 0,
+        //        StartDate = DateTime.Now
+        //    };
 
-            await _userEnrolledCoursesRepository.AddAsync(newEnrollment);
-            await _userEnrolledCoursesRepository.SaveAsync();
+        //    await _userEnrolledCoursesRepository.AddAsync(newEnrollment);
+        //    await _userEnrolledCoursesRepository.SaveAsync();
 
-            return new GeneralResponse()
-            {
-                IsSuccess = true,
-                Message = "Student enrolled in course successfully.",
-                Status = 200
-            };
-        }
+        //    return new GeneralResponse()
+        //    {
+        //        IsSuccess = true,
+        //        Message = "Student enrolled in course successfully.",
+        //        Status = 200
+        //    };
+        //}
 
         [HttpPost("RequestEnroll")]
         public async Task<ActionResult<GeneralResponse>> RequestEnrollStudentInCourse(RequestUserEnrollDTO userEnrollDTO)
