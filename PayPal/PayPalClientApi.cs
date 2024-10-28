@@ -210,7 +210,7 @@ namespace Educational_Medical_platform.PayPal
             return result;
         }
 
-        // -----------------------------------------------------------------
+        // ===================================== Create Subscription ====================================
 
         public async Task<CreateSubscriptionResponse?> CreateSubscriptionAsync(CreateSubscribtionDTO request)
         {
@@ -480,77 +480,140 @@ namespace Educational_Medical_platform.PayPal
             }
         }
 
-        // -----------------------------------------------------------------
+        // ======================================== Buy Course ============================================
 
-        public async Task<GeneralResponse> BuyCourse(BuyCourseDTO buyCourseDTO)
-        {
-            Course? courseFromDB = _courseRepository.Find(c => c.Id == buyCourseDTO.CourseId);
+        //public async Task<GeneralResponse> BuyCourse(BuyCourseDTO buyCourseDTO)
+        //{
+        //    EnsureHttpClientCreated();
 
-            if(courseFromDB == null)
-            {
-                return new GeneralResponse()
-                {
-                    IsSuccess = false ,
-                    Message = "No course found with this ID"
-                };
-            }
+        //    await EnsureValidAccessTokenAsync();
 
-            ApplicationUser? buyerUser = await _userManager.FindByEmailAsync(buyCourseDTO.UserId);
+        //    Course? courseFromDB = _courseRepository.Find(c => c.Id == buyCourseDTO.CourseId);
 
-            if (buyerUser == null)
-            {
-                return new GeneralResponse()
-                {
-                    IsSuccess = false,
-                    Message = $"No Buyer User found with this ID : {buyCourseDTO.UserId}"
-                };
-            }
+        //    if (courseFromDB == null)
+        //    {
+        //        return new GeneralResponse()
+        //        {
+        //            IsSuccess = false,
+        //            Message = "No course found with this ID"
+        //        };
+        //    }
 
-            ApplicationUser? instructorUser = await _userManager.FindByEmailAsync(courseFromDB.InstructorId);
+        //    ApplicationUser? buyerUser = await _userManager.FindByEmailAsync(buyCourseDTO.UserId);
 
-            if (instructorUser == null)
-            {
-                return new GeneralResponse()
-                {
-                    IsSuccess = false,
-                    Message = $"No Instructor User found with this ID : {courseFromDB.InstructorId}"
-                };
-            }
+        //    if (buyerUser == null)
+        //    {
+        //        return new GeneralResponse()
+        //        {
+        //            IsSuccess = false,
+        //            Message = $"No Buyer User found with this ID : {buyCourseDTO.UserId}"
+        //        };
+        //    }
 
-            //---------------------------------------------------------------
+        //    ApplicationUser? instructorUser = await _userManager.FindByEmailAsync(courseFromDB.InstructorId);
 
-            CreateProductResponse createCourseProductResponse = await EnsureCourseProductCreated(courseFromDB);
+        //    if (instructorUser == null)
+        //    {
+        //        return new GeneralResponse()
+        //        {
+        //            IsSuccess = false,
+        //            Message = $"No Instructor User found with this ID : {courseFromDB.InstructorId}"
+        //        };
+        //    }
 
-            CreateOrderResponse? createOrderResponse = await EnsureCourseOrderCreatedAsync(courseFromDB);
+        //    //---------------------------------------------------------------
 
-            CapturePaymentForOrderResponse? capturePaymentForOrderResponse = await CapturePaymentForOrderAsync(createOrderResponse.id);
+        //    CreateProductResponse createCourseProductResponse = await EnsureCourseProductCreated(courseFromDB);
 
-            return null;
-        }
+        //    CreateOrderResponse createOrderResponse = await EnsureCourseOrderCreatedAsync(courseFromDB);
 
-        private async Task<CreateProductResponse> EnsureCourseProductCreated(Course courseFromDB)
-        {
-            if(string.IsNullOrEmpty(courseFromDB.PaypalProductId))
-            {
-                CreateProductResponse? createProductResponse = await CreateCourseProductAsync(courseFromDB);
-            }
+        //    CapturePaymentForOrderResponse capturePaymentForOrderResponse = await CapturePaymentForOrderAsync(createOrderResponse.id);
 
-            throw new NotImplementedException();
-        }
+        //    return null;
+        //}
 
-        private Task<CreateProductResponse?> CreateCourseProductAsync(Course courseFromDB)
-        {
-            throw new NotImplementedException();
-        }
+        //private async Task<CreateProductResponse> EnsureCourseProductCreated(Course courseFromDB)
+        //{
+        //    string updatePaypalProductId = courseFromDB.PaypalProductId;
 
-        private async Task<CreateOrderResponse?> EnsureCourseOrderCreatedAsync(Course courseFromDB)
-        {
-            throw new NotImplementedException();
-        }
+        //    if (string.IsNullOrEmpty(courseFromDB.PaypalProductId))
+        //    {
+        //        CreateProductResponse createProductResponse = await CreateCourseProductAsync(courseFromDB);
+        //        if (createProductResponse == null)
+        //        {
+        //            throw new Exception("Error in Creating Course Paypal Product");
+        //        }
 
-        private async Task<CapturePaymentForOrderResponse?> CapturePaymentForOrderAsync(string id)
-        {
-            throw new NotImplementedException();
-        }
+        //        updatePaypalProductId = createProductResponse.id;
+        //    }
+
+        //    // ensure prod is valid => call show prod details api => if success OK => else creare paypal prod and update your SQL
+
+        //    // Call PayPal API to check if the product exists
+        //    var response = await _client.GetAsync($"{ConfigHelper.BaseUrl}/v1/catalogs/products/{updatePaypalProductId}");
+        //    if (response.IsSuccessStatusCode)
+        //    {
+        //        // Product exists, return response as no new product creation is required
+        //        return new CreateProductResponse()
+        //        {
+        //            id = updatePaypalProductId,
+        //            name =?. ?? string.Empty,
+        //            description = platformData?.ProductDescribtion ?? string.Empty,
+        //        };
+        //    }
+
+        //    // If PayPal product check fails, create a new product
+        //    return await CreatePlatformProductAsync();
+
+        //    throw new NotImplementedException();
+        //}
+
+        //private async Task<CreateProductResponse?> CreateCourseProductAsync(Course courseFromDB)
+        //{
+        //    // create paypal prod then update your SQL
+
+        //    var newProduct = new CreateProductRequest
+        //    {
+        //        name = $"{courseFromDB.Title}",
+        //        description = $"{courseFromDB.Preview}",
+        //        type = "DIGITAL",
+        //        category = "ACADEMIC_SOFTWARE"
+        //    };
+
+        //    var jsonContent = JsonConvert.SerializeObject(newProduct);
+        //    var httpContent = new StringContent(jsonContent, Encoding.UTF8, "application/json");
+        //    var response = await _client.PostAsync($"{ConfigHelper.BaseUrl}/v1/catalogs/products", httpContent);
+
+        //    if (response.IsSuccessStatusCode)
+        //    {
+        //        var responseAsString = await response.Content.ReadAsStringAsync();
+        //        CreateProductResponse? result = JsonConvert.DeserializeObject<CreateProductResponse>(responseAsString);
+
+        //        courseFromDB.PaypalProductId = result.id;
+        //        await _courseRepository.SaveAsync();
+
+        //        return result;
+        //    }
+        //    else
+        //    {
+        //        return null;
+        //    }
+        //}
+
+        //private async Task<CreateOrderResponse?> EnsureCourseOrderCreatedAsync(Course courseFromDB)
+        //{
+        //    // create order put the value and the instructor paypal mail
+
+        //    throw new NotImplementedException();
+        //}
+
+        //private async Task<CapturePaymentForOrderResponse?> CapturePaymentForOrderAsync(string id)
+        //{
+        //    // just take the order Id from the prev method 
+        //    throw new NotImplementedException();
+        //}
+
+        // ================================================================================================
+
     }
 }

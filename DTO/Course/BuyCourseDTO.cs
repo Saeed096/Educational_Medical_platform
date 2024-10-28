@@ -10,4 +10,4 @@ namespace Educational_Medical_platform.DTO.Course
         [Required]
         public int CourseId { get; set; }
     }
-}
+}   
