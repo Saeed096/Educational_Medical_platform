@@ -181,19 +181,26 @@ namespace Educational_Medical_platform
             builder.Services.Configure<DataProtectionTokenProviderOptions>(options =>
                 options.TokenLifespan = TimeSpan.FromHours(3)); // Example: 3 hours
 
+
+            #endregion
+
             builder.WebHost.ConfigureKestrel(options =>
             {
-                // Set the maximum request body size to 1 GB
-                options.Limits.MaxRequestBodySize = 1 * 1024 * 1024 * 1024 ; // 1 GB in bytes
+                // Set the maximum request body size to 2 GB
+                options.Limits.MaxRequestBodySize = 2L * 1024 * 1024 * 1024; // 2 GB in bytes
             });
 
             // Configure form options to handle large file uploads
             builder.Services.Configure<FormOptions>(options =>
             {
-                options.MultipartBodyLengthLimit = 1 * 1024 * 1024 * 1024; // 1 GB in bytes
+                options.MultipartBodyLengthLimit = 2L * 1024 * 1024 * 1024; // 2 GB in bytes
             });
 
-            #endregion
+            builder.Services.Configure<IISServerOptions>(options =>
+            {
+                options.MaxRequestBodySize = 2L * 1024 * 1024 * 1024; // 2 GB in bytes
+            });
+
 
             //*************************************************************************
             var app = builder.Build();

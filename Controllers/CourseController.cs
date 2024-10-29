@@ -59,7 +59,7 @@ namespace Educational_Medical_platform.Controllers
             _videosPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Videos", "Courses");
 
             _maxImageSize = 2 * 1024 * 1024;  // 2 MB
-            _maxVideoSize = 500 * 1024 * 1024; // 500 MB
+            _maxVideoSize = 2L * 1024 * 1024 * 1024; // 2 GB in bytes
         }
 
         [HttpGet("All")]
