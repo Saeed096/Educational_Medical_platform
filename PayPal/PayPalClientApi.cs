@@ -473,6 +473,39 @@ namespace Educational_Medical_platform.PayPal
             }
         }
 
+        // ----------------------------------- Handle Subscription Web Hook ------------------------------
+
+        public async Task<bool> VerifyEvent(string json, IHeaderDictionary headerDictionary)
+        {
+            // !!IMPORTANT!!
+            // Without this direct JSON serialization, PayPal WILL ALWAYS return verification_status = "FAILURE".
+            // This is probably because the order of the fields are different and PayPal does not sort them. 
+            var paypalVerifyRequestJsonString = $@"{{
+				""transmission_id"": ""{headerDictionary["PAYPAL-TRANSMISSION-ID"][0]}"",
+				""transmission_time"": ""{headerDictionary["PAYPAL-TRANSMISSION-TIME"][0]}"",
+				""cert_url"": ""{headerDictionary["PAYPAL-CERT-URL"][0]}"",
+				""auth_algo"": ""{headerDictionary["PAYPAL-AUTH-ALGO"][0]}"",
+				""transmission_sig"": ""{headerDictionary["PAYPAL-TRANSMISSION-SIG"][0]}"",
+				""webhook_id"": ""3KB13201FY811394L"",
+				""webhook_event"": {json}
+				}}";
+
+            var content = new StringContent(paypalVerifyRequestJsonString, Encoding.UTF8, "application/json");
+
+            var resultResponse = await _client.PostAsync($"{ConfigHelper.BaseUrl}/v1/notifications/verify-webhook-signature", content);
+
+            var responseBody = await resultResponse.Content.ReadAsStringAsync();
+
+            var verifyWebhookResponse = JsonConvert.DeserializeObject<WebHookVerificationResponse>(responseBody);
+
+            if (verifyWebhookResponse.verification_status != "SUCCESS")
+            {
+                return false;
+            }
+
+            return true;
+        }
+
         // ======================================== Buy Course ============================================
 
         public async Task<GeneralResponse> BuyCourse(BuyCourseDTO buyCourseDTO)
@@ -582,7 +615,7 @@ namespace Educational_Medical_platform.PayPal
             var newProduct = new CreateProductRequest
             {
                 name = $"{courseFromDB.Title}",
-                description = $"{courseFromDB.Preview}",
+                description = $"{courseFromDB?.Preview??"NA"}", 
                 type = "DIGITAL",
                 category = "ACADEMIC_SOFTWARE"
             };
@@ -630,7 +663,7 @@ namespace Educational_Medical_platform.PayPal
                         amount = new Models.Responses.Amount
                         {
                             // I found that paypal takes 5-6 % fees
-                            // TODO : The fromt end should display this note to user + aslo the same for taxes and Fees at the subscription
+                            // TODO : The front end should display this note to user + aslo the same for taxes and Fees at the subscription
                             value = (courseFromDB.Price + (0.06m * courseFromDB.Price)).ToString() ,
                             currency_code = "USD"
                         },

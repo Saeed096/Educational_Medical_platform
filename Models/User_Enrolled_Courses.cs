@@ -13,6 +13,8 @@ namespace Educational_Medical_platform.Models
 
         public Course Course { get; set; }
 
+        // TODO : orderid or just status
+
         //----------------------------------
 
         public float? Degree { get; set; }

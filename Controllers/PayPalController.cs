@@ -118,7 +118,11 @@ namespace Educational_Medical_platform.Controllers
             }
         }
 
-        //=================================================================
+        [HttpPost("HandleSubscriptionWebhook")]
+        public async Task<IActionResult> HandleSubscriptionWebhook()
+        {
+            return Ok();
+        }
 
         [HttpPost("BuyCourse")]
         public async Task<ActionResult<GeneralResponse>> BuyCourse(BuyCourseDTO buyCourseDTO)
@@ -128,6 +132,93 @@ namespace Educational_Medical_platform.Controllers
             return response;
         }
 
+        // webhook on approve subscription 
+        // => get the application user and do this : 1/ IsSubscribed = true ,,,, 2/subscripedmethod = paypal
+
+        // webhook approve order
+        // => capture order 
+        // => then notification(mail) to instructor that he should transfere platform part of money 20% to admin Dr Ehab (uses the existed end point in course controller) 
+
+        //=================================================================
+
+        //[HttpPost("api/checkout/webhook")]
+        //[AllowAnonymous]
+        //public async Task<IActionResult> HandleWebhook()
+        //{
+        //    var json = await new StreamReader(HttpContext.Request.Body).ReadToEndAsync();
+        //    var headers = HttpContext.Request.Headers;
+
+        //    var isValidEvent = await VerifyEvent(json, headers);
+
+        //    if (isValidEvent)
+        //    {
+        //        var webhookEvent = JsonConvert.DeserializeObject<WebHookEvent>(json);
+
+        //        switch (webhookEvent.event_type)
+        //        {
+        //            case "BILLING.SUBSCRIPTION.ACTIVATED":
+        //                // Activate the subscription -- Use webhookEvent.resource to get event data
+        //                break;
+        //            case "BILLING.SUBSCRIPTION.CANCELLED":
+        //                // Cancel the subscription -- Use webhookEvent.resource to get event data
+        //                break;
+        //            case "PAYMENT.SALE.COMPLETED":
+        //                // Add Recurring Payment -- Use webhookEvent.resource to get event data
+        //                break;
+        //        }
+        //        //https://api.sandbox.paypal.com/v1/payments/sale/94B86548SC282320N/refund
+        //        //I-TBHAH1F8HLEM
+        //        return Ok("Success");
+        //    }
+        //    return BadRequest();
+        //}
+
         // should be ther is web hook when user approves => Go capture payment => then create enroll request to admin and update database
+
+        /*   [HttpPost("api/checkout/webhook")]
+        [AllowAnonymous]
+        public async Task<IActionResult> HandleWebhook()
+        {
+            var json = await new StreamReader(HttpContext.Request.Body).ReadToEndAsync();
+            var headers = HttpContext.Request.Headers;
+
+            var isValidEvent = await VerifyEvent(json, headers);
+
+            if (isValidEvent)
+            {
+                var webhookEvent = JsonConvert.DeserializeObject<WebHookEvent>(json);
+
+                switch (webhookEvent.event_type)
+                {
+                    case "BILLING.SUBSCRIPTION.ACTIVATED":
+                        // Activate the subscription -- Use webhookEvent.resource to get event data
+                        break;
+                    case "BILLING.SUBSCRIPTION.CANCELLED":
+                        // Cancel the subscription -- Use webhookEvent.resource to get event data
+                        break;
+                    case "PAYMENT.SALE.COMPLETED":
+                        // Add Recurring Payment -- Use webhookEvent.resource to get event data
+                        break;
+                }
+                //https://api.sandbox.paypal.com/v1/payments/sale/94B86548SC282320N/refund
+                //I-TBHAH1F8HLEM
+                return Ok("Success");
+            }
+            return BadRequest();
+        }
+
+        private async Task<bool> VerifyEvent(string json, IHeaderDictionary headerDictionary)
+        {
+            var paypalHelper = new PayPalClientApi();
+            var response = await paypalHelper.GetAuthorizationRequest();
+            paypalHelper.SetToken(response.access_token);
+
+            var isValidEvent = await paypalHelper.VerifyEvent(json, headerDictionary);
+
+            return isValidEvent;
+
+        }
+
+         */
     }
 }
