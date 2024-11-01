@@ -137,7 +137,8 @@ namespace Educational_Medical_platform.Controllers
 
         // webhook approve order
         // => capture order 
-        // => then notification(mail) to instructor that he should transfere platform part of money 20% to admin Dr Ehab (uses the existed end point in course controller) 
+        // => then notification(mail) to instructor that he should transfere platform part of money 20% to admin Dr Ehab
+        // then the instructor will use the existed end point in course controller called :(RequestEnrollStudentInCourse)
 
         //=================================================================
 
