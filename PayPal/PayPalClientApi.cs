@@ -68,14 +68,7 @@ namespace Educational_Medical_platform.PayPal
 
         private void SetAuthorizationHeader(string token)
         {
-            if (_client.DefaultRequestHeaders.Authorization != null)
-            {
-                _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-            }
-            else
-            {
-                _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-            }
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
         }
 
         public async Task<AuthorizationResponseData?> GetAuthorizationRequest()
@@ -482,138 +475,206 @@ namespace Educational_Medical_platform.PayPal
 
         // ======================================== Buy Course ============================================
 
-        //public async Task<GeneralResponse> BuyCourse(BuyCourseDTO buyCourseDTO)
-        //{
-        //    EnsureHttpClientCreated();
+        public async Task<GeneralResponse> BuyCourse(BuyCourseDTO buyCourseDTO)
+        {
+            EnsureHttpClientCreated();
 
-        //    await EnsureValidAccessTokenAsync();
+            await EnsureValidAccessTokenAsync();
 
-        //    Course? courseFromDB = _courseRepository.Find(c => c.Id == buyCourseDTO.CourseId);
+            var courseFromDB = _courseRepository.Find(c => c.Id == buyCourseDTO.CourseId);
 
-        //    if (courseFromDB == null)
-        //    {
-        //        return new GeneralResponse()
-        //        {
-        //            IsSuccess = false,
-        //            Message = "No course found with this ID"
-        //        };
-        //    }
+            if (courseFromDB == null)
+            {
+                return new GeneralResponse()
+                {
+                    IsSuccess = false,
+                    Message = "No course found with this ID"
+                };
+            }
 
-        //    ApplicationUser? buyerUser = await _userManager.FindByEmailAsync(buyCourseDTO.UserId);
+            var buyerUser = await _userManager.FindByIdAsync(buyCourseDTO.UserId);
+            if (buyerUser == null)
+            {
+                return new GeneralResponse()
+                {
+                    IsSuccess = false,
+                    Message = $"No Buyer User found with this ID : {buyCourseDTO.UserId}"
+                };
+            }
 
-        //    if (buyerUser == null)
-        //    {
-        //        return new GeneralResponse()
-        //        {
-        //            IsSuccess = false,
-        //            Message = $"No Buyer User found with this ID : {buyCourseDTO.UserId}"
-        //        };
-        //    }
+            var instructorUser = await _userManager.FindByIdAsync(courseFromDB.InstructorId);
+            if (instructorUser == null)
+            {
+                return new GeneralResponse()
+                {
+                    IsSuccess = false,
+                    Message = $"No Instructor User found with this ID : {courseFromDB.InstructorId}"
+                };
+            }
 
-        //    ApplicationUser? instructorUser = await _userManager.FindByEmailAsync(courseFromDB.InstructorId);
+            if (buyerUser == instructorUser)
+            {
+                return new GeneralResponse()
+                {
+                    IsSuccess = false,
+                    Message = $"The instructor can't buy his own course !"
+                };
+            }
 
-        //    if (instructorUser == null)
-        //    {
-        //        return new GeneralResponse()
-        //        {
-        //            IsSuccess = false,
-        //            Message = $"No Instructor User found with this ID : {courseFromDB.InstructorId}"
-        //        };
-        //    }
+            //---------------------------------------------------------------
 
-        //    //---------------------------------------------------------------
+            var createCourseProductResponse = await EnsureCourseProductCreated(courseFromDB);
 
-        //    CreateProductResponse createCourseProductResponse = await EnsureCourseProductCreated(courseFromDB);
+            if (!createCourseProductResponse.IsSuccess)
+            {
+                return createCourseProductResponse;
+            }
 
-        //    CreateOrderResponse createOrderResponse = await EnsureCourseOrderCreatedAsync(courseFromDB);
+            var createOrderResponse = await EnsureCourseOrderCreatedAsync(courseFromDB, instructorUser);
 
-        //    CapturePaymentForOrderResponse capturePaymentForOrderResponse = await CapturePaymentForOrderAsync(createOrderResponse.id);
+            return createOrderResponse;
 
-        //    return null;
-        //}
+            // capture payment I will do it in web hook after the customer approves
+            //   CapturePaymentForOrderResponse capturePaymentForOrderResponse = await CapturePaymentForOrderAsync(createOrderResponse.id);
 
-        //private async Task<CreateProductResponse> EnsureCourseProductCreated(Course courseFromDB)
-        //{
-        //    string updatePaypalProductId = courseFromDB.PaypalProductId;
+        }
 
-        //    if (string.IsNullOrEmpty(courseFromDB.PaypalProductId))
-        //    {
-        //        CreateProductResponse createProductResponse = await CreateCourseProductAsync(courseFromDB);
-        //        if (createProductResponse == null)
-        //        {
-        //            throw new Exception("Error in Creating Course Paypal Product");
-        //        }
+        private async Task<GeneralResponse> EnsureCourseProductCreated(Course courseFromDB)
+        {
+            if (string.IsNullOrEmpty(courseFromDB.PaypalProductId))
+            {
+                var createProductResponse = await CreateCourseProductAsync(courseFromDB);
 
-        //        updatePaypalProductId = createProductResponse.id;
-        //    }
+                return createProductResponse;
+            }
 
-        //    // ensure prod is valid => call show prod details api => if success OK => else creare paypal prod and update your SQL
+            // ensure prod is valid => call show prod details api => if success OK => else creare paypal prod and update your SQL
 
-        //    // Call PayPal API to check if the product exists
-        //    var response = await _client.GetAsync($"{ConfigHelper.BaseUrl}/v1/catalogs/products/{updatePaypalProductId}");
-        //    if (response.IsSuccessStatusCode)
-        //    {
-        //        // Product exists, return response as no new product creation is required
-        //        return new CreateProductResponse()
-        //        {
-        //            id = updatePaypalProductId,
-        //            name =?. ?? string.Empty,
-        //            description = platformData?.ProductDescribtion ?? string.Empty,
-        //        };
-        //    }
+            // Call PayPal API to check if the product exists
+            var response = await _client.GetAsync($"{ConfigHelper.BaseUrl}/v1/catalogs/products/{courseFromDB.PaypalProductId}");
+            if (response.IsSuccessStatusCode)
+            {
+                // Product exists, return response as no new product creation is required
+                return new GeneralResponse
+                {
+                    IsSuccess = true,
+                    Message = "Product Details Retrieved successfully",
+                    Data = new CreateProductResponse()
+                    {
+                        id = courseFromDB.PaypalProductId,
+                        name = courseFromDB.Title,
+                        description = courseFromDB.Preview
+                    }
+                };
+            }
+            else
+            {
+                // If PayPal product check fails, create a new product
+                var newProdRespose = await CreateCourseProductAsync(courseFromDB); // could be null
 
-        //    // If PayPal product check fails, create a new product
-        //    return await CreatePlatformProductAsync();
+                return newProdRespose;
+            }
+        }
 
-        //    throw new NotImplementedException();
-        //}
+        private async Task<GeneralResponse> CreateCourseProductAsync(Course courseFromDB)
+        {
+            // create paypal prod then update your SQL
+            var newProduct = new CreateProductRequest
+            {
+                name = $"{courseFromDB.Title}",
+                description = $"{courseFromDB.Preview}",
+                type = "DIGITAL",
+                category = "ACADEMIC_SOFTWARE"
+            };
 
-        //private async Task<CreateProductResponse?> CreateCourseProductAsync(Course courseFromDB)
-        //{
-        //    // create paypal prod then update your SQL
+            var jsonContent = JsonConvert.SerializeObject(newProduct);
+            var httpContent = new StringContent(jsonContent, Encoding.UTF8, "application/json");
+            var response = await _client.PostAsync($"{ConfigHelper.BaseUrl}/v1/catalogs/products", httpContent);
 
-        //    var newProduct = new CreateProductRequest
-        //    {
-        //        name = $"{courseFromDB.Title}",
-        //        description = $"{courseFromDB.Preview}",
-        //        type = "DIGITAL",
-        //        category = "ACADEMIC_SOFTWARE"
-        //    };
+            if (response.IsSuccessStatusCode)
+            {
+                var responseAsString = await response.Content.ReadAsStringAsync();
+                var result = JsonConvert.DeserializeObject<CreateProductResponse>(responseAsString);
 
-        //    var jsonContent = JsonConvert.SerializeObject(newProduct);
-        //    var httpContent = new StringContent(jsonContent, Encoding.UTF8, "application/json");
-        //    var response = await _client.PostAsync($"{ConfigHelper.BaseUrl}/v1/catalogs/products", httpContent);
+                courseFromDB.PaypalProductId = result.id;
+                await _courseRepository.SaveAsync();
 
-        //    if (response.IsSuccessStatusCode)
-        //    {
-        //        var responseAsString = await response.Content.ReadAsStringAsync();
-        //        CreateProductResponse? result = JsonConvert.DeserializeObject<CreateProductResponse>(responseAsString);
+                return new GeneralResponse
+                {
+                    IsSuccess = true,
+                    Message = "Course Product Created Susccessfully",
+                    Data = result
+                };
+            }
+            else
+            {
+                return new GeneralResponse
+                {
+                    IsSuccess = false,
+                    Message = "Error happened during creating Course Product",
+                    Data = response
+                };
+            }
+        }
 
-        //        courseFromDB.PaypalProductId = result.id;
-        //        await _courseRepository.SaveAsync();
+        private async Task<GeneralResponse> EnsureCourseOrderCreatedAsync(Course courseFromDB, ApplicationUser instructor)
+        {
+            // create order put the value and the instructor paypal mail
+            CreateOrderRequest createOrderRequest = new CreateOrderRequest
+            {
+                intent = "CAPTURE",
+                purchase_units = new List<PurchaseUnit>
+                {
+                    new PurchaseUnit
+                    {
+                        amount = new Models.Responses.Amount
+                        {
+                            value = courseFromDB.Price.ToString(),
+                            currency_code = "USD"
+                        },
 
-        //        return result;
-        //    }
-        //    else
-        //    {
-        //        return null;
-        //    }
-        //}
+                        payee = new Payee
+                        {
+                            email_address = instructor.Email
+                        }
+                    }
+                },
+            };
 
-        //private async Task<CreateOrderResponse?> EnsureCourseOrderCreatedAsync(Course courseFromDB)
-        //{
-        //    // create order put the value and the instructor paypal mail
+            var jsonContent = JsonConvert.SerializeObject(createOrderRequest);
+            var httpContent = new StringContent(jsonContent, Encoding.UTF8, "application/json");
+            var response = await _client.PostAsync($"{ConfigHelper.BaseUrl}/v2/checkout/orders", httpContent);
 
-        //    throw new NotImplementedException();
-        //}
+            if (response.IsSuccessStatusCode)
+            {
+                var responseAsString = await response.Content.ReadAsStringAsync();
+                CreateOrderResponse? result = JsonConvert.DeserializeObject<CreateOrderResponse>(responseAsString);
 
-        //private async Task<CapturePaymentForOrderResponse?> CapturePaymentForOrderAsync(string id)
-        //{
-        //    // just take the order Id from the prev method 
-        //    throw new NotImplementedException();
-        //}
+                return new GeneralResponse
+                {
+                    IsSuccess = true,
+                    Message = "Course Order Created Successfully , Rediredt the buyer to approve link",
+                    Data = result
+                };
+            }
+            else
+            {
+                return new GeneralResponse
+                {
+                    IsSuccess = false,
+                    Message = "Error happened in Course Order Creating",
+                    Data = response
+                };
+            }
+
+            // This after approve I think
+            //private async Task<CapturePaymentForOrderResponse?> CapturePaymentForOrderAsync(string id)
+            //{
+            //    // just take the order Id from the prev method 
+            //    throw new NotImplementedException();
+            //}
+        }
 
         // ================================================================================================
-
     }
 }

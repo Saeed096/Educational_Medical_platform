@@ -30,21 +30,20 @@ namespace Shoghlana.EF.Configurations
                          SecurityStamp = "9f9ef764-d632-42d2-99ee-93v2410d8ae0",
                          PhoneNumber = "011548726155",
                      },
-                    new ApplicationUser
-                    {
-                        Id = "2b222b22-2222-2222-2222-222222222222",
-                        UserName = "Mohamed_Galal",
-                        FirstName = "Mohamed",
-                        LastName = "Galal",
-                        NormalizedUserName = "MOHAMED_GALAL",
-                        Email = "Mohamed_Galal@example.com",
-                        NormalizedEmail = "MOHAMED_GALAL@EXAMPLE.COM",
-                        EmailConfirmed = true,
-                        PasswordHash = hasher.HashPassword(null, "Test@123"),
-                        SecurityStamp = "9f9ed761-d631-42d2-99ee-93v2420d8ae0",
-                        PhoneNumber = "01054871566",
-
-                    },
+                      new ApplicationUser
+                      {
+                          Id = "2b222b22-2222-2222-2222-222222222222",
+                          UserName = "Abdallah_Saudie", 
+                          FirstName = "Abdallah",
+                          LastName = "Saudie", 
+                          NormalizedUserName = "ABDALLAH_SAUDIE", 
+                          Email = "Abdallah_Saudie@business.example.com", 
+                          NormalizedEmail = "ABDALLAH_SAUDIE@BUSINESS.EXAMPLE.COM", 
+                          EmailConfirmed = true,
+                          PasswordHash = hasher.HashPassword(null, "Test@123"),
+                          SecurityStamp = "9f9ed761-d631-42d2-99ee-93v2420d8ae0",
+                          PhoneNumber = "01054871566",
+                      },
                     new ApplicationUser
                     {
                         Id = "3c333c33-3333-3333-3333-333333333333",

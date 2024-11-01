@@ -1,4 +1,5 @@
-﻿using Educational_Medical_platform.DTO.Course;
+﻿using Azure;
+using Educational_Medical_platform.DTO.Course;
 using Educational_Medical_platform.DTO.PayPal;
 using Educational_Medical_platform.PayPal;
 using Educational_Medical_platform.Repositories.Interfaces;
@@ -20,51 +21,51 @@ namespace Educational_Medical_platform.Controllers
         public PayPalController(
             IUserSubscribtionRipository userSubscribtionRipository,
             IPlatformRepository platformRepository,
-            UserManager<ApplicationUser> userManager , 
+            UserManager<ApplicationUser> userManager,
             ICourseRepository courseRepository)
         {
-            _client = new PayPalClientApi(userSubscribtionRipository, platformRepository, userManager , courseRepository);
+            _client = new PayPalClientApi(userSubscribtionRipository, platformRepository, userManager, courseRepository);
 
             _userSubscribtionRipository = userSubscribtionRipository;
         }
 
-        [HttpGet("/GetAccessToken")]
+        [HttpGet("GetAccessToken")]
         public async Task<ActionResult<GeneralResponse>> GetAccessToken()
         {
             var response = await _client.GetAuthorizationRequest();
 
             return new GeneralResponse
             {
-                IsSuccess = response != null ? true : false,
+                IsSuccess = response != null,
                 Data = response
             };
         }
 
-        [HttpGet("/GetCurrentAccessTokenDetails")]
+        [HttpGet("GetCurrentAccessTokenDetails")]
         public ActionResult<GeneralResponse> GetCurrentAccessTokenDetails()
         {
             var response = _client.GetCurrentAccessTokenDetails();
 
             return new GeneralResponse
             {
-                IsSuccess = response != null ? true : false,
+                IsSuccess = response != null,
                 Data = response != null ? response : "Access token is not initialized. Please ensure you have retrieved it"
             };
         }
 
-        [HttpPost("/CreateProduct")]
+        [HttpPost("CreateProduct")]
         public async Task<ActionResult<GeneralResponse>> CreateProduct(CreateProductRequestDTO productRequestDTO)
         {
             var response = await _client.CreateProduct(productRequestDTO);
 
             return new GeneralResponse
             {
-                IsSuccess = response != null ? true : false,
+                IsSuccess = response != null,
                 Data = response
             };
         }
 
-        [HttpPost("/CreateMonthlyPlanForProduct")]
+        [HttpPost("CreateMonthlyPlanForProduct")]
         public async Task<ActionResult<GeneralResponse>> CreateMonthlyPlanForProduct(CreatePlanRequestDTO createPlanRequestDTO)
         {
             var response = await _client.CreateMonthlyPlan(createPlanRequestDTO);
@@ -76,20 +77,20 @@ namespace Educational_Medical_platform.Controllers
             };
         }
 
-        [HttpPost("/CreateSubscribtion")]
+        [HttpPost("CreateSubscribtion")]
         public async Task<ActionResult<GeneralResponse>> CreateSubscribtion(CreateSubscribtionDTO createSubscribtionDTO)
         {
             var response = await _client.CreateSubscriptionAsync(createSubscribtionDTO);
 
             return new GeneralResponse
             {
-                IsSuccess = response == null ? false : true,
+                IsSuccess = response != null,
                 Data = response
             };
         }
 
         // Webhook endpoint to receive PayPal notifications
-        [HttpPost("/HandlePayPalWebhook")]
+        [HttpPost("HandlePayPalWebhook")]
         public async Task<IActionResult> HandlePayPalWebhook([FromBody] WebHookEvent webhookEvent)
         {
             if (webhookEvent.event_type == "BILLING.SUBSCRIPTION.ACTIVATED")
@@ -119,11 +120,12 @@ namespace Educational_Medical_platform.Controllers
 
         //=================================================================
 
-        //[HttpPost("/BuyCourse")]
-        //public async Task<ActionResult<GeneralResponse>> BuyCourse(BuyCourseDTO buyCourseDTO)
-        //{
+        [HttpPost("BuyCourse")]
+        public async Task<ActionResult<GeneralResponse>> BuyCourse(BuyCourseDTO buyCourseDTO)
+        {
+            var response = await _client.BuyCourse(buyCourseDTO);
 
-        //}
-
+            return response;
+        }
     }
 }

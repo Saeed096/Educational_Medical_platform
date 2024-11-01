@@ -1,4 +1,6 @@
-﻿namespace Educational_Medical_platform.PayPal.Models.Responses
+﻿using Newtonsoft.Json;
+
+namespace Educational_Medical_platform.PayPal.Models.Responses
 {
     public class CreateOrderResponse
     {
@@ -9,6 +11,13 @@
         public DateTime create_time { get; set; }
         public List<Link> links { get; set; }
     }
+
+    public class CreateOrderRequest
+    {
+        public string intent { get; set; }
+        public List<PurchaseUnit> purchase_units { get; set; }
+    }
+
 
     public class Amount
     {

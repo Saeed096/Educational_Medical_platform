@@ -36,6 +36,7 @@ namespace Educational_Medical_platform.Migrations
                     LastName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     ImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     IsSubscribedToPlatform = table.Column<bool>(type: "bit", nullable: false),
+                    SubscriptionMethod = table.Column<int>(type: "int", nullable: true),
                     UserName = table.Column<string>(type: "nvarchar(50)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -68,6 +69,27 @@ namespace Educational_Medical_platform.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Categories", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "platformData",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ProductId = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ProductName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ProductDescribtion = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PlanId = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PlanName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PlanDescription = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PlanFixedPricePerMonth = table.Column<decimal>(type: "decimal(10,2)", nullable: true),
+                    PlanSetupFee = table.Column<decimal>(type: "decimal(10,2)", nullable: true),
+                    PlanTaxesPercentage = table.Column<decimal>(type: "decimal(10,2)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_platformData", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -177,6 +199,51 @@ namespace Educational_Medical_platform.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "UserLocalSubscribtions",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    TransactionImageURL = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Status = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserLocalSubscribtions", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_UserLocalSubscribtions_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.NoAction);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "UserSubscriptions",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    StartDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    EndDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Status = table.Column<int>(type: "int", nullable: false),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    SubscriptionPlanId = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserSubscriptions", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_UserSubscriptions_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.NoAction);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "SubCategories",
                 columns: table => new
                 {
@@ -279,6 +346,7 @@ namespace Educational_Medical_platform.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    PaypalProductId = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Price = table.Column<decimal>(type: "decimal(10,2)", nullable: false),
                     ThumbnailURL = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -322,6 +390,7 @@ namespace Educational_Medical_platform.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Fullmark = table.Column<int>(type: "int", nullable: false),
+                    Price = table.Column<int>(type: "int", nullable: false),
                     Type = table.Column<int>(type: "int", nullable: false),
                     Difficulty = table.Column<int>(type: "int", nullable: false),
                     DurationInMinutes = table.Column<int>(type: "int", nullable: false),
@@ -417,7 +486,9 @@ namespace Educational_Medical_platform.Migrations
                     CourseId = table.Column<int>(type: "int", nullable: false),
                     Degree = table.Column<float>(type: "real", nullable: true),
                     CurrentVideoNumber = table.Column<int>(type: "int", nullable: false),
-                    StartDate = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    StartDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Status = table.Column<int>(type: "int", nullable: false),
+                    TransactionImageURL = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -527,12 +598,12 @@ namespace Educational_Medical_platform.Migrations
 
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
-                columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "FirstName", "ImageUrl", "IsSubscribedToPlatform", "LastName", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
+                columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "FirstName", "ImageUrl", "IsSubscribedToPlatform", "LastName", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "SubscriptionMethod", "TwoFactorEnabled", "UserName" },
                 values: new object[,]
                 {
-                    { "1a111a11-1111-1111-1111-111111111111", 0, "08fc7215-21f9-4a7a-be2e-dffc2f033f1e", "Ehab_Naser@example.com", true, "Ehab", null, false, "Naser", false, null, "EHAB_NASER@EXAMPLE.COM", "EHAB_NASER", "AQAAAAIAAYagAAAAEB4V7akh0Js4JzYFHBq28r3jWIHDW5BLVKVnmCvoIxIkDVIov481OG7ghM9yx2MOyw==", "011548726155", false, "9f9ef764-d632-42d2-99ee-93v2410d8ae0", false, "Ehab_Naser" },
-                    { "2b222b22-2222-2222-2222-222222222222", 0, "47003250-983e-4cd0-9c5c-0b8216ad225a", "Mohamed_Galal@example.com", true, "Mohamed", null, false, "Galal", false, null, "MOHAMED_GALAL@EXAMPLE.COM", "MOHAMED_GALAL", "AQAAAAIAAYagAAAAEArFUNCedwZCB77pzdHRZPla/e7wDY9XTp5TQSNveQIaaonhj53lbkG8Zplj/tx0LQ==", "01054871566", false, "9f9ed761-d631-42d2-99ee-93v2420d8ae0", false, "Mohamed_Galal" },
-                    { "3c333c33-3333-3333-3333-333333333333", 0, "1da08389-6bc6-4324-9e67-4e667449a02f", "Alaa_Test@example.com", true, "Alaa", null, false, "Ahmed", false, null, "ALAA_AHMED@EXAMPLE.COM", "ALAA_AHMED", "AQAAAAIAAYagAAAAEN3ofc1DT+WwHOMB3dJt9sNY5uTjoiVmVFZa6KiiWwr8jRecRyWVFZjMfuiA5LMoFw==", "01225193482", false, "9f1ed761-a631-42dq-99ee-93z2420d8aeq", false, "Alaa_Ahmed" }
+                    { "1a111a11-1111-1111-1111-111111111111", 0, "b6913b07-a432-4730-a15f-d7e164d6c69f", "Ehab_Naser@example.com", true, "Ehab", null, false, "Naser", false, null, "EHAB_NASER@EXAMPLE.COM", "EHAB_NASER", "AQAAAAIAAYagAAAAELS92WnQFZUOod5SpdfiqT07Gk+JkVGdiOhJcZkaMXHPblOA7LRDkwuT39xdnaxsgw==", "011548726155", false, "9f9ef764-d632-42d2-99ee-93v2410d8ae0", null, false, "Ehab_Naser" },
+                    { "2b222b22-2222-2222-2222-222222222222", 0, "38049d35-732e-4dcd-be41-e5f062c0b845", "Mohamed_Galal@example.com", true, "Mohamed", null, false, "Galal", false, null, "MOHAMED_GALAL@EXAMPLE.COM", "MOHAMED_GALAL", "AQAAAAIAAYagAAAAEE22QGkHlpoCXu4fv7VBbXg2P4Tsj0ec5SNk3FvxSxOb5Y7DH+Q61UPhANc4JOoFNg==", "01054871566", false, "9f9ed761-d631-42d2-99ee-93v2420d8ae0", null, false, "Mohamed_Galal" },
+                    { "3c333c33-3333-3333-3333-333333333333", 0, "7ecbc276-f4e0-444e-9f14-faac297d4f6d", "Alaa_Test@example.com", true, "Alaa", null, false, "Ahmed", false, null, "ALAA_AHMED@EXAMPLE.COM", "ALAA_AHMED", "AQAAAAIAAYagAAAAEPll/ikRAJjPSEVCFXV7q2Qmy8ZEEB7OiedgP2x7tNXbM1XmgME5ctJ2N9yoRa2udA==", "01225193482", false, "9f1ed761-a631-42dq-99ee-93z2420d8aeq", null, false, "Alaa_Ahmed" }
                 });
 
             migrationBuilder.InsertData(
@@ -557,6 +628,11 @@ namespace Educational_Medical_platform.Migrations
                     { 15, "Pharmacology Exam", 3 },
                     { 16, "Pathology Exam", 3 }
                 });
+
+            migrationBuilder.InsertData(
+                table: "platformData",
+                columns: new[] { "Id", "PlanDescription", "PlanFixedPricePerMonth", "PlanId", "PlanName", "PlanSetupFee", "PlanTaxesPercentage", "ProductDescribtion", "ProductId", "ProductName" },
+                values: new object[] { 1, null, 20m, null, null, 2m, 10m, null, null, null });
 
             migrationBuilder.InsertData(
                 table: "AspNetUserRoles",
@@ -644,12 +720,12 @@ namespace Educational_Medical_platform.Migrations
 
             migrationBuilder.InsertData(
                 table: "Courses",
-                columns: new[] { "Id", "CategoryId", "DurationInhours", "InstructorId", "Preview", "Price", "RejectedReason", "Status", "SubCategoryId", "ThumbnailURL", "Title", "Type" },
+                columns: new[] { "Id", "CategoryId", "DurationInhours", "InstructorId", "PaypalProductId", "Preview", "Price", "RejectedReason", "Status", "SubCategoryId", "ThumbnailURL", "Title", "Type" },
                 values: new object[,]
                 {
-                    { 1, 1, 10f, "2b222b22-2222-2222-2222-222222222222", null, 1500m, null, 1, 1, null, "physiology", 0 },
-                    { 2, 2, 20f, "2b222b22-2222-2222-2222-222222222222", null, 1000m, null, 0, 3, null, "anatomy", 1 },
-                    { 3, 3, 30f, "3c333c33-3333-3333-3333-333333333333", null, 2500m, null, 2, 5, null, "histology", 1 }
+                    { 1, 1, 10f, "2b222b22-2222-2222-2222-222222222222", "", null, 1500m, null, 1, 1, null, "physiology", 0 },
+                    { 2, 2, 20f, "2b222b22-2222-2222-2222-222222222222", "", null, 1000m, null, 0, 3, null, "anatomy", 1 },
+                    { 3, 3, 30f, "3c333c33-3333-3333-3333-333333333333", "", null, 2500m, null, 2, 5, null, "histology", 1 }
                 });
 
             migrationBuilder.InsertData(
@@ -671,12 +747,12 @@ namespace Educational_Medical_platform.Migrations
 
             migrationBuilder.InsertData(
                 table: "StandardTests",
-                columns: new[] { "Id", "CategoryId", "Difficulty", "DurationInMinutes", "Fullmark", "SubCategoryId", "Title", "Type" },
+                columns: new[] { "Id", "CategoryId", "Difficulty", "DurationInMinutes", "Fullmark", "Price", "SubCategoryId", "Title", "Type" },
                 values: new object[,]
                 {
-                    { 1, 13, 0, 60, 100, 25, "Test1", 0 },
-                    { 2, 14, 1, 100, 150, 27, "Test2", 0 },
-                    { 3, 15, 2, 200, 300, 29, "Test3", 0 }
+                    { 1, 13, 0, 60, 100, 0, 25, "Test1", 0 },
+                    { 2, 14, 1, 100, 150, 100, 27, "Test2", 1 },
+                    { 3, 15, 2, 200, 300, 150, 29, "Test3", 1 }
                 });
 
             migrationBuilder.InsertData(
@@ -945,6 +1021,16 @@ namespace Educational_Medical_platform.Migrations
                 column: "CourseId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_UserLocalSubscribtions_UserId",
+                table: "UserLocalSubscribtions",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserSubscriptions_UserId",
+                table: "UserSubscriptions",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Videos_CourseId",
                 table: "Videos",
                 column: "CourseId");
@@ -981,10 +1067,19 @@ namespace Educational_Medical_platform.Migrations
                 name: "Objectives");
 
             migrationBuilder.DropTable(
+                name: "platformData");
+
+            migrationBuilder.DropTable(
                 name: "Requirements");
 
             migrationBuilder.DropTable(
                 name: "UserEnrolledCourses");
+
+            migrationBuilder.DropTable(
+                name: "UserLocalSubscribtions");
+
+            migrationBuilder.DropTable(
+                name: "UserSubscriptions");
 
             migrationBuilder.DropTable(
                 name: "Videos");

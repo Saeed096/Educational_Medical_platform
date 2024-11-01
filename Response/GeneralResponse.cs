@@ -3,7 +3,7 @@
     public class GeneralResponse
     {
         public bool IsSuccess { get; set; }
-
+            
         /// <summary>
         /// made it dynamic not generic so that if was case has to return differnt types in the same controller based on some condition
         /// u can use it to send failer message if failed.. or to send the DTO if success or to send the object itself when added or edited
