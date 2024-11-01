@@ -24,8 +24,7 @@ namespace Educational_Medical_platform.Controllers
         private readonly ISubCategoryRepository _subCategoryRepository;
         private readonly ICategoryRepository _categoryRepository;
         private readonly IUserEnrolledCoursesRepository _userEnrolledCoursesRepository;
-        private readonly IQuestionRepository _questionRepository;
-        private readonly IAnswerRepository _answerRepository;
+
 
         private readonly string _imagesPath;
         private readonly string _videosPath;
@@ -39,9 +38,7 @@ namespace Educational_Medical_platform.Controllers
             ICourseObjectiveRepository courseObjectiveRepository,
             ISubCategoryRepository subCategoryRepository,
             ICategoryRepository categoryRepository,
-            IUserEnrolledCoursesRepository userEnrolledCoursesRepository,
-            IQuestionRepository questionRepository,
-            IAnswerRepository answerRepository
+            IUserEnrolledCoursesRepository userEnrolledCoursesRepository
             )
         {
             _courseRepository = courseRepository;
@@ -52,8 +49,7 @@ namespace Educational_Medical_platform.Controllers
             _subCategoryRepository = subCategoryRepository;
             _categoryRepository = categoryRepository;
             _userEnrolledCoursesRepository = userEnrolledCoursesRepository;
-            _questionRepository = questionRepository;
-            _answerRepository = answerRepository;
+
 
             _imagesPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Images", "Courses");
             _videosPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Videos", "Courses");
@@ -484,7 +480,7 @@ namespace Educational_Medical_platform.Controllers
                         CourseId = req.CourseId,
                         Description = req.Description,
                     }).ToList()
-                    : new List<GetCourseRequirmentsDTO>(), // Provide an empty list if there are no requirements
+                    : new List<GetCourseRequirmentsDTO>(),
 
                 Objectives = course.Objectives != null && course.Objectives.Any()
                     ? course.Objectives.Select(req => new GetCourseObjectiveDTO()
@@ -493,7 +489,7 @@ namespace Educational_Medical_platform.Controllers
                         CourseId = req.CourseId,
                         Description = req.Description,
                     }).ToList()
-                    : new List<GetCourseObjectiveDTO>(), // Provide an empty list if there are no Objectives
+                    : new List<GetCourseObjectiveDTO>(), 
 
                 Videos = course.Videos != null && course.Videos.Any()
                     ? course.Videos.Select(video => new GetVideoDTO()
@@ -762,16 +758,6 @@ namespace Educational_Medical_platform.Controllers
                     Status = 409
                 };
             }
-
-            //if (course.InstructorId != userEnrollDTO.InstructorId)
-            //{
-            //    return new GeneralResponse
-            //    {
-            //        IsSuccess = false,
-            //        Message = "The Given Instructor ID is not the instructor who owns this course",
-            //        Status = 406
-            //    };
-            //}
 
             if (course.InstructorId == userEnrollDTO.StudentId)
             {
