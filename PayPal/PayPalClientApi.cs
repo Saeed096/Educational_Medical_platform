@@ -629,7 +629,9 @@ namespace Educational_Medical_platform.PayPal
                     {
                         amount = new Models.Responses.Amount
                         {
-                            value = courseFromDB.Price.ToString(),
+                            // I found that paypal takes 5-6 % fees
+                            // TODO : The fromt end should display this note to user + aslo the same for taxes and Fees at the subscription
+                            value = (courseFromDB.Price + (0.06m * courseFromDB.Price)).ToString() ,
                             currency_code = "USD"
                         },
 
