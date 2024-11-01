@@ -5,10 +5,13 @@ namespace Educational_Medical_platform.Controllers
     public class GetRequestUserEnrollDTO
     {
         public string StudentId { get; set; }
+        public string StudentName { get; set; }
 
         public string InstructorId { get; set; }
+        public string InstructorName { get; set; }
 
         public int CourseId { get; set; }
+        public string CourseName { get; set; }
 
         //----------------------------------
 

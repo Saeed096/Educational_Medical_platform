@@ -717,13 +717,24 @@ namespace Educational_Medical_platform.Controllers
         [HttpPost("RequestEnroll")]
         public async Task<ActionResult<GeneralResponse>> RequestEnrollStudentInCourse(RequestUserEnrollDTO userEnrollDTO)
         {
-            var instructor = await _userManager.FindByIdAsync(userEnrollDTO.InstructorId);
+            var course = _courseRepository.Find(c => c.Id == userEnrollDTO.CourseId);
+            if (course == null)
+            {
+                return new GeneralResponse()
+                {
+                    IsSuccess = false,
+                    Message = $"There is no course found with this ID: {userEnrollDTO.CourseId}",
+                    Status = 407,
+                };
+            }
+
+            var instructor = await _userManager.FindByIdAsync(course.InstructorId);
             if (instructor == null)
             {
                 return new GeneralResponse()
                 {
                     IsSuccess = false,
-                    Message = $"There is no User found with this ID: {userEnrollDTO.InstructorId}",
+                    Message = $"There is no User found with this ID: {course.InstructorId}",
                     Status = 406,
                 };
             }
@@ -736,17 +747,6 @@ namespace Educational_Medical_platform.Controllers
                     IsSuccess = false,
                     Message = $"There is no User found with this ID: {userEnrollDTO.StudentId}",
                     Status = 406,
-                };
-            }
-
-            var course = _courseRepository.Find(c => c.Id == userEnrollDTO.CourseId);
-            if (course == null)
-            {
-                return new GeneralResponse()
-                {
-                    IsSuccess = false,
-                    Message = $"There is no course found with this ID: {userEnrollDTO.CourseId}",
-                    Status = 407,
                 };
             }
 
@@ -763,15 +763,15 @@ namespace Educational_Medical_platform.Controllers
                 };
             }
 
-            if (course.InstructorId != userEnrollDTO.InstructorId)
-            {
-                return new GeneralResponse
-                {
-                    IsSuccess = false,
-                    Message = "The Given Instructor ID is not the instructor who owns this course",
-                    Status = 406
-                };
-            }
+            //if (course.InstructorId != userEnrollDTO.InstructorId)
+            //{
+            //    return new GeneralResponse
+            //    {
+            //        IsSuccess = false,
+            //        Message = "The Given Instructor ID is not the instructor who owns this course",
+            //        Status = 406
+            //    };
+            //}
 
             if (course.InstructorId == userEnrollDTO.StudentId)
             {

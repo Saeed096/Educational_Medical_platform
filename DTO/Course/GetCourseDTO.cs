@@ -12,8 +12,6 @@ namespace Educational_Medical_platform.DTO.Course
 
         public decimal Price { get; set; }
 
-        //public IFormFile? Thumbnail { get; set; }
-
         public string? ThumbnailURL { get; set; }
 
         public float DurationInhours { get; set; }
@@ -36,13 +34,6 @@ namespace Educational_Medical_platform.DTO.Course
 
         public string InstructorFullName { get; set; }
 
-        //public ApplicationUser Instructor { get; set; }
-
-        //----------------------------------------------------
-
-        // Navigation property for enrolled users
-        //public List<User_Enrolled_Courses>? EnrolledUsers { get; set; }
-
         //----------------------------------------------------
 
         public List<GetCourseRequirmentsDTO>? Requirements { get; set; }
@@ -51,8 +42,6 @@ namespace Educational_Medical_platform.DTO.Course
 
         public List<GetVideoDTO>? Videos { get; set; }
 
-        //public List<Question>? Questions { get; set; }
-
         public int SubCategoryId { get; set; }
 
         public string SubCategoryName { get; set; }
@@ -60,7 +49,5 @@ namespace Educational_Medical_platform.DTO.Course
         public int CategoryId { get; set; }
 
         public string CategoryName { get; set; }
-
-        //public SubCategory? SubCategory { get; set; }
     }
 }

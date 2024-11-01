@@ -320,7 +320,6 @@ namespace Educational_Medical_platform.Controllers
                     Status = course.Status,
                     StatusName = course.Status.GetDisplayName(),
 
-
                     InstructorId = course.InstructorId,
                     InstructorFullName = $"{course.Instructor.FirstName} {course.Instructor.LastName}",
 
@@ -339,7 +338,7 @@ namespace Educational_Medical_platform.Controllers
                             CourseId = req.CourseId,
                             Description = req.Description,
                         }).ToList()
-                        : new List<GetCourseRequirmentsDTO>(), // Provide an empty list if there are no requirements
+                        : new List<GetCourseRequirmentsDTO>(),
 
                     Objectives = course.Objectives != null && course.Objectives.Any()
                         ? course.Objectives.Select(req => new GetCourseObjectiveDTO()
@@ -348,7 +347,7 @@ namespace Educational_Medical_platform.Controllers
                             CourseId = req.CourseId,
                             Description = req.Description,
                         }).ToList()
-                        : new List<GetCourseObjectiveDTO>(), // Provide an empty list if there are no Objectives
+                        : new List<GetCourseObjectiveDTO>(),
 
                     Videos = course.Videos != null && course.Videos.Any()
                     ? course.Videos.Select(video => new GetVideoDTO()
@@ -766,18 +765,29 @@ namespace Educational_Medical_platform.Controllers
         }
 
         [HttpGet("GetPendingApprovalEnrollRequests")]
-        public ActionResult<GeneralResponse> GetPendingApprovalEnrollRequests()
+        public async Task<ActionResult<GeneralResponse>> GetPendingApprovalEnrollRequests()
         {
             List<User_Enrolled_Courses> enrollRequests = _userEnrolledCoursesRepository
-                               .FindAll(criteria: uc => uc.Status == EnrollRequestStatus.PendingApproval,
-                               includes: ["Course"]).ToList();
+                                   .FindAll(criteria: uc => uc.Status == EnrollRequestStatus.PendingApproval,
+                                            includes: ["Course", "Student"])
+                                   .ToList();
 
-            List<GetRequestUserEnrollDTO> enrollRequestsDTO = enrollRequests.Select(
-                enrollRequest => new GetRequestUserEnrollDTO
+            List<GetRequestUserEnrollDTO> enrollRequestsDTO = new List<GetRequestUserEnrollDTO>();
+
+            foreach (var enrollRequest in enrollRequests)
+            {
+                var instructor = await _userManager.FindByIdAsync(enrollRequest.Course.InstructorId);
+
+                enrollRequestsDTO.Add(new GetRequestUserEnrollDTO
                 {
                     CourseId = enrollRequest.CourseId,
+                    CourseName = enrollRequest.Course.Title,
+
                     InstructorId = enrollRequest.Course.InstructorId,
+                    InstructorName = $"{instructor?.FirstName ?? "NA"} {instructor?.LastName ?? "NA"}",
+
                     StudentId = enrollRequest.StudentId,
+                    StudentName = $"{enrollRequest?.Student?.FirstName ?? "NA"} {enrollRequest?.Student?.LastName ?? "NA"}",
 
                     StartDate = enrollRequest.StartDate,
 
@@ -785,29 +795,38 @@ namespace Educational_Medical_platform.Controllers
                     StatusName = enrollRequest.Status.GetDisplayName(),
 
                     TransactionImageURL = enrollRequest.TransactionImageURL,
-                })
-            .OrderByDescending(req => req.StartDate)
-            .ToList();
+                });
+            }
 
             return new GeneralResponse()
             {
                 IsSuccess = true,
-                Data = enrollRequestsDTO
+                Data = enrollRequestsDTO.OrderByDescending(r => r.StartDate).ToList(),
             };
         }
 
         [HttpGet("GetAllEnrollRequests")]
-        public ActionResult<GeneralResponse> GetAllEnrollRequests()
+        public  async Task<ActionResult<GeneralResponse>> GetAllEnrollRequests()
         {
             List<User_Enrolled_Courses> enrollRequests = _userEnrolledCoursesRepository
-                               .FindAll(includes: ["Course"]).ToList();
+                               .FindAll(includes: ["Course" , "Student"]).ToList();
 
-            List<GetRequestUserEnrollDTO> enrollRequestsDTO = enrollRequests.Select(
-                enrollRequest => new GetRequestUserEnrollDTO
+            List<GetRequestUserEnrollDTO> enrollRequestsDTO = new List<GetRequestUserEnrollDTO>();
+
+            foreach (var enrollRequest in enrollRequests)
+            {
+                var instructor = await _userManager.FindByIdAsync(enrollRequest.Course.InstructorId);
+
+                enrollRequestsDTO.Add(new GetRequestUserEnrollDTO
                 {
                     CourseId = enrollRequest.CourseId,
+                    CourseName = enrollRequest.Course.Title,
+
                     InstructorId = enrollRequest.Course.InstructorId,
+                    InstructorName = $"{instructor?.FirstName ?? "NA"} {instructor?.LastName ?? "NA"}",
+
                     StudentId = enrollRequest.StudentId,
+                    StudentName = $"{enrollRequest?.Student?.FirstName ?? "NA"} {enrollRequest?.Student?.LastName ?? "NA"}",
 
                     StartDate = enrollRequest.StartDate,
 
@@ -815,14 +834,13 @@ namespace Educational_Medical_platform.Controllers
                     StatusName = enrollRequest.Status.GetDisplayName(),
 
                     TransactionImageURL = enrollRequest.TransactionImageURL,
-                })
-            .OrderByDescending(req => req.StartDate)
-            .ToList();
+                });
+            }
 
             return new GeneralResponse()
             {
                 IsSuccess = true,
-                Data = enrollRequestsDTO
+                Data = enrollRequestsDTO.OrderByDescending(r => r.StartDate).ToList(),
             };
         }
 
@@ -1012,7 +1030,8 @@ namespace Educational_Medical_platform.Controllers
         public ActionResult<GeneralResponse> GetPendingApprovalLocalSubscriptions()
         {
             List<UserLocalSubscribtion> UserLocalSubscribtions = _userLocalSubscribtionRepository
-                               .FindAll(criteria: us => us.Status == LocalSubscribtionStatus.PendingApproval)
+                               .FindAll(criteria: us => us.Status == LocalSubscribtionStatus.PendingApproval,
+                                         includes: ["User"])
                                .ToList();
 
             List<GetUserLocalSubscribtionDTO> subscriptionsRequestsDTO = UserLocalSubscribtions.Select(
@@ -1020,6 +1039,7 @@ namespace Educational_Medical_platform.Controllers
                 {
                     Id = subscribtionRequest.Id,
                     UserId = subscribtionRequest.UserId,
+                    UserFullName = $"{subscribtionRequest.User.FirstName} {subscribtionRequest.User.LastName}",
 
                     Status = subscribtionRequest.Status,
                     StatusName = subscribtionRequest.Status.GetDisplayName(),
@@ -1036,18 +1056,19 @@ namespace Educational_Medical_platform.Controllers
             };
         }
 
-
         [HttpGet("GetAllLocalSubscriptionsRequests")]
         public ActionResult<GeneralResponse> GetAllLocalSubscriptionsRequests()
         {
             List<UserLocalSubscribtion> UserLocalSubscribtions = _userLocalSubscribtionRepository
-                                                                  .FindAll().ToList();
+                                                                  .FindAll(includes: ["User"])
+                                                                  .ToList();
 
             List<GetUserLocalSubscribtionDTO> subscriptionsRequestsDTO = UserLocalSubscribtions.Select(
                 subscribtionRequest => new GetUserLocalSubscribtionDTO
                 {
                     Id = subscribtionRequest.Id,
                     UserId = subscribtionRequest.UserId,
+                    UserFullName = $"{subscribtionRequest.User.FirstName} {subscribtionRequest.User.LastName}",
 
                     Status = subscribtionRequest.Status,
                     StatusName = subscribtionRequest.Status.GetDisplayName(),
@@ -1063,7 +1084,6 @@ namespace Educational_Medical_platform.Controllers
                 Data = subscriptionsRequestsDTO
             };
         }
-
 
         [HttpPost("ApproveLocalSubscriptionRequest")]
         public async Task<ActionResult<GeneralResponse>> ApproveLocalSubscriptionRequest(int localSubscriptionId)

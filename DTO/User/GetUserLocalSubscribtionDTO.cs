@@ -8,6 +8,8 @@ namespace Educational_Medical_platform.DTO.User
 
         public string UserId { get; set; }
 
+        public string UserFullName { get; set; }
+
         //--------------------------------------
 
         public string TransactionImageURL { get; set; }
