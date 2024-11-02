@@ -1,7 +1,13 @@
 use MedLearnHubDB
 
-select * from platformData
+select *
+from platformData
 
-select * from UserSubscriptions
+select *
+from UserSubscriptions
 
-select * from AspNetUsers
+select *
+from AspNetUsers
+
+select *
+from Courses

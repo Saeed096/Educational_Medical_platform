@@ -4,14 +4,17 @@ using Educational_Medical_platform.DTO.Course.Requirments;
 using Educational_Medical_platform.Helpers;
 using Educational_Medical_platform.Models;
 using Educational_Medical_platform.Repositories.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Shoghlana.Api.Response;
 using Shoghlana.Core.Models;
 using System.Linq.Expressions;
+using System.Security.Claims;
 
 namespace Educational_Medical_platform.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class CourseController : ControllerBase
@@ -122,17 +125,17 @@ namespace Educational_Medical_platform.Controllers
                         }).ToList()
                         : new List<GetCourseObjectiveDTO>(), // Provide an empty list if there are no Objectives
 
-                    Videos = course.Videos != null && course.Videos.Any()
-                    ? course.Videos.Select(video => new GetVideoDTO()
-                    {
-                        Id = video.Id,
-                        CourseId = video.CourseId,
-                        Description = video.Description,
-                        Number = video.Number,
-                        Title = video.Title,
-                        videoURL = video.videoURL
-                    }).ToList()
-                    : new List<GetVideoDTO>(),
+                    //videos = course.videos != null && course.videos.any()
+                    //? course.videos.select(video => new getvideodto()
+                    //{
+                    //    id = video.id,
+                    //    courseid = video.courseid,
+                    //    description = video.description,
+                    //    number = video.number,
+                    //    title = video.title,
+                    //    videourl = video.videourl
+                    //}).tolist()
+                    //: new list<getvideodto>(),
                 };
 
                 courseDTOs.Add(courseDTO);
@@ -227,15 +230,15 @@ namespace Educational_Medical_platform.Controllers
                     CourseId = obj.CourseId,
                     Description = obj.Description,
                 }).ToList() ?? new List<GetCourseObjectiveDTO>(),
-                Videos = course.Videos?.Select(video => new GetVideoDTO
-                {
-                    Id = video.Id,
-                    CourseId = video.CourseId,
-                    Description = video.Description,
-                    Number = video.Number,
-                    Title = video.Title,
-                    videoURL = video.videoURL
-                }).ToList() ?? new List<GetVideoDTO>(),
+                //Videos = course.Videos?.Select(video => new GetVideoDTO
+                //{
+                //    Id = video.Id,
+                //    CourseId = video.CourseId,
+                //    Description = video.Description,
+                //    Number = video.Number,
+                //    Title = video.Title,
+                //    videoURL = video.videoURL
+                //}).ToList() ?? new List<GetVideoDTO>(),
             }).ToList();
 
             // Return the response with pagination details
@@ -327,15 +330,15 @@ namespace Educational_Medical_platform.Controllers
                         CourseId = obj.CourseId,
                         Description = obj.Description
                     }).ToList() ?? new List<GetCourseObjectiveDTO>(),
-                    Videos = course.Videos?.Select(video => new GetVideoDTO
-                    {
-                        Id = video.Id,
-                        CourseId = video.CourseId,
-                        Description = video.Description,
-                        Number = video.Number,
-                        Title = video.Title,
-                        videoURL = video.videoURL
-                    }).ToList() ?? new List<GetVideoDTO>()
+                    //Videos = course.Videos?.Select(video => new GetVideoDTO
+                    //{
+                    //    Id = video.Id,
+                    //    CourseId = video.CourseId,
+                    //    Description = video.Description,
+                    //    Number = video.Number,
+                    //    Title = video.Title,
+                    //    videoURL = video.videoURL
+                    //}).ToList() ?? new List<GetVideoDTO>()
                 };
 
                 courseDTOs.Add(courseDTO);
@@ -409,17 +412,17 @@ namespace Educational_Medical_platform.Controllers
                     }).ToList()
                     : new List<GetCourseObjectiveDTO>(), // Provide an empty list if there are no Objectives
 
-                Videos = course.Videos != null && course.Videos.Any()
-                    ? course.Videos.Select(video => new GetVideoDTO()
-                    {
-                        Id = video.Id,
-                        CourseId = video.CourseId,
-                        Description = video.Description,
-                        Number = video.Number,
-                        Title = video.Title,
-                        videoURL = video.videoURL
-                    }).ToList()
-                    : new List<GetVideoDTO>(),
+                //Videos = course.Videos != null && course.Videos.Any()
+                //    ? course.Videos.Select(video => new GetVideoDTO()
+                //    {
+                //        Id = video.Id,
+                //        CourseId = video.CourseId,
+                //        Description = video.Description,
+                //        Number = video.Number,
+                //        Title = video.Title,
+                //        videoURL = video.videoURL
+                //    }).ToList()
+                //    : new List<GetVideoDTO>(),
             };
 
             return new GeneralResponse()
@@ -431,7 +434,7 @@ namespace Educational_Medical_platform.Controllers
         }
 
         [HttpGet("{courseId:int}")]
-        public ActionResult<GeneralResponse> GetByCourseId(int courseId)
+        public async Task<ActionResult<GeneralResponse>> GetByCourseId(int courseId)
         {
             Course? course = _courseRepository.Find(criteria: c => c.Id == courseId, includes: new[] { "Requirements", "Objectives", "Videos", "SubCategory", "Instructor" });
 
@@ -444,6 +447,30 @@ namespace Educational_Medical_platform.Controllers
                     Status = 404
                 };
             }
+
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            var userEnrolledRecord = _userEnrolledCoursesRepository.Find(criteria: uc => uc.StudentId == userId && uc.CourseId == courseId);
+
+            if(userEnrolledRecord == null)
+            {
+                return new GeneralResponse
+                {
+                    IsSuccess = false,
+                    Message = "This user has not requested to enroll in this course"
+                };
+            }
+
+
+            if (userEnrolledRecord.Status != EnrollRequestStatus.Approved)
+            {
+                return new GeneralResponse
+                {
+                    IsSuccess = false,
+                    Message = $"This user Request to enroll status is not Approved , it's current status is : {userEnrolledRecord.Status.GetDisplayName()}"
+                };
+            }
+
 
             GetCourseDTO courseDTO = new GetCourseDTO()
             {
@@ -489,7 +516,7 @@ namespace Educational_Medical_platform.Controllers
                         CourseId = req.CourseId,
                         Description = req.Description,
                     }).ToList()
-                    : new List<GetCourseObjectiveDTO>(), 
+                    : new List<GetCourseObjectiveDTO>(),
 
                 Videos = course.Videos != null && course.Videos.Any()
                     ? course.Videos.Select(video => new GetVideoDTO()
@@ -582,17 +609,17 @@ namespace Educational_Medical_platform.Controllers
                         }).ToList()
                         : new List<GetCourseObjectiveDTO>(), // Provide an empty list if there are no Objectives
 
-                    Videos = course.Videos != null && course.Videos.Any()
-                    ? course.Videos.Select(video => new GetVideoDTO()
-                    {
-                        Id = video.Id,
-                        CourseId = video.CourseId,
-                        Description = video.Description,
-                        Number = video.Number,
-                        Title = video.Title,
-                        videoURL = video.videoURL
-                    }).ToList()
-                    : new List<GetVideoDTO>(),
+                    //Videos = course.Videos != null && course.Videos.Any()
+                    //? course.Videos.Select(video => new GetVideoDTO()
+                    //{
+                    //    Id = video.Id,
+                    //    CourseId = video.CourseId,
+                    //    Description = video.Description,
+                    //    Number = video.Number,
+                    //    Title = video.Title,
+                    //    videoURL = video.videoURL
+                    //}).ToList()
+                    //: new List<GetVideoDTO>(),
                 };
 
                 courseDTOs.Add(courseDTO);
@@ -686,17 +713,17 @@ namespace Educational_Medical_platform.Controllers
                         }).ToList()
                         : new List<GetCourseObjectiveDTO>(), // Provide an empty list if there are no Objectives
 
-                    Videos = course.Videos != null && course.Videos.Any()
-                    ? course.Videos.Select(video => new GetVideoDTO()
-                    {
-                        Id = video.Id,
-                        CourseId = video.CourseId,
-                        Description = video.Description,
-                        Number = video.Number,
-                        Title = video.Title,
-                        videoURL = video.videoURL
-                    }).ToList()
-                    : new List<GetVideoDTO>(),
+                    //Videos = course.Videos != null && course.Videos.Any()
+                    //? course.Videos.Select(video => new GetVideoDTO()
+                    //{
+                    //    Id = video.Id,
+                    //    CourseId = video.CourseId,
+                    //    Description = video.Description,
+                    //    Number = video.Number,
+                    //    Title = video.Title,
+                    //    videoURL = video.videoURL
+                    //}).ToList()
+                    //: new List<GetVideoDTO>(),
                 };
 
                 courseDTOs.Add(courseDTO);

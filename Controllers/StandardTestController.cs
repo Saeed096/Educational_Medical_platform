@@ -1,14 +1,17 @@
 ﻿using Educational_Medical_platform.DTO.StandardTestDTO;
 using Educational_Medical_platform.Helpers;
 using Educational_Medical_platform.Models;
-using Educational_Medical_platform.Repositories.Implementations;
 using Educational_Medical_platform.Repositories.Interfaces;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Shoghlana.Api.Response;
-using static System.Net.Mime.MediaTypeNames;
+using Shoghlana.Core.Models;
+using System.Security.Claims;
 
 namespace Educational_Medical_platform.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class StandardTestController : ControllerBase
@@ -18,23 +21,168 @@ namespace Educational_Medical_platform.Controllers
         private readonly ISubCategoryRepository _subCategoryRepository;
         private readonly IQuestionRepository _questionRepository;
         private readonly IAnswerRepository _answerRepository;
+        private readonly UserManager<ApplicationUser> _userManager;
 
         public StandardTestController(
             IStandardTestRepository standardTestRepository,
             ISubCategoryRepository subCategoryRepository,
             IQuestionRepository questionRepository,
-            IAnswerRepository answerRepository
+            IAnswerRepository answerRepository,
+            UserManager<ApplicationUser> userManager
             )
         {
             _standardTestRepository = standardTestRepository;
             _subCategoryRepository = subCategoryRepository;
             _questionRepository = questionRepository;
-            this._answerRepository = answerRepository;
+            _answerRepository = answerRepository;
+            _userManager = userManager;
         }
 
-        [HttpGet]
-        public ActionResult<GeneralResponse> GetAllStandardTests()
+        [HttpGet("GetAllFreeStandardTests")]
+        public ActionResult<GeneralResponse> GetAllFreeStandardTests()
         {
+            try
+            {
+                var standardTests = _standardTestRepository
+                              .FindAll(criteria: t => t.Type == TestType.Free
+                                      , includes: ["Category", "SubCategory"]);
+
+                if (standardTests == null || !standardTests.Any())
+                {
+                    return new GeneralResponse
+                    {
+                        Message = "No Standard Tests found.",
+                        IsSuccess = false
+                    };
+                }
+
+                var standardTestDTOs = standardTests.Select(test => new StandardTestDTO
+                {
+                    Id = test.Id,
+                    Title = test.Title,
+                    Fullmark = test.Fullmark,
+                    DurationInMinutes = test.DurationInMinutes,
+                    Price = test.Price,
+
+                    SubCategoryId = test.SubCategoryId,
+                    SubCategoryName = test.SubCategory.Name,
+
+                    CategoryId = test.CategoryId,
+                    CategoryName = test.Category.Name,
+
+                    Type = test.Type,
+                    TypeName = test.Type.GetDisplayName(),
+
+                    Difficulty = test.Difficulty,
+                    DifficultyName = test.Difficulty.GetDisplayName(),
+
+                }).ToList();
+
+                return new GeneralResponse
+                {
+                    Data = standardTestDTOs,
+                    Message = "Standard Tests retrieved successfully.",
+                    IsSuccess = true
+                };
+            }
+            catch (Exception ex)
+            {
+                return new GeneralResponse
+                {
+                    Message = $"An error occurred while retrieving Standard Tests: {ex.Message}",
+                    IsSuccess = false
+                };
+            }
+        }
+
+        [HttpGet("GetAllPremiumStandardTests")]
+        public async Task<ActionResult<GeneralResponse>> GetAllPremiumStandardTests()
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var user = await _userManager.FindByIdAsync(userId);
+
+            // check if the user is subscriped to platform or not
+            if (!user.IsSubscribedToPlatform)
+            {
+                return new GeneralResponse
+                {
+                    IsSuccess = false,
+                    Message = "this user can't access premuim tests because he is not subsciped to platform",
+                    Data = userId
+                };
+            }
+
+            try
+            {
+                var standardTests = _standardTestRepository
+                              .FindAll(criteria: t => t.Type == TestType.Premium
+                                      , includes: ["Category", "SubCategory"]);
+
+                if (standardTests == null || !standardTests.Any())
+                {
+                    return new GeneralResponse
+                    {
+                        Message = "No Standard Tests found.",
+                        IsSuccess = false
+                    };
+                }
+
+                var standardTestDTOs = standardTests.Select(test => new StandardTestDTO
+                {
+                    Id = test.Id,
+                    Title = test.Title,
+                    Fullmark = test.Fullmark,
+                    DurationInMinutes = test.DurationInMinutes,
+                    Price = test.Price,
+
+                    SubCategoryId = test.SubCategoryId,
+                    SubCategoryName = test.SubCategory.Name,
+
+                    CategoryId = test.CategoryId,
+                    CategoryName = test.Category.Name,
+
+                    Type = test.Type,
+                    TypeName = test.Type.GetDisplayName(),
+
+                    Difficulty = test.Difficulty,
+                    DifficultyName = test.Difficulty.GetDisplayName(),
+
+                }).ToList();
+
+                return new GeneralResponse
+                {
+                    Data = standardTestDTOs,
+                    Message = "Standard Tests retrieved successfully.",
+                    IsSuccess = true
+                };
+            }
+            catch (Exception ex)
+            {
+                return new GeneralResponse
+                {
+                    Message = $"An error occurred while retrieving Standard Tests: {ex.Message}",
+                    IsSuccess = false
+                };
+            }
+        }
+
+        [HttpGet("GetAllStandardTests")]
+        public async Task<ActionResult<GeneralResponse>> GetAllStandardTests()
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var user = await _userManager.FindByIdAsync(userId);
+
+            // check if the user is subscriped to platform or not
+            if (!user.IsSubscribedToPlatform)
+            {
+                return new GeneralResponse
+                {
+                    IsSuccess = false,
+                    Message = "this user can't access premuim tests because he is not subsciped to platform",
+                    Data = userId
+                };
+            }
+
             try
             {
                 var standardTests = _standardTestRepository.FindAll(includes: ["Category", "SubCategory"]);
@@ -87,8 +235,8 @@ namespace Educational_Medical_platform.Controllers
             }
         }
 
-        [HttpGet("{id:int}")]
-        public ActionResult<GeneralResponse> GetStandardTestById(int id)
+        [HttpGet("GetStandardTestById/{id:int}")]
+        public async Task<ActionResult<GeneralResponse>> GetStandardTestById(int id)
         {
             try
             {
@@ -101,6 +249,23 @@ namespace Educational_Medical_platform.Controllers
                         Message = "Standard Test not found.",
                         IsSuccess = false
                     };
+                }
+
+                if(standardTest.Type == TestType.Premium)
+                {
+                    // checking if the logged user is subscriped or not
+                    var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                    var user = await _userManager.FindByIdAsync(userId);
+
+                    if (!user.IsSubscribedToPlatform)
+                    {
+                        return new GeneralResponse
+                        {
+                            IsSuccess = false,
+                            Message = "this user can't access premuim test because he is not subsciped to platform",
+                            Data = userId
+                        };
+                    }
                 }
 
                 var standardTestDTO = new StandardTestDTO
@@ -141,7 +306,7 @@ namespace Educational_Medical_platform.Controllers
             }
         }
 
-        [HttpPost]
+        [HttpPost("AddStandardTest")]
         public ActionResult<GeneralResponse> AddStandardTest([FromBody] AddTestDTO standardTestDTO)
         {
             try
@@ -467,6 +632,5 @@ namespace Educational_Medical_platform.Controllers
                 };
             }
         }
-
     }
 }

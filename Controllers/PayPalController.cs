@@ -1,5 +1,4 @@
-﻿using Azure;
-using Educational_Medical_platform.DTO.Course;
+﻿using Educational_Medical_platform.DTO.Course;
 using Educational_Medical_platform.DTO.PayPal;
 using Educational_Medical_platform.PayPal;
 using Educational_Medical_platform.Repositories.Interfaces;
