@@ -4,6 +4,7 @@ using Educational_Medical_platform.DTO.Course.Requirments;
 using Educational_Medical_platform.DTO.User;
 using Educational_Medical_platform.Helpers;
 using Educational_Medical_platform.Models;
+using Educational_Medical_platform.Repositories.Implementations;
 using Educational_Medical_platform.Repositories.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -30,7 +31,7 @@ namespace Educational_Medical_platform.Controllers
         private readonly IQuestionRepository _questionRepository;
         private readonly IVideoRepository _videoRepository;
         private readonly IUserLocalSubscribtionRepository _userLocalSubscribtionRepository;
-
+        private readonly IApplicationUserRepository _applicationUserRepository;
         private readonly string _imagesPath;
         private readonly string _videosPath;
         private readonly long _maxImageSize;
@@ -51,7 +52,7 @@ namespace Educational_Medical_platform.Controllers
             IQuestionRepository questionRepository,
             IVideoRepository videoRepository,
             IUserLocalSubscribtionRepository userLocalSubscribtionRepository,
-
+            IApplicationUserRepository applicationUserRepository,
             UserManager<ApplicationUser> userManager
             )
         {
@@ -67,6 +68,7 @@ namespace Educational_Medical_platform.Controllers
             _questionRepository = questionRepository;
             _videoRepository = videoRepository;
             _userLocalSubscribtionRepository = userLocalSubscribtionRepository;
+            _applicationUserRepository = applicationUserRepository;
             _userManager = userManager;
 
             _imagesPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Images", "Courses");
@@ -285,6 +287,46 @@ namespace Educational_Medical_platform.Controllers
                 };
             }
         }
+
+        [HttpGet("GetAllUsersPaginated")]
+        public ActionResult<GeneralResponse> GetAllUsersPaginated(int page = 1, int pageSize = 10)
+        {
+            var usersPaginationList = _applicationUserRepository.FindPaginatedUsers(page: page, pageSize: pageSize);
+
+            if (usersPaginationList == null || !usersPaginationList.Items.Any())
+            {
+                return new GeneralResponse()
+                {
+                    IsSuccess = false,
+                    Message = "No users available."
+                };
+            }
+
+            var userDTOs = usersPaginationList.Items.Select(user => new ApplicationUser
+            {
+                Id = user.Id,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Email = user.Email,
+                PhoneNumber = user.PhoneNumber,
+                IsSubscribedToPlatform = user.IsSubscribedToPlatform,
+                ImageUrl = user.ImageUrl
+            }).ToList();
+
+            return new GeneralResponse()
+            {
+                IsSuccess = true,
+                Message = "Users retrieved successfully.",
+                Data = new
+                {
+                    CurrentPage = usersPaginationList.CurrentPage,
+                    TotalPages = usersPaginationList.TotalPages,
+                    TotalItems = usersPaginationList.TotalItems,
+                    Users = userDTOs
+                }
+            };
+        }
+
 
         //********************************************  Course Actions *********************************************************
 

@@ -2,6 +2,7 @@
 using Educational_Medical_platform.Helpers;
 using Educational_Medical_platform.Models;
 using Educational_Medical_platform.Repositories.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
@@ -471,6 +472,7 @@ namespace Educational_Medical_platform.Controllers
 
         //=======================================> User Profile <==============================================
 
+        [Authorize]
         [HttpPut("update/{userId}")]
         public async Task<ActionResult<GeneralResponse>> UpdateUser(string userId, [FromForm] UpdateUserDTO updateUserDTO)
         {
@@ -561,49 +563,9 @@ namespace Educational_Medical_platform.Controllers
             };
         }
 
-        //=======================================> Dashboard <=================================================
-
-        [HttpGet("GetAllUsersPaginated")]
-        public ActionResult<GeneralResponse> GetAllUsersPaginated(int page = 1, int pageSize = 10)
-        {
-            var usersPaginationList = _applicationUserRepository.FindPaginatedUsers(page: page, pageSize: pageSize);
-
-            if (usersPaginationList == null || !usersPaginationList.Items.Any())
-            {
-                return new GeneralResponse()
-                {
-                    IsSuccess = false,
-                    Message = "No users available."
-                };
-            }
-
-            var userDTOs = usersPaginationList.Items.Select(user => new ApplicationUser
-            {
-                Id = user.Id,
-                FirstName = user.FirstName,
-                LastName = user.LastName,
-                Email = user.Email,
-                PhoneNumber = user.PhoneNumber,
-                IsSubscribedToPlatform = user.IsSubscribedToPlatform,
-                ImageUrl = user.ImageUrl
-            }).ToList();
-
-            return new GeneralResponse()
-            {
-                IsSuccess = true,
-                Message = "Users retrieved successfully.",
-                Data = new
-                {
-                    CurrentPage = usersPaginationList.CurrentPage,
-                    TotalPages = usersPaginationList.TotalPages,
-                    TotalItems = usersPaginationList.TotalItems,
-                    Users = userDTOs
-                }
-            };
-        }
-
         //====================================> Platform Subscribtion <=========================================
 
+        [Authorize]
         [HttpPost("RequestSubscribtionLocally")]
         public async Task<ActionResult<GeneralResponse>> RequestSubscribtionLocally(RequestSubscribtionDTO requestSubscribtion)
         {
