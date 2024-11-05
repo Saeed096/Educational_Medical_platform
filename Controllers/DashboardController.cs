@@ -34,8 +34,6 @@ namespace Educational_Medical_platform.Controllers
         private readonly IApplicationUserRepository _applicationUserRepository;
         private readonly string _imagesPath;
         private readonly string _videosPath;
-        private readonly long _maxImageSize;
-        private readonly long _maxVideoSize;
 
         private readonly UserManager<ApplicationUser> _userManager;
 
@@ -73,9 +71,6 @@ namespace Educational_Medical_platform.Controllers
 
             _imagesPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Images", "Courses");
             _videosPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Videos", "Courses");
-
-            _maxImageSize = 2 * 1024 * 1024;  // 2 MB
-            _maxVideoSize = 500 * 1024 * 1024; // 500 MB
         }
 
         //******************************************  General Statistics  *****************************************************
