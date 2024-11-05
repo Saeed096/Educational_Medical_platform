@@ -1,9 +1,8 @@
-﻿using Educational_Medical_platform.DTO.Blog;
-using Educational_Medical_platform.DTO.BookDTO;
+﻿using Educational_Medical_platform.DTO.BookDTO;
 using Educational_Medical_platform.Helpers;
 using Educational_Medical_platform.Models;
-using Educational_Medical_platform.Repositories.Implementations;
 using Educational_Medical_platform.Repositories.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Shoghlana.Api.Response;
@@ -12,6 +11,7 @@ using Shoghlana.Core.Models;
 
 namespace Educational_Medical_platform.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class BookController : ControllerBase
@@ -21,6 +21,9 @@ namespace Educational_Medical_platform.Controllers
         private readonly ISubCategoryRepository _subCategoryRepository;
         private readonly IWebHostEnvironment _webHostEnvironment;
         private readonly UserManager<ApplicationUser> _userManager;
+
+        private readonly string _imagesPath;
+        private readonly long _maxImageSize;
 
 
         public BookController(IBookRepository BookRepository,
@@ -35,6 +38,9 @@ namespace Educational_Medical_platform.Controllers
             _userManager = userManager;
             _categoryRepository = categoryRepository;
             _subCategoryRepository = subCategoryRepository;
+
+            _maxImageSize = StorageInfo.MaxImageSize;
+            _imagesPath = StorageInfo.BooksImagesPath;
         }
 
         [HttpGet]
@@ -99,7 +105,7 @@ namespace Educational_Medical_platform.Controllers
                     return new GeneralResponse
                     {
                         IsSuccess = true,
-                        Data = new List<BookDTO>(), 
+                        Data = new List<BookDTO>(),
                         Message = "There are no books available."
                     };
                 }
@@ -123,7 +129,7 @@ namespace Educational_Medical_platform.Controllers
                     IsSuccess = true,
                     Data = new PaginatedListDTO<BookDTO>
                     {
-                        CurrentPage = booksPaginatedList.CurrentPage, 
+                        CurrentPage = booksPaginatedList.CurrentPage,
                         Items = bookDTOs,
                         TotalItems = booksPaginatedList.TotalItems,
                         TotalPages = booksPaginatedList.TotalPages,
@@ -140,7 +146,7 @@ namespace Educational_Medical_platform.Controllers
             }
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{id:int}")]
         public ActionResult<GeneralResponse> GetBookById(int id)
         {
             try
@@ -189,104 +195,271 @@ namespace Educational_Medical_platform.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<GeneralResponse>> AddBook([FromForm] BookDTO bookDTO)
+        public async Task<ActionResult<GeneralResponse>> AddBook([FromForm] AddBookDTO bookDTO)
         {
-            try
-            {
-                string uploadpath = Path.Combine(_webHostEnvironment.WebRootPath, "Images", "Book");
-                string imagename = Guid.NewGuid().ToString() + "_" + bookDTO.Thumbnail.FileName;
-                string filepath = Path.Combine(uploadpath, imagename);
-                using (FileStream fileStream = new FileStream(filepath, FileMode.Create))
-                {
-                    bookDTO.Thumbnail.CopyTo(fileStream);
-                }
-                bookDTO.ThumbnailURL = imagename;
-                if (ModelState.IsValid)
-                {
-                    var existinguser = await _userManager.FindByIdAsync(bookDTO.UserID);
-
-                    if (existinguser == null)
-                    {
-                        return new GeneralResponse
-                        {
-                            IsSuccess = false,
-                            Message = "there is no such user "
-                        };
-                    }
-
-                    //Check if Category ID and Sub Category Id are Related to Books or not 
-
-                    Category category = _categoryRepository.GetById((int)bookDTO.CategoryId);
-                    SubCategory subCategory = _subCategoryRepository.GetById((int)bookDTO.SubCategoryId);
-                    if (category.Type != CategoryType.Books || subCategory.Type != SubCategoryType.Books)
-                    {
-                        return new GeneralResponse()
-                        {
-                            IsSuccess = false,
-                            Message = $"Category or SubCategory with these ID not related to Books."
-                        };
-
-                    }
-                    var roles = await _userManager.GetRolesAsync(existinguser);
-
-                    Book book = new Book
-                    {
-                        Title = bookDTO.Title,
-                        Description = bookDTO.Description,
-                        ThumbnailURL = $"/Images/Book/{imagename}",
-                        Url = bookDTO.Url,
-                        SubCategoryId = bookDTO.SubCategoryId,
-                        CategoryId = bookDTO.CategoryId,
-                        PublishDate = bookDTO.CreatedDate,
-                        PublisherName = existinguser.UserName,
-                        PublisherRole = roles.FirstOrDefault()
-                    };
-
-                    Book addedBook = _bookRepository.Add(book);
-
-                    _bookRepository.Save();
-
-                    BookDTO addedBookDTO = new BookDTO
-                    {
-                        Id = addedBook.Id,
-                        Title = addedBook.Title,
-                        Description = addedBook.Description,
-                        ThumbnailURL = addedBook.ThumbnailURL,
-                        Url = addedBook.Url,
-                        SubCategoryId = addedBook.SubCategoryId,
-                        CategoryId = addedBook.CategoryId
-                    };
-
-                    return new GeneralResponse
-                    {
-                        IsSuccess = true,
-                        Message = "Book added successfully",
-                        Data = addedBookDTO
-                    };
-
-                }
-
-                else
-                {
-                    return new GeneralResponse
-                    {
-                        IsSuccess = false,
-                        Message = "Invalid book data"
-                    };
-                }
-
-            }
-            catch (Exception ex)
+            if (!ModelState.IsValid)
             {
                 return new GeneralResponse
                 {
                     IsSuccess = false,
-                    Message = $"An error occurred: {ex.Message}"
+                    Message = "Invalid Model State",
+                    Data = ModelState
                 };
             }
+
+            var user = await _userManager.FindByIdAsync(bookDTO.UserID);
+            if (user is null)
+            {
+                return new GeneralResponse
+                {
+                    IsSuccess = false,
+                    Message = $"No User Found with this ID : {bookDTO.UserID}"
+                };
+            }
+
+            if (bookDTO.CategoryId is null && bookDTO.SubCategoryId is null)
+            {
+                return new GeneralResponse
+                {
+                    IsSuccess = false,
+                    Message = $"the book must be related to category or subcategory !"
+                };
+            }
+
+            Category? category = null;
+            if (bookDTO.CategoryId is not null)
+            {
+                category = _categoryRepository.GetById((int)bookDTO.CategoryId);
+
+                if (category is null)
+                {
+                    return new GeneralResponse
+                    {
+                        IsSuccess = false,
+                        Message = $"There is no Category Found with this ID : {bookDTO.CategoryId}"
+                    };
+                }
+
+                if (category.Type != CategoryType.Books)
+                {
+                    return new GeneralResponse
+                    {
+                        IsSuccess = false,
+                        Message = $"The Book must added to books categories only , this category type is : {category.Type.GetDisplayName()!}"
+                    };
+                }
+            }
+
+            SubCategory? subCategory = null;
+            if (bookDTO.SubCategoryId is not null)
+            {
+                subCategory = _subCategoryRepository.GetById((int)bookDTO.SubCategoryId);
+
+                if (subCategory is null)
+                {
+                    return new GeneralResponse
+                    {
+                        IsSuccess = false,
+                        Message = $"There is no subCategory Found with this ID : {bookDTO.SubCategoryId}"
+                    };
+                }
+
+                if (subCategory.Type != SubCategoryType.Books)
+                {
+                    return new GeneralResponse
+                    {
+                        IsSuccess = false,
+                        Message = $"The Book must added to books subCategories only , this subCategory type is : {subCategory.Type.GetDisplayName()!}"
+                    };
+                }
+            }
+
+            if (bookDTO.SubCategoryId is not null && bookDTO.CategoryId is not null)
+            {
+                if (subCategory?.CategoryId != category?.Id)
+                {
+                    return new GeneralResponse
+                    {
+                        IsSuccess = false,
+                        Message = $"This subcategory witht ID : {subCategory?.Id} is not related to the category with ID : {category?.Id}"
+                    };
+                }
+            }
+
+            var fileName = string.Empty;
+
+            if (bookDTO.Thumbnail != null)
+            {
+                // Validate that the file is an image by checking the MIME type
+                if (!bookDTO.Thumbnail.ContentType.StartsWith("image/"))
+                {
+                    return new GeneralResponse()
+                    {
+                        IsSuccess = false,
+                        Message = "The uploaded file is not a valid image.",
+                        Status = 409
+                    };
+                }
+
+                // Validate image size (e.g., max 2MB)
+                if (bookDTO.Thumbnail.Length > _maxImageSize)
+                {
+                    return new GeneralResponse()
+                    {
+                        IsSuccess = false,
+                        Message = "Image size exceeds the maximum allowed size of 2MB.",
+                        Status = 410
+                    };
+                }
+
+                fileName = $"{Path.GetFileNameWithoutExtension(bookDTO.Thumbnail.FileName)}_{Guid.NewGuid()}{Path.GetExtension(bookDTO.Thumbnail.FileName)}";
+                var filePath = Path.Combine(_imagesPath, fileName);
+
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await bookDTO.Thumbnail.CopyToAsync(stream);
+                }
+
+                bookDTO.Thumbnail = null; // Remove the image from DTO after saving
+            }
+
+            var roles = await _userManager.GetRolesAsync(user);
+
+            Book book = new Book
+            {
+                Title = bookDTO.Title,
+                Description = bookDTO.Description,
+                ThumbnailURL = $"/Images/Book/{fileName}",
+                Url = bookDTO.Url,
+                SubCategoryId = bookDTO.SubCategoryId,
+                CategoryId = bookDTO?.CategoryId ?? subCategory?.CategoryId,
+                PublishDate = bookDTO?.CreatedDate ?? null,
+                PublisherName = $"{user.FirstName} {user.LastName}",
+                PublisherRole = roles.FirstOrDefault(),
+                UserId = user.Id,
+            };
+
+            Book addedBook = _bookRepository.Add(book);
+            _bookRepository.Save();
+
+            BookDTO addedBookDTO = new BookDTO
+            {
+                Id = addedBook.Id,
+                Title = addedBook.Title,
+                Description = addedBook.Description,
+                ThumbnailURL = addedBook.ThumbnailURL,
+                Url = addedBook.Url,
+                SubCategoryId = addedBook.SubCategoryId,
+                CategoryId = addedBook.CategoryId
+            };
+
+            return new GeneralResponse
+            {
+                IsSuccess = true,
+                Message = "Book Added Successfully",
+                Data = addedBookDTO
+            };
         }
 
-        [HttpPut("{id}")]
+        //[HttpPost]
+        //public async Task<ActionResult<GeneralResponse>> AddBook([FromForm] AddBookDTO bookDTO)
+        //{
+        //    try
+        //    {
+        //        string uploadpath = Path.Combine(_webHostEnvironment.WebRootPath, "Images", "Book");
+        //        string imagename = Guid.NewGuid().ToString() + "_" + bookDTO.Thumbnail.FileName;
+        //        string filepath = Path.Combine(uploadpath, imagename);
+        //        using (FileStream fileStream = new FileStream(filepath, FileMode.Create))
+        //        {
+        //            bookDTO.Thumbnail.CopyTo(fileStream);
+        //        }
+        //        bookDTO.ThumbnailURL = imagename;
+        //        if (ModelState.IsValid)
+        //        {
+        //            var existinguser = await _userManager.FindByIdAsync(bookDTO.UserID);
+
+        //            if (existinguser == null)
+        //            {
+        //                return new GeneralResponse
+        //                {
+        //                    IsSuccess = false,
+        //                    Message = "there is no such user "
+        //                };
+        //            }
+
+        //            //Check if Category ID and Sub Category Id are Related to Books or not 
+
+        //            Category category = _categoryRepository.GetById((int)bookDTO.CategoryId);
+        //            SubCategory subCategory = _subCategoryRepository.GetById((int)bookDTO.SubCategoryId);
+        //            if (category.Type != CategoryType.Books || subCategory.Type != SubCategoryType.Books)
+        //            {
+        //                return new GeneralResponse()
+        //                {
+        //                    IsSuccess = false,
+        //                    Message = $"Category or SubCategory with these ID not related to Books."
+        //                };
+
+        //            }
+        //            var roles = await _userManager.GetRolesAsync(existinguser);
+
+        //            Book book = new Book
+        //            {
+        //                Title = bookDTO.Title,
+        //                Description = bookDTO.Description,
+        //                ThumbnailURL = $"/Images/Book/{imagename}",
+        //                Url = bookDTO.Url,
+        //                SubCategoryId = bookDTO.SubCategoryId,
+        //                CategoryId = bookDTO.CategoryId,
+        //                PublishDate = bookDTO.CreatedDate,
+        //                PublisherName = existinguser.UserName,
+        //                PublisherRole = roles.FirstOrDefault()
+        //            };
+
+        //            Book addedBook = _bookRepository.Add(book);
+
+        //            _bookRepository.Save();
+
+        //            BookDTO addedBookDTO = new BookDTO
+        //            {
+        //                Id = addedBook.Id,
+        //                Title = addedBook.Title,
+        //                Description = addedBook.Description,
+        //                ThumbnailURL = addedBook.ThumbnailURL,
+        //                Url = addedBook.Url,
+        //                SubCategoryId = addedBook.SubCategoryId,
+        //                CategoryId = addedBook.CategoryId
+        //            };
+
+        //            return new GeneralResponse
+        //            {
+        //                IsSuccess = true,
+        //                Message = "Book added successfully",
+        //                Data = addedBookDTO
+        //            };
+
+        //        }
+
+        //        else
+        //        {
+        //            return new GeneralResponse
+        //            {
+        //                IsSuccess = false,
+        //                Message = "Invalid book data"
+        //            };
+        //        }
+
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return new GeneralResponse
+        //        {
+        //            IsSuccess = false,
+        //            Message = $"An error occurred: {ex.Message}"
+        //        };
+        //    }
+        //}
+
+        [HttpPut("{id:int}")]
         public ActionResult<GeneralResponse> UpdateBook(int id, [FromForm] BookDTO bookDTO)
         {
             try
@@ -388,7 +561,7 @@ namespace Educational_Medical_platform.Controllers
             }
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("{id:int}")]
         public ActionResult<GeneralResponse> DeleteBook(int id)
         {
             try

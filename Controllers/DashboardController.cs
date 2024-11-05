@@ -5,6 +5,7 @@ using Educational_Medical_platform.DTO.User;
 using Educational_Medical_platform.Helpers;
 using Educational_Medical_platform.Models;
 using Educational_Medical_platform.Repositories.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Shoghlana.Api.Response;
@@ -12,7 +13,7 @@ using Shoghlana.Core.Models;
 
 namespace Educational_Medical_platform.Controllers
 {
-    //[Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin")]
     [Route("api/[controller]")]
     [ApiController]
     public class DashboardController : ControllerBase

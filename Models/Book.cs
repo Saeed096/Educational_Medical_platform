@@ -17,12 +17,9 @@ namespace Educational_Medical_platform.Models
 
         public string? PublisherRole { get; set; }
 
-        public DateTime? PublishDate { get; set; }
+        public DateTime? PublishDate { get; set; } 
 
         public string? ThumbnailURL { get; set; }
-
-        [NotMapped]
-        public IFormFile? Thumbnail { get; set; }
 
         public string Url { get; set; }
 
