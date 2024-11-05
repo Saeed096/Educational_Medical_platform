@@ -1,6 +1,6 @@
 ﻿using Educational_Medical_platform.Helpers;
 
-namespace Educational_Medical_platform.Controllers
+namespace Educational_Medical_platform.DTO.Course
 {
     public class GetRequestUserEnrollDTO
     {

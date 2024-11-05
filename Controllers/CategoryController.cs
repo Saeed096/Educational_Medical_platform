@@ -1,16 +1,14 @@
 ﻿using Educational_Medical_platform.DTO;
-using Educational_Medical_platform.DTO.BookDTO;
 using Educational_Medical_platform.Helpers;
 using Educational_Medical_platform.Models;
-using Educational_Medical_platform.Repositories.Implementations;
 using Educational_Medical_platform.Repositories.Interfaces;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Shoghlana.Api.Response;
-using System.Collections.Generic;
 
 namespace Educational_Medical_platform.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class CategoryController : ControllerBase

@@ -2,6 +2,7 @@
 using Educational_Medical_platform.DTO.PayPal;
 using Educational_Medical_platform.PayPal;
 using Educational_Medical_platform.Repositories.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using PayPal.Models;
@@ -10,6 +11,7 @@ using Shoghlana.Core.Models;
 
 namespace Educational_Medical_platform.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class PayPalController : ControllerBase
