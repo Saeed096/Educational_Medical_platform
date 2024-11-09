@@ -3,6 +3,7 @@ using Shoghlana.Core.DTO;
 using Shoghlana.Core.Interfaces;
 using System.Linq.Expressions;
 
+
 namespace Shoghlana.EF.Repository
 {
     public class GenericRepository<T> : IGenericRepository<T> where T : class
@@ -106,12 +107,12 @@ namespace Shoghlana.EF.Repository
                 }
             }
 
-            return await query.ToListAsync(); 
+            return await query.ToListAsync();
         }
 
-        public int GetCount(Expression<Func<T,bool>> criteria = null)
+        public int GetCount(Expression<Func<T, bool>> criteria = null)
         {
-            if(criteria is not null)
+            if (criteria is not null)
             {
                 return dbSet.Count(criteria);
             }
@@ -226,6 +227,42 @@ namespace Shoghlana.EF.Repository
 
         //----------------------------------------------------------
 
+        public IEnumerable<T> GetRecentSixRecords<TKey>(Expression<Func<T, TKey>> orderByProperty, string[] includes = null)
+        {
+            IQueryable<T> query = dbSet;
+
+            if (includes != null)
+            {
+                foreach (var include in includes)
+                {
+                    query = query.Include(include);
+                }
+            }
+
+            return query.OrderByDescending(orderByProperty)
+                        .Take(6)
+                        .ToList();
+        }
+
+        public async Task<IEnumerable<T>> GetRecentSixRecordsAsync<TKey>(Expression<Func<T, TKey>> orderByProperty, string[] includes = null)
+        {
+            IQueryable<T> query = dbSet;
+
+            if (includes != null)
+            {
+                foreach (var include in includes)
+                {
+                    query = query.Include(include);
+                }
+            }
+
+            return await query.OrderByDescending(orderByProperty)
+                        .Take(6)
+                        .ToListAsync();
+        }
+
+        //----------------------------------------------------------
+
         public T Add(T entity)
         {
             dbSet.Add(entity);
@@ -281,7 +318,7 @@ namespace Shoghlana.EF.Repository
 
         public Task SaveAsync()
         {
-           return context.SaveChangesAsync();
+            return context.SaveChangesAsync();
         }
     }
 }
