@@ -584,13 +584,6 @@ namespace Educational_Medical_platform.PayPal
 
             var createOrderResponse = await EnsureCourseOrderCreatedAsync(courseFromDB, instructorUser);
 
-            //User_Enrolled_Courses userEnrolledCourse = new User_Enrolled_Courses()
-            //{
-            //    CourseId = courseFromDB.Id,
-            //    StudentId = buyerUser.Id,
-            //    Status = EnrollRequestStatus.PendingApproval,
-            //    orderId = createOrderResponse.Data.id,
-            //}
 
             return createOrderResponse;
 
@@ -644,7 +637,7 @@ namespace Educational_Medical_platform.PayPal
                 var newProduct = new CreateProductRequest
                 {
                     name = $"{courseFromDB.Title}",
-                    description = $"{courseFromDB.Preview?? "s"}",
+                    description = $"{courseFromDB.Preview?? "NA"}",
                     type = "DIGITAL",
                     category = "ACADEMIC_SOFTWARE"
                 };
@@ -736,18 +729,7 @@ namespace Educational_Medical_platform.PayPal
                          }
                     }
                 },
-                //            intent = "CAPTURE", // or "AUTHORIZE" based on your requirement
-                //            purchase_units = new List<PurchaseUnit>
-                //{
-                //    new PurchaseUnit
-                //    {
-                //        amount = new Models.Responses.Amount
-                //        {
-                //            value = "1590.00", // Note the correct format for currency value
-                //            currency_code = "USD"
-                //        }
-                //    }
-                //}
+               
             };
 
             var jsonContent = JsonConvert.SerializeObject(createOrderRequest);
@@ -775,13 +757,6 @@ namespace Educational_Medical_platform.PayPal
                     Data = response
                 };
             }
-
-            // This after approve I think
-            //private async Task<CapturePaymentForOrderResponse?> CapturePaymentForOrderAsync(string id)
-            //{
-            //    // just take the order Id from the prev method 
-            //    throw new NotImplementedException();
-            //}
         }
 
         // ================================================================================================
