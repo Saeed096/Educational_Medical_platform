@@ -306,11 +306,7 @@ namespace Educational_Medical_platform.Controllers
             return isValidEvent;
         }
 
-        [HttpPost("HandleSubscriptionWebhook")]
-        public async Task<IActionResult> HandleSubscriptionWebhook()
-        {
-            return Ok();
-        }
+     
 
         [HttpPost("BuyCourse")]
         public async Task<ActionResult<GeneralResponse>> BuyCourse(BuyCourseDTO buyCourseDTO)
