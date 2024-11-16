@@ -6,8 +6,6 @@ using Educational_Medical_platform.PayPal.Models;
 using Educational_Medical_platform.PayPal.Models.Responses;
 using Educational_Medical_platform.Repositories.Interfaces;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using PayPal.Configuration;
 using PayPal.Models.Requests;
@@ -28,16 +26,12 @@ namespace Educational_Medical_platform.PayPal
         private readonly IPlatformRepository _platformRepository;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ICourseRepository _courseRepository;
-        private readonly IUserEnrolledCoursesRepository _userEnrolledCoursesRepository;
-        private readonly ValidWebhookEventIds _validWebhookEventIds;
 
         public PayPalClientApi(
             IUserSubscribtionRipository userSubscribtionRipository,
             IPlatformRepository platformRepository,
             UserManager<ApplicationUser> userManager,
-            ICourseRepository courseRepository,
-            IUserEnrolledCoursesRepository userEnrolledCoursesRepository,
-             IOptions<ValidWebhookEventIds> ValidWebhookEventIds
+            ICourseRepository courseRepository
             )
         {
             _client = new HttpClient();
@@ -46,8 +40,6 @@ namespace Educational_Medical_platform.PayPal
             _platformRepository = platformRepository;
             _userManager = userManager;
             _courseRepository = courseRepository;
-            _userEnrolledCoursesRepository = userEnrolledCoursesRepository;
-            _validWebhookEventIds = ValidWebhookEventIds.Value;
         }
 
         private async Task InitializeHttpClient()
@@ -76,15 +68,15 @@ namespace Educational_Medical_platform.PayPal
 
         private void SetAuthorizationHeader(string token)
         {
-            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);   // to be studied
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
         }
 
         public async Task<AuthorizationResponseData?> GetAuthorizationRequest()
         {
             EnsureHttpClientCreated();
 
-            var byteArray = Encoding.ASCII.GetBytes($"{ConfigHelper.ClientId}:{ConfigHelper.ClientSecret}");  // to be studied
-            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(byteArray));   
+            var byteArray = Encoding.ASCII.GetBytes($"{ConfigHelper.ClientId}:{ConfigHelper.ClientSecret}");
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(byteArray));
 
             var keyValuePairs = new List<KeyValuePair<string, string>>
             {
@@ -168,7 +160,7 @@ namespace Educational_Medical_platform.PayPal
                         },
                         tenure_type = "REGULAR",
                         sequence = 1,
-                        total_cycles = 0,
+                        total_cycles = 12,
                         pricing_scheme = new PricingScheme
                         {
                             fixed_price = new FixedPrice
@@ -562,17 +554,6 @@ namespace Educational_Medical_platform.PayPal
                 };
             }
 
-           var userEnrolledCourseFromDb = _userEnrolledCoursesRepository
-                                          .Find(u => u.CourseId == buyCourseDTO.CourseId && u.StudentId == buyCourseDTO.UserId);
-
-            if (userEnrolledCourseFromDb != null)
-            {
-                return new GeneralResponse()
-                {
-                    IsSuccess = false,
-                    Message = "This user has already bought this course before"
-                };
-            }
             //---------------------------------------------------------------
 
             var createCourseProductResponse = await EnsureCourseProductCreated(courseFromDB);
@@ -583,14 +564,6 @@ namespace Educational_Medical_platform.PayPal
             }
 
             var createOrderResponse = await EnsureCourseOrderCreatedAsync(courseFromDB, instructorUser);
-
-            //User_Enrolled_Courses userEnrolledCourse = new User_Enrolled_Courses()
-            //{
-            //    CourseId = courseFromDB.Id,
-            //    StudentId = buyerUser.Id,
-            //    Status = EnrollRequestStatus.PendingApproval,
-            //    orderId = createOrderResponse.Data.id,
-            //}
 
             return createOrderResponse;
 
@@ -639,26 +612,13 @@ namespace Educational_Medical_platform.PayPal
         private async Task<GeneralResponse> CreateCourseProductAsync(Course courseFromDB)
         {
             // create paypal prod then update your SQL
-            //if(!string.IsNullOrEmpty(courseFromDB.Preview))
-            //{
-                var newProduct = new CreateProductRequest
-                {
-                    name = $"{courseFromDB.Title}",
-                    description = $"{courseFromDB.Preview?? "s"}",
-                    type = "DIGITAL",
-                    category = "ACADEMIC_SOFTWARE"
-                };
-            //}
-            //else
-            //{
-            //    var newProduct = new CreateProductRequest
-            //    {
-            //        name = $"{courseFromDB.Title}",
-            //        type = "DIGITAL",
-            //        category = "ACADEMIC_SOFTWARE"
-            //    };
-            //}
-            
+            var newProduct = new CreateProductRequest
+            {
+                name = $"{courseFromDB.Title}",
+                description = $"{courseFromDB?.Preview??"NA"}", 
+                type = "DIGITAL",
+                category = "ACADEMIC_SOFTWARE"
+            };
 
             var jsonContent = JsonConvert.SerializeObject(newProduct);
             var httpContent = new StringContent(jsonContent, Encoding.UTF8, "application/json");
@@ -696,58 +656,24 @@ namespace Educational_Medical_platform.PayPal
             CreateOrderRequest createOrderRequest = new CreateOrderRequest
             {
                 intent = "CAPTURE",
-                purchase_units = new List<Models.Responses.PurchaseUnit>
+                purchase_units = new List<PurchaseUnit>
                 {
-                    new Models.Responses.PurchaseUnit
+                    new PurchaseUnit
                     {
                         amount = new Models.Responses.Amount
                         {
                             // I found that paypal takes 5-6 % fees
                             // TODO : The front end should display this note to user + aslo the same for taxes and Fees at the subscription
-                            value = (courseFromDB.Price + (0.06m * courseFromDB.Price)).ToString("F2") ,
-                            currency_code = "USD",
-                            breakdown = new Breakdown()
-                            {
-                                item_total = new ItemTotal()
-                                {
-                                    currency_code = "USD",
-                                    value = (courseFromDB.Price + (0.06m * courseFromDB.Price)).ToString("F2")
-                                }
-                            }
+                            value = (courseFromDB.Price + (0.06m * courseFromDB.Price)).ToString() ,
+                            currency_code = "USD"
                         },
-                        
-                         payee = new Models.Responses.Payee
+
+                        payee = new Payee
                         {
-                            // should validate here that this mail is valid for payal????
-                            email_address = instructor.Email  // "sb-zlsua33259933@business.example.com"
-                        },
-                         items = new List<Item>()
-                         {
-                             new Item()
-                             {
-                                 name = courseFromDB.Title,
-                                 quantity = "1" ,
-                                 unit_amount = new UnitAmount()
-                                 {
-                                   currency_code = "USD",
-                                   value = (courseFromDB.Price + (0.06m * courseFromDB.Price)).ToString("F2")
-                                 }
-                             }
-                         }
+                            email_address = instructor.Email
+                        }
                     }
                 },
-                //            intent = "CAPTURE", // or "AUTHORIZE" based on your requirement
-                //            purchase_units = new List<PurchaseUnit>
-                //{
-                //    new PurchaseUnit
-                //    {
-                //        amount = new Models.Responses.Amount
-                //        {
-                //            value = "1590.00", // Note the correct format for currency value
-                //            currency_code = "USD"
-                //        }
-                //    }
-                //}
             };
 
             var jsonContent = JsonConvert.SerializeObject(createOrderRequest);
@@ -762,7 +688,7 @@ namespace Educational_Medical_platform.PayPal
                 return new GeneralResponse
                 {
                     IsSuccess = true,
-                    Message = "Course Order Created Successfully , Redirect the buyer to approve link",
+                    Message = "Course Order Created Successfully , Rediredt the buyer to approve link",
                     Data = result
                 };
             }
@@ -785,63 +711,5 @@ namespace Educational_Medical_platform.PayPal
         }
 
         // ================================================================================================
-
-        public async Task<bool> VerifyEvent(string json, IHeaderDictionary headerDictionary , string WebhookId)
-        {
-            // !!IMPORTANT!!
-            // Without this direct JSON serialization, PayPal WILL ALWAYS return verification_status = "FAILURE".
-            // This is probably because the order of the fields are different and PayPal does not sort them. 
-            var paypalVerifyRequestJsonString = $@"{{
-				""transmission_id"": ""{headerDictionary["PAYPAL-TRANSMISSION-ID"][0]}"",
-				""transmission_time"": ""{headerDictionary["PAYPAL-TRANSMISSION-TIME"][0]}"",
-				""cert_url"": ""{headerDictionary["PAYPAL-CERT-URL"][0]}"",
-				""auth_algo"": ""{headerDictionary["PAYPAL-AUTH-ALGO"][0]}"",
-				""transmission_sig"": ""{headerDictionary["PAYPAL-TRANSMISSION-SIG"][0]}"",
-				""webhook_id"": ""{WebhookId}"",  
-				""webhook_event"": {json}
-				}}"; // to be changed to omar webhook id
-
-            var content = new StringContent(paypalVerifyRequestJsonString, Encoding.UTF8, "application/json");
-
-            var resultResponse = await _client.PostAsync($"{ConfigHelper.BaseUrl}/v1/notifications/verify-webhook-signature", content);
-
-            var responseBody = await resultResponse.Content.ReadAsStringAsync();
-
-            var verifyWebhookResponse = JsonConvert.DeserializeObject<WebHookVerificationResponse>(responseBody);
-
-            if (verifyWebhookResponse.verification_status != "SUCCESS")
-            {
-                return false;
-            }
-
-            return true;
-        }
-
-        public async Task<GeneralResponse> captureOrderAsync(string orderId)
-        {
-            var request = new HttpRequestMessage(HttpMethod.Post , $"{ConfigHelper.BaseUrl}/v2/checkout/orders/{orderId}/capture");
-            request.Headers.Add("Accept", "application/json");
-            request.Headers.Add("Authorization", $"Bearer {_accessToken}");
-            request.Content = new StringContent("", Encoding.UTF8, "application/json"); // Empty JSON body with correct Content-Type
-            var response = await _client.SendAsync(request);
-
-            if(response.IsSuccessStatusCode)
-            {
-                return new GeneralResponse()
-                {
-                    IsSuccess = true,
-                    Message = "Money has been transferred successfully"
-                };
-            }
-            else
-            {
-                return new GeneralResponse()
-                {
-                    IsSuccess = false,
-                    Message = "Error happened through transferring money"
-                };
-            }
-        }
-
     }
 }

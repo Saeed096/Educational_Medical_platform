@@ -33,12 +33,7 @@ namespace Educational_Medical_platform.Configurations
                 new Category { Id = 13, Name = "Anatomy Exam", Type = Helpers.CategoryType.Exams },
                 new Category { Id = 14, Name = "Physiology Exam", Type = Helpers.CategoryType.Exams },
                 new Category { Id = 15, Name = "Pharmacology Exam", Type = Helpers.CategoryType.Exams },
-                new Category { Id = 16, Name = "Pathology Exam", Type = Helpers.CategoryType.Exams },
-
-
-                // real data 
-                new Category { Id = 17, Name = "American physical therapy equation", Type = Helpers.CategoryType.Exams }
-
+                new Category { Id = 16, Name = "Pathology Exam", Type = Helpers.CategoryType.Exams }
             );
         }
     }
