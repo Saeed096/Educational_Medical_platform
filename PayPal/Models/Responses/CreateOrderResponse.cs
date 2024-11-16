@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Educational_Medical_platform.PayPal.Models.Responses
 {
@@ -22,6 +23,8 @@ namespace Educational_Medical_platform.PayPal.Models.Responses
     public class Amount
     {
         public string currency_code { get; set; }
+
+        [Column ( TypeName = "decimal(10,2)")]
         public string value { get; set; }
         public Breakdown breakdown { get; set; }
     }
@@ -34,7 +37,7 @@ namespace Educational_Medical_platform.PayPal.Models.Responses
     public class Item
     {
         public string name { get; set; }
-        public UnitAmount unit_amount { get; set; }
+        public UnitAmount unit_amount { get; set; } 
         public string quantity { get; set; }
     }
 
@@ -67,7 +70,7 @@ namespace Educational_Medical_platform.PayPal.Models.Responses
 
     public class UnitAmount
     {
-        public string currency_code { get; set; }
-        public string value { get; set; }
+        public string currency_code { get; set; } 
+        public string value { get; set; }  
     }
 }

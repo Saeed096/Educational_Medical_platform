@@ -8,7 +8,7 @@ namespace Educational_Medical_platform.Models
         [Key]
         public int Id { get; set; }
 
-        [StringLength(maximumLength: 200, MinimumLength = 3, ErrorMessage = "Description Must be within (3-200) chars")]
+        [StringLength(maximumLength: 800, MinimumLength = 3, ErrorMessage = "Description Must be within (3-200) chars")]
         public string Description { get; set; }
 
         [ForeignKey(nameof(Test))]
