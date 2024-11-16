@@ -49,7 +49,20 @@ namespace Educational_Medical_platform.Configurations
                 new SubCategory { Id = 29, Name = "Clinical Pharmacology Exam", CategoryId = 15, Type = Helpers.SubCategoryType.Exams },
                 new SubCategory { Id = 30, Name = "Pharmacokinetics Exam", CategoryId = 15, Type = Helpers.SubCategoryType.Exams },
                 new SubCategory { Id = 31, Name = "General Pathology Exam", CategoryId = 16, Type = Helpers.SubCategoryType.Exams },
-                new SubCategory { Id = 32, Name = "Systemic Pathology Exam", CategoryId = 16, Type = Helpers.SubCategoryType.Exams }
+                new SubCategory { Id = 32, Name = "Systemic Pathology Exam", CategoryId = 16, Type = Helpers.SubCategoryType.Exams },
+
+                // real data 
+                new SubCategory { Id = 33, Name = "Surgery", CategoryId = 17, Type = Helpers.SubCategoryType.Exams },
+                new SubCategory { Id = 34, Name = "Burns", CategoryId = 17, Type = Helpers.SubCategoryType.Exams },
+                new SubCategory { Id = 35, Name = "Surgery & Burns", CategoryId = 17, Type = Helpers.SubCategoryType.Exams },
+                new SubCategory { Id = 36, Name = "Cardiology & Chest", CategoryId = 17, Type = Helpers.SubCategoryType.Exams },
+                new SubCategory { Id = 37, Name = "Cancer", CategoryId = 17, Type = Helpers.SubCategoryType.Exams },
+                new SubCategory { Id = 38, Name = "Dermatology", CategoryId = 17, Type = Helpers.SubCategoryType.Exams },
+                new SubCategory { Id = 39, Name = "Other systems", CategoryId = 17, Type = Helpers.SubCategoryType.Exams },
+                new SubCategory { Id = 40, Name = "Basic science", CategoryId = 17, Type = Helpers.SubCategoryType.Exams },
+                new SubCategory { Id = 41, Name = "Gynecology", CategoryId = 17, Type = Helpers.SubCategoryType.Exams },
+                new SubCategory { Id = 42, Name = "Neurology", CategoryId = 17, Type = Helpers.SubCategoryType.Exams }
+
 
                 );
         }

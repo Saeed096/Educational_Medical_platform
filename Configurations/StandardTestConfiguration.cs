@@ -45,7 +45,59 @@ namespace Educational_Medical_platform.Configurations
                      Difficulty = TestDifficulty.Hard,
                      Type = TestType.Premium,
                      Price = 150,
-                 }
+                 },
+
+                 // real data
+                   new StandardTest()
+                   {
+                       Id = 4,
+                       Title = "Cardiology & Chest 1",
+                       DurationInMinutes = 30,
+                       Fullmark = 20,
+                       CategoryId = 17,
+                       SubCategoryId = 36,
+                       Difficulty = TestDifficulty.Intermediate,
+                       Type = TestType.Free,
+                       Price = 150,             // no need for it
+                   },
+
+                   new StandardTest()
+                   {
+                       Id = 5,
+                       Title = "Cardiology & Chest 2",
+                       DurationInMinutes = 30,
+                       Fullmark = 20,
+                       CategoryId = 17,
+                       SubCategoryId = 36,
+                       Difficulty = TestDifficulty.Intermediate,
+                       Type = TestType.Premium,
+                       Price = 150,          
+                   },
+
+                      new StandardTest()
+                      {
+                          Id = 6,
+                          Title = "Cardiology & Chest 3",
+                          DurationInMinutes = 30,
+                          Fullmark = 20,
+                          CategoryId = 17,
+                          SubCategoryId = 36,
+                          Difficulty = TestDifficulty.Intermediate,
+                          Type = TestType.Premium,
+                          Price = 150,
+                      },
+                        new StandardTest()
+                        {
+                            Id = 7,
+                            Title = "Cardiology & Chest 4",
+                            DurationInMinutes = 30,
+                            Fullmark = 20,
+                            CategoryId = 17,
+                            SubCategoryId = 36,
+                            Difficulty = TestDifficulty.Intermediate,
+                            Type = TestType.Premium,
+                            Price = 150,
+                        }
                 );
         }
     }

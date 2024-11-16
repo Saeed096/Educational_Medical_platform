@@ -45,6 +45,7 @@ namespace Educational_Medical_platform
 
             #region Registering Services
             builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("MailSettings"));
+            builder.Services.Configure<ValidWebhookEventIds>(builder.Configuration.GetSection("ValidWebhookEventIds"));
 
             builder.Services.AddScoped<IEmailService, EmailService>();
             builder.Services.AddScoped<IBlogRepository, BlogRepository>(); 
