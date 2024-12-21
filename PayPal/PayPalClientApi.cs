@@ -271,6 +271,7 @@ namespace Educational_Medical_platform.PayPal
                 var userSubscription = new UserSubscription
                 {
                     CreatedAt = DateTime.Now,
+                    UpdatedAt = DateTime.Now,
                     StartDate = subscriptionResponse.start_time,
                     EndDate = DateTime.Now.AddMonths(12),
 

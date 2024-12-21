@@ -1,6 +1,8 @@
-﻿using Educational_Medical_platform.DTO.Course;
+﻿using Azure;
+using Educational_Medical_platform.DTO.Course;
 using Educational_Medical_platform.DTO.PayPal;
 using Educational_Medical_platform.Helpers;
+using Educational_Medical_platform.Models;
 using Educational_Medical_platform.PayPal;
 using Educational_Medical_platform.PayPal.Models;
 using Educational_Medical_platform.PayPal.Models.Responses;
@@ -119,7 +121,8 @@ namespace Educational_Medical_platform.Controllers
         // Webhook endpoint to receive PayPal notifications
         [HttpPost("ActivateSubscription")]
         public async Task<ActionResult<GeneralResponse>> ActivateSubscription()  
-         {
+         
+        {
             var json = await new StreamReader(HttpContext.Request.Body).ReadToEndAsync();
             var headers = HttpContext.Request.Headers;
             bool result = false;
@@ -261,6 +264,7 @@ namespace Educational_Medical_platform.Controllers
                 };
             }
         }
+        // test all cycle of subscription
         private async Task<bool> HandleSubscriptionActivated(webhookEvent webhookEvent)
         {
             var subscriptionId = webhookEvent.Resource.Id;  // Subscription ID is in resource.id
@@ -295,9 +299,195 @@ namespace Educational_Medical_platform.Controllers
 
 
         [HttpPost("cancelSubscription")]
-        public IActionResult cancelSubscription()
+        public async Task <ActionResult<GeneralResponse>> cancelSubscription(webhookEvent webhookEvent)
         {
-            return Ok();
+
+            var json = await new StreamReader(HttpContext.Request.Body).ReadToEndAsync();
+            var headers = HttpContext.Request.Headers;
+            bool isValid = await VerifyEvent(json, headers, _validWebhookEventIds.SubscriptionCancelled);
+
+            if (true) // replace it with isvalid 
+            {
+
+                if (webhookEvent.Summary == "Subscription cancelled")
+                {
+                    UserSubscription? userSubscription = _userSubscribtionRipository
+                                               .Find(us => us.SubscriptionPlanId == webhookEvent.Resource.Id);
+                    if (userSubscription is not null)
+                    {
+                        if (userSubscription?.EndDate.Day > DateTime.Today.Day)
+                        {
+                            // use isdayfoundinmonth before build date
+
+                            if (isDayFoundInMonth(userSubscription.EndDate.Day, DateTime.Today.Month))
+                            {
+                                userSubscription.EndDate = new DateTime(DateTime.Today.Year
+                                , DateTime.Today.Month, userSubscription.EndDate.Day);
+                            }
+                            else
+                            {
+                                userSubscription.EndDate = new DateTime(DateTime.Today.Year, DateTime.Today.Month + 1, 1);
+                            }
+
+                        }
+                        else
+                        {
+                            if (DateTime.Today.Month != 12)
+                            {
+                                if (isDayFoundInMonth(userSubscription.EndDate.Day, DateTime.Today.Month + 1))
+                                {
+                                    userSubscription.EndDate = new DateTime(DateTime.Today.Year,
+                                        DateTime.Today.Month + 1, userSubscription.EndDate.Day);
+                                }
+                                else
+                                {
+                                    userSubscription.EndDate = new DateTime(DateTime.Today.Year, DateTime.Today.Month + 2, 1);
+                                }
+
+                            }
+                            else
+                            {
+                                if (isDayFoundInMonth(userSubscription.EndDate.Day, 1))
+                                {
+                                    userSubscription.EndDate = new DateTime(DateTime.Today.Year + 1,
+                                  1, userSubscription.EndDate.Day);
+                                }
+                                else
+                                {
+                                    userSubscription.EndDate = new DateTime(DateTime.Today.Year + 1, 2, 1);
+                                }
+
+                            }
+                        }
+                        userSubscription.UpdatedAt = DateTime.Now;  // to use it on job, as filter to minimize number of records to be affected every day for better performance
+                        _userSubscribtionRipository.Update(userSubscription);
+                        await _userSubscribtionRipository.SaveAsync();
+                        // job to check end dates then make issubscribed false or cehecking subscribtion using enddates regardless flag
+
+                        // send mail to notify user
+
+                        ApplicationUser? user = await _userManager.FindByIdAsync("59e7780d-e3fc-4017-ac92-9411a3da168b");
+                        if (user == null)
+                        {
+                            return new GeneralResponse()
+                            {
+                                IsSuccess = false,
+                                Message = "No user was found for this id"
+                            };
+                        }
+
+                        string subject = "Subscription Cancellation Confirmation";
+
+                        string htmlBody = $@"
+<html>
+<head>
+    <link href=""https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"" rel=""stylesheet"">
+</head>
+<body>
+    <div class=""container mt-4 p-4 border rounded shadow-sm"">
+        <h2 class=""text-center text-primary mb-4"">Subscription Cancellation Confirmation</h2>
+        <p>Dear <strong>User</strong>,</p>
+        <p>We would like to confirm that your premium subscription has been successfully canceled.</p>
+        <div class=""alert alert-info"" role=""alert"">
+            <p>Your subscription will remain active until the end of your billing period. The last day of your premium plan will be <strong>{userSubscription.EndDate}</strong>.</p>
+        </div>
+        <p class=""text-success"">We’re sad to see you go, but we hope to serve you again in the future!</p>
+        <p>If you wish to reactivate your subscription or explore other plans, feel free to visit our platform at any time.</p>
+        <hr>
+        <p>Thank you for being a valued part of our community.</p>
+        <p>Best Regards,</p>
+        <p class=""text-muted"">The Platform Team</p>
+    </div>
+</body>
+</html>
+";
+
+
+                        await _emailService.SendEmailAsync(user.Email, subject, htmlBody);
+
+                        return new GeneralResponse()
+                        {
+                            IsSuccess = true,
+                            Message = "Subscription has been cancelled successfully"
+                        };
+
+                    }
+                    else
+                    {
+                        return new GeneralResponse()
+                        {
+                            IsSuccess = false,
+                            Message = "No user was found for this subscription id"
+                        };
+                    }
+
+
+                }
+                else
+                {
+                    return new GeneralResponse()
+                    {
+                        IsSuccess = false,
+                        Message = "event summary is not cancelled"
+                    };
+                }
+
+
+            }
+            else
+            {
+                return new GeneralResponse()
+                {
+                    IsSuccess = false,
+                    Message = "Unverified event"
+                };
+            }
+
+        }
+
+
+        private bool isDayFoundInMonth(int day , int month)
+        {
+            int[] largeMonths = { 1, 3, 5, 7, 8, 10, 12 }; // months that contain 31 day
+            int[] smallMonths = { 4, 6, 9, 11};  // months that contain 30 day
+
+            if (largeMonths.Contains(month))
+            {
+                return true;    
+            }
+            else if(smallMonths.Contains(month))
+            {
+                if(day > 30)
+                {
+                    return false;
+                }
+                return true;
+            }
+            else // handle februaury case
+            {
+                if(DateTime.IsLeapYear(DateTime.Today.Year))
+                {
+                    if(day <= 29)
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+                else
+                {
+                    if (day <= 28)
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+            }
         }
 
         private async Task<bool> VerifyEvent(string json, IHeaderDictionary headerDictionary, string WebhookId)
