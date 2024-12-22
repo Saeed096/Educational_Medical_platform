@@ -245,7 +245,7 @@ namespace Educational_Medical_platform.Controllers
                     {
                         IsSuccess = false,
                         Data = null,
-                        Message = "This user email is not confirmed",
+                        Message = "This user email is not confirmed",   
                         Status = 105
                     };
                 }
@@ -644,7 +644,8 @@ namespace Educational_Medical_platform.Controllers
             return new GeneralResponse
             {
                 IsSuccess = true,
-                Message = "Local Subscription request is created successfully , And now it's pending Approval by the Admin"
+                Message = "Local Subscription request is created successfully , And now it's pending Approval by the Admin",
+                Data = userLocalSubscribtion.Id
             };
         }
     }

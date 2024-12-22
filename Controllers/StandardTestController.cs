@@ -101,13 +101,15 @@ namespace Educational_Medical_platform.Controllers
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             var user = await _userManager.FindByIdAsync(userId);
 
-            // check if the user is subscriped to platform or not
-            if (!user.IsSubscribedToPlatform)
+            var userRoles = await _userManager.GetRolesAsync(user);
+
+            // Check if the user is allowed access to premium tests
+            if (!userRoles.Contains("Admin") && !user.IsSubscribedToPlatform)
             {
                 return new GeneralResponse
                 {
                     IsSuccess = false,
-                    Message = "this user can't access premuim tests because he is not subsciped to platform",
+                    Message = "This user can't access premium tests because they are not subscribed to the platform.",
                     Data = userId
                 };
             }
