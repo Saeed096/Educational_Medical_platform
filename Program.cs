@@ -31,11 +31,16 @@ namespace Educational_Medical_platform
             {
                 options.AddPolicy("DefaultPolicy", policy =>
                 {
-                    policy.WithOrigins("http://localhost:3000", "http://localhost:5173") // Add multiple origins
+                    policy.WithOrigins(
+                        "http://localhost:3000",
+                        "https://practice2pass.netlify.app",
+                        "https://dr-naser-academy.netlify.app"
+                    )
                     .AllowAnyMethod()
                     .AllowAnyHeader();
                 });
             });
+
 
             builder.Services.AddDbContext<ApplicationDBContext>(options =>
             {
@@ -48,8 +53,8 @@ namespace Educational_Medical_platform
             builder.Services.Configure<ValidWebhookEventIds>(builder.Configuration.GetSection("ValidWebhookEventIds"));
 
             builder.Services.AddScoped<IEmailService, EmailService>();
-            builder.Services.AddScoped<IBlogRepository, BlogRepository>(); 
-            builder.Services.AddScoped<IBookRepository,BookRepository>();
+            builder.Services.AddScoped<IBlogRepository, BlogRepository>();
+            builder.Services.AddScoped<IBookRepository, BookRepository>();
             builder.Services.AddScoped<ISubCategoryRepository, SubCategoryRepository>();
             builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
             builder.Services.AddScoped<IBlog_User_LikesRepository, Blog_User_LikeRepository>();
@@ -110,20 +115,20 @@ namespace Educational_Medical_platform
                 options.SaveToken = true;
 
                 // validate the token itself
-                options.TokenValidationParameters = new TokenValidationParameters()
+                options.TokenValidationParameters = new TokenValidationParameters
                 {
-                    // check that the issuer is this wep API
+                    // Validate against multiple issuers
                     ValidateIssuer = true,
-                    ValidIssuer = builder.Configuration["JWT:ValidIss"],
+                    ValidIssuers = builder.Configuration.GetSection("JWT:ValidIssuers").Get<string[]>(),
 
-                    // check that the audience is target React App
+                    // Validate against multiple audiences
                     ValidateAudience = true,
-                    ValidAudience = builder.Configuration["JWT:ValidAud"],// note : don't write any sapces
+                    ValidAudiences = builder.Configuration.GetSection("JWT:ValidAudiences").Get<string[]>(),
 
-                    // check the signature resulting from : key + payload 
-                    IssuerSigningKey =
-                    new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:SecretKey"])),
+                    // Validate the signature of the token
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:SecretKey"]))
                 };
+
             });
 
 
