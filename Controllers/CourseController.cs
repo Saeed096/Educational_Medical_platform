@@ -648,7 +648,8 @@ namespace Educational_Medical_platform.Controllers
                 };
             }
 
-            List<User_Enrolled_Courses> User_Enrolled_Courses = _userEnrolledCoursesRepository.FindAll(criteria: uc => uc.StudentId == studentId).ToList();
+            List<User_Enrolled_Courses> User_Enrolled_Courses = _userEnrolledCoursesRepository
+                            .FindAll(criteria: uc => uc.StudentId == studentId ).ToList();
 
             if (User_Enrolled_Courses == null || !User_Enrolled_Courses.Any())
             {
@@ -664,7 +665,7 @@ namespace Educational_Medical_platform.Controllers
 
             foreach (var User_Enrolled_Course in User_Enrolled_Courses)
             {
-                var course = _courseRepository.Find(c => c.Id == User_Enrolled_Course.CourseId, ["Instructor"]);
+                var course = _courseRepository.Find(c => c.Id == User_Enrolled_Course.CourseId, ["Instructor" ,"Requirements", "Objectives"]);
 
 
                 var subCategory = _subCategoryRepository.Find(s => s.Id == course.SubCategoryId, ["Category"]);
