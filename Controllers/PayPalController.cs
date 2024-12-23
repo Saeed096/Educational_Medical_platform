@@ -19,7 +19,6 @@ using Shoghlana.Core.Models;
 
 namespace Educational_Medical_platform.Controllers
 {
-    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class PayPalController : ControllerBase
@@ -30,13 +29,15 @@ namespace Educational_Medical_platform.Controllers
         private readonly ValidWebhookEventIds _validWebhookEventIds;
         private readonly IUserEnrolledCoursesRepository _userEnrolledCoursesRepository;
         private readonly IEmailService _emailService;
+        private readonly ISubscriptionService _subscriptionService;
 
         public PayPalController(
             IUserSubscribtionRipository userSubscribtionRipository,
             IPlatformRepository platformRepository,
             UserManager<ApplicationUser> userManager,
             ICourseRepository courseRepository, IOptions<ValidWebhookEventIds> ValidWebhookEventIds,
-            IUserEnrolledCoursesRepository userEnrolledCoursesRepository, IEmailService emailService)
+            IUserEnrolledCoursesRepository userEnrolledCoursesRepository, IEmailService emailService,
+            ISubscriptionService subscriptionService)
         {
             _client = new PayPalClientApi(userSubscribtionRipository, platformRepository, userManager, courseRepository,
                 userEnrolledCoursesRepository, ValidWebhookEventIds);
@@ -46,9 +47,11 @@ namespace Educational_Medical_platform.Controllers
             _validWebhookEventIds = ValidWebhookEventIds.Value;
             _userEnrolledCoursesRepository = userEnrolledCoursesRepository;
 
-            _emailService = emailService;   
+            _emailService = emailService;
+            _subscriptionService = subscriptionService;
         }
 
+        [Authorize]
         [HttpGet("GetAccessToken")]
         public async Task<ActionResult<GeneralResponse>> GetAccessToken()
         {
@@ -61,6 +64,7 @@ namespace Educational_Medical_platform.Controllers
             };
         }
 
+        [Authorize]
         [HttpGet("GetCurrentAccessTokenDetails")]
         public ActionResult<GeneralResponse> GetCurrentAccessTokenDetails()
         {
@@ -73,6 +77,7 @@ namespace Educational_Medical_platform.Controllers
             };
         }
 
+        [Authorize]
         [HttpPost("CreateProduct")]
         public async Task<ActionResult<GeneralResponse>> CreateProduct(CreateProductRequestDTO productRequestDTO)
         {
@@ -85,6 +90,7 @@ namespace Educational_Medical_platform.Controllers
             };
         }
 
+        [Authorize]
         [HttpPost("CreateMonthlyPlanForProduct")]
         public async Task<ActionResult<GeneralResponse>> CreateMonthlyPlanForProduct(CreatePlanRequestDTO createPlanRequestDTO)
         {
@@ -97,6 +103,7 @@ namespace Educational_Medical_platform.Controllers
             };
         }
 
+        [Authorize]
         [HttpPost("CreateSubscribtion")]
         public async Task<ActionResult<GeneralResponse>> CreateSubscribtion(CreateSubscribtionDTO createSubscribtionDTO)
         {
@@ -299,86 +306,43 @@ namespace Educational_Medical_platform.Controllers
 
 
         [HttpPost("cancelSubscription")]
-        public async Task <ActionResult<GeneralResponse>> cancelSubscription(webhookEvent webhookEvent)
+        public async Task <ActionResult<GeneralResponse>> cancelSubscription(CancelSubscriptionWebhookEvent webhookEvent)
         {
 
-            var json = await new StreamReader(HttpContext.Request.Body).ReadToEndAsync();
-            var headers = HttpContext.Request.Headers;
-            bool isValid = await VerifyEvent(json, headers, _validWebhookEventIds.SubscriptionCancelled);
 
-            if (true) // replace it with isvalid 
-            {
-
-                if (webhookEvent.Summary == "Subscription cancelled")
+                if (webhookEvent.event_type == "BILLING.SUBSCRIPTION.CANCELLED")
                 {
                     UserSubscription? userSubscription = _userSubscribtionRipository
-                                               .Find(us => us.SubscriptionPlanId == webhookEvent.Resource.Id);
+                                               .Find(us => us.SubscriptionPlanId == webhookEvent.resource.id);
                     if (userSubscription is not null)
                     {
-                        if (userSubscription?.EndDate.Day > DateTime.Today.Day)
+
+                    // call enddate func 
+                    DateTime updatedEnddate = _subscriptionService.getEnddate(userSubscription.EndDate);
+
+
+                    userSubscription.EndDate = updatedEnddate;
+                    userSubscription.UpdatedAt = DateTime.Now;  // to use it on job, as filter to minimize number of records to be affected every day for better performance
+                    userSubscription.Status = SubscriptionStatus.CANCELLED;
+                    _userSubscribtionRipository.Update(userSubscription);
+                    await _userSubscribtionRipository.SaveAsync();
+                    // job to check end dates then make issubscribed false or cehecking subscribtion using enddates regardless flag
+
+                    // send mail to notify user
+
+                    ApplicationUser? user = await _userManager.FindByIdAsync(userSubscription.UserId);
+                    if (user == null)
+                    {
+                        return new GeneralResponse()
                         {
-                            // use isdayfoundinmonth before build date
+                            IsSuccess = false,
+                            Message = "No user was found for this id"
+                        };
+                    }
 
-                            if (isDayFoundInMonth(userSubscription.EndDate.Day, DateTime.Today.Month))
-                            {
-                                userSubscription.EndDate = new DateTime(DateTime.Today.Year
-                                , DateTime.Today.Month, userSubscription.EndDate.Day);
-                            }
-                            else
-                            {
-                                userSubscription.EndDate = new DateTime(DateTime.Today.Year, DateTime.Today.Month + 1, 1);
-                            }
+                    string subject = "Subscription Cancellation Confirmation";
 
-                        }
-                        else
-                        {
-                            if (DateTime.Today.Month != 12)
-                            {
-                                if (isDayFoundInMonth(userSubscription.EndDate.Day, DateTime.Today.Month + 1))
-                                {
-                                    userSubscription.EndDate = new DateTime(DateTime.Today.Year,
-                                        DateTime.Today.Month + 1, userSubscription.EndDate.Day);
-                                }
-                                else
-                                {
-                                    userSubscription.EndDate = new DateTime(DateTime.Today.Year, DateTime.Today.Month + 2, 1);
-                                }
-
-                            }
-                            else
-                            {
-                                if (isDayFoundInMonth(userSubscription.EndDate.Day, 1))
-                                {
-                                    userSubscription.EndDate = new DateTime(DateTime.Today.Year + 1,
-                                  1, userSubscription.EndDate.Day);
-                                }
-                                else
-                                {
-                                    userSubscription.EndDate = new DateTime(DateTime.Today.Year + 1, 2, 1);
-                                }
-
-                            }
-                        }
-                        userSubscription.UpdatedAt = DateTime.Now;  // to use it on job, as filter to minimize number of records to be affected every day for better performance
-                        _userSubscribtionRipository.Update(userSubscription);
-                        await _userSubscribtionRipository.SaveAsync();
-                        // job to check end dates then make issubscribed false or cehecking subscribtion using enddates regardless flag
-
-                        // send mail to notify user
-
-                        ApplicationUser? user = await _userManager.FindByIdAsync("59e7780d-e3fc-4017-ac92-9411a3da168b");
-                        if (user == null)
-                        {
-                            return new GeneralResponse()
-                            {
-                                IsSuccess = false,
-                                Message = "No user was found for this id"
-                            };
-                        }
-
-                        string subject = "Subscription Cancellation Confirmation";
-
-                        string htmlBody = $@"
+                    string htmlBody = $@"
 <html>
 <head>
     <link href=""https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"" rel=""stylesheet"">
@@ -389,7 +353,7 @@ namespace Educational_Medical_platform.Controllers
         <p>Dear <strong>User</strong>,</p>
         <p>We would like to confirm that your premium subscription has been successfully canceled.</p>
         <div class=""alert alert-info"" role=""alert"">
-            <p>Your subscription will remain active until the end of your billing period. The last day of your premium plan will be <strong>{userSubscription.EndDate}</strong>.</p>
+            <p>Your subscription will remain active until the end of your billing period. The last day of your premium plan will be <strong>{updatedEnddate}</strong>.</p>
         </div>
         <p class=""text-success"">We’re sad to see you go, but we hope to serve you again in the future!</p>
         <p>If you wish to reactivate your subscription or explore other plans, feel free to visit our platform at any time.</p>
@@ -403,15 +367,14 @@ namespace Educational_Medical_platform.Controllers
 ";
 
 
-                        await _emailService.SendEmailAsync(user.Email, subject, htmlBody);
+                    await _emailService.SendEmailAsync(user.Email, subject, htmlBody);
 
-                        return new GeneralResponse()
-                        {
-                            IsSuccess = true,
-                            Message = "Subscription has been cancelled successfully"
-                        };
-
-                    }
+                    return new GeneralResponse()
+                    {
+                        IsSuccess = true,
+                        Message = "Subscription has been cancelled successfully"
+                    };
+                }
                     else
                     {
                         return new GeneralResponse()
@@ -434,70 +397,18 @@ namespace Educational_Medical_platform.Controllers
 
 
             }
-            else
-            {
-                return new GeneralResponse()
-                {
-                    IsSuccess = false,
-                    Message = "Unverified event"
-                };
-            }
 
-        }
-
-
-        private bool isDayFoundInMonth(int day , int month)
-        {
-            int[] largeMonths = { 1, 3, 5, 7, 8, 10, 12 }; // months that contain 31 day
-            int[] smallMonths = { 4, 6, 9, 11};  // months that contain 30 day
-
-            if (largeMonths.Contains(month))
-            {
-                return true;    
-            }
-            else if(smallMonths.Contains(month))
-            {
-                if(day > 30)
-                {
-                    return false;
-                }
-                return true;
-            }
-            else // handle februaury case
-            {
-                if(DateTime.IsLeapYear(DateTime.Today.Year))
-                {
-                    if(day <= 29)
-                    {
-                        return true;
-                    }
-                    else
-                    {
-                        return false;
-                    }
-                }
-                else
-                {
-                    if (day <= 28)
-                    {
-                        return true;
-                    }
-                    else
-                    {
-                        return false;
-                    }
-                }
-            }
-        }
-
+        
+       
+       
         private async Task<bool> VerifyEvent(string json, IHeaderDictionary headerDictionary, string WebhookId)
         {
             var isValidEvent = await _client.VerifyEvent(json, headerDictionary, WebhookId);
             return isValidEvent;
         }
 
-     
 
+        [Authorize]
         [HttpPost("BuyCourse")]
         public async Task<ActionResult<GeneralResponse>> BuyCourse(BuyCourseDTO buyCourseDTO)
         {
