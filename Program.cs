@@ -242,7 +242,7 @@ namespace Educational_Medical_platform
             // Serve static files from wwwroot (e.g., CSS, JS, images)
             app.UseStaticFiles();
 
-            //app.UseRouting();
+            app.UseRouting();
 
             // Enable CORS for frontend domains
             app.UseCors("DefaultPolicy");
