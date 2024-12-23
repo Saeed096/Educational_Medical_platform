@@ -218,17 +218,44 @@ namespace Educational_Medical_platform
                 app.UseSwaggerUI();
             }
 
+            // Exception handling and security
+            // Omar : Comment if u wanna debgug and see the exception details
+            app.UseExceptionHandler(errorApp =>
+            {
+                errorApp.Run(async context =>
+                {
+                    context.Response.ContentType = "application/json";
+                    context.Response.StatusCode = 500;
+
+                    await context.Response.WriteAsJsonAsync(new
+                    {
+                        error = "An unexpected error occurred. Please contact support.",
+                        statusCode = 500
+                    });
+                });
+            });
+
+            app.UseHsts(); // Enforces HTTPS (if in production)
+
+            app.UseHttpsRedirection();
+
+            // Serve static files from wwwroot (e.g., CSS, JS, images)
+            app.UseStaticFiles();
+
+            //app.UseRouting();
+
+            // Enable CORS for frontend domains
             app.UseCors("DefaultPolicy");
 
-            app.UseAuthentication(); // Ensure this is called before authorization
+            // Authentication and Authorization
+            app.UseAuthentication(); // Ensures users are authenticated
+            app.UseAuthorization();  // Ensures users have permissions
 
-            app.UseAuthorization();
-
-            app.UseStaticFiles(); // Serves files from wwwroot
-
+            // Map controller endpoints
             app.MapControllers();
 
             app.Run();
+
         }
     }
 }
