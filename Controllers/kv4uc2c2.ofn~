@@ -344,15 +344,26 @@ namespace Educational_Medical_platform.Controllers
                     // JWT header
                     SigningCredentials signingCredentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
+
                     // JWT payload
+                    //JwtSecurityToken jwtSecurityToken = new JwtSecurityToken
+                    //(
+                    //    issuer: _configuration["JWT:ValidIssuers"],
+                    //    audience: _configuration["JWT:ValidAudiences"],
+                    //    expires: DateTime.UtcNow.AddHours(1),
+                    //    claims: myClaims,
+                    //    signingCredentials: signingCredentials
+                    //);
+
                     JwtSecurityToken jwtSecurityToken = new JwtSecurityToken
                     (
-                        issuer: _configuration["JWT:ValidIssuers:0"], // Use the first issuer
-                        audience: validAudiences[0], // Use the first valid audience (or pick dynamically)
-                        expires: DateTime.UtcNow.AddMinutes(int.Parse(_configuration["JWT:TokenExpiryInMinutes"])),
-                        claims: myClaims,
-                        signingCredentials: signingCredentials
+                        issuer: _configuration["JWT:ValidIssuers:0"],  // Take the first valid issuer
+                        audience: _configuration["JWT:ValidAudiences"], // The audience remains the same
+                        expires: DateTime.UtcNow.AddMinutes(int.Parse(_configuration["JWT:TokenExpiryInMinutes"])), // Expiration time
+                        claims: myClaims,  // Claims you created earlier
+                        signingCredentials: signingCredentials  // The signing credentials
                     );
+
 
                     // Prepare user data to return
                     var userData = new
