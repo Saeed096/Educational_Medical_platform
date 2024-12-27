@@ -84,96 +84,96 @@ namespace Educational_Medical_platform.Controllers
             };
         }
 
-        [HttpGet("{id:int}")]
-        public ActionResult<GeneralResponse> GetById(int id)
-        {
-            Question? question = _questionRepository.Find(criteria: q => q.Id == id, includes: ["Answers"]);
+        //[HttpGet("{id:int}")]
+        //public ActionResult<GeneralResponse> GetById(int id)
+        //{
+        //    Question? question = _questionRepository.Find(criteria: q => q.Id == id, includes: ["Answers"]);
 
-            if (question is null)
-            {
-                return new GeneralResponse()
-                {
-                    IsSuccess = false,
-                    Data = null,
-                    Message = $"No question found with this ID : {id}"
-                };
-            }
+        //    if (question is null)
+        //    {
+        //        return new GeneralResponse()
+        //        {
+        //            IsSuccess = false,
+        //            Data = null,
+        //            Message = $"No question found with this ID : {id}"
+        //        };
+        //    }
 
-            GetQuestionDTO questionDTO = new GetQuestionDTO()
-            {
-                Id = question.Id,
-                BlogId = question.BlogId,
-                CourseId = question.CourseId,
-                SubCategoryId = question.SubCategoryId,
-                TestId = question.TestId,
-                Description = question.Description,
+        //    GetQuestionDTO questionDTO = new GetQuestionDTO()
+        //    {
+        //        Id = question.Id,
+        //        BlogId = question.BlogId,
+        //        CourseId = question.CourseId,
+        //        SubCategoryId = question.SubCategoryId,
+        //        TestId = question.TestId,
+        //        Description = question.Description,
 
-                Answers = question.Answers.Select(answer => new GetAnswerDTO()
-                {
-                    Id = answer.Id,
-                    QuestionId = answer.QuestionId,
-                    Description = answer.Description,
-                    Reason = answer.Reason,
-                    IsCorrect = answer.IsCorrect,
-                }).ToList(),
-            };
+        //        Answers = question.Answers.Select(answer => new GetAnswerDTO()
+        //        {
+        //            Id = answer.Id,
+        //            QuestionId = answer.QuestionId,
+        //            Description = answer.Description,
+        //            Reason = answer.Reason,
+        //            IsCorrect = answer.IsCorrect,
+        //        }).ToList(),
+        //    };
 
-            return new GeneralResponse()
-            {
-                IsSuccess = true,
-                Data = questionDTO,
-            };
-        }
+        //    return new GeneralResponse()
+        //    {
+        //        IsSuccess = true,
+        //        Data = questionDTO,
+        //    };
+        //}
 
-        [HttpGet("subcategory/{id:int}")]
-        public ActionResult<GeneralResponse> GetBySubCategoryId(int id)
-        {
-            if (!_subCategoryRepository.Exists(id))
-            {
-                return new GeneralResponse()
-                {
-                    IsSuccess = false,
-                    Data = null,
-                    Message = $"No subcategory found with this ID : {id}"
-                };
-            }
+        //[HttpGet("subcategory/{id:int}")]
+        //public ActionResult<GeneralResponse> GetBySubCategoryId(int id)
+        //{
+        //    if (!_subCategoryRepository.Exists(id))
+        //    {
+        //        return new GeneralResponse()
+        //        {
+        //            IsSuccess = false,
+        //            Data = null,
+        //            Message = $"No subcategory found with this ID : {id}"
+        //        };
+        //    }
 
-            List<GetQuestionDTO> questionDTOs = _questionRepository.FindAll(criteria: q => q.SubCategoryId == id, includes: ["Answers"]).Select(question => new GetQuestionDTO()
-            {
-                Id = question.Id,
-                BlogId = question.BlogId,
-                CourseId = question.CourseId,
-                SubCategoryId = question.SubCategoryId,
-                TestId = question.TestId,
-                Description = question.Description,
+        //    List<GetQuestionDTO> questionDTOs = _questionRepository.FindAll(criteria: q => q.SubCategoryId == id, includes: ["Answers"]).Select(question => new GetQuestionDTO()
+        //    {
+        //        Id = question.Id,
+        //        BlogId = question.BlogId,
+        //        CourseId = question.CourseId,
+        //        SubCategoryId = question.SubCategoryId,
+        //        TestId = question.TestId,
+        //        Description = question.Description,
 
-                // I think this is better preformance than seeraching every time with questiong ID
-                Answers = question.Answers.Select(answer => new GetAnswerDTO()
-                {
-                    Id = answer.Id,
-                    QuestionId = answer.QuestionId,
-                    Description = answer.Description,
-                    Reason = answer.Reason,
-                    IsCorrect = answer.IsCorrect,
-                }).ToList(),
-            }).ToList();
+        //        // I think this is better preformance than seeraching every time with questiong ID
+        //        Answers = question.Answers.Select(answer => new GetAnswerDTO()
+        //        {
+        //            Id = answer.Id,
+        //            QuestionId = answer.QuestionId,
+        //            Description = answer.Description,
+        //            Reason = answer.Reason,
+        //            IsCorrect = answer.IsCorrect,
+        //        }).ToList(),
+        //    }).ToList();
 
-            if (questionDTOs is null || !questionDTOs.Any())
-            {
-                return new GeneralResponse()
-                {
-                    IsSuccess = false,
-                    Data = null,
-                    Message = $"No questions found with this SubCategory ID : {id}"
-                };
-            }
+        //    if (questionDTOs is null || !questionDTOs.Any())
+        //    {
+        //        return new GeneralResponse()
+        //        {
+        //            IsSuccess = false,
+        //            Data = null,
+        //            Message = $"No questions found with this SubCategory ID : {id}"
+        //        };
+        //    }
 
-            return new GeneralResponse()
-            {
-                IsSuccess = true,
-                Data = questionDTOs,
-            };
-        }
+        //    return new GeneralResponse()
+        //    {
+        //        IsSuccess = true,
+        //        Data = questionDTOs,
+        //    };
+        //}
 
         [HttpGet("test/{id:int}")]
         public async Task<ActionResult<GeneralResponse>> GetByTestId(int id)
@@ -590,7 +590,6 @@ namespace Educational_Medical_platform.Controllers
             }
 
         }
-
 
         [HttpPatch("{questionId:int}")]
         public async Task<ActionResult<GeneralResponse>> EditQuestion(AddQuestionDTO questionDTO, int questionId)
