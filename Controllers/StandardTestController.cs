@@ -11,7 +11,7 @@ using System.Security.Claims;
 
 namespace Educational_Medical_platform.Controllers
 {
-    [Authorize]
+    //[Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class StandardTestController : ControllerBase
@@ -245,24 +245,24 @@ namespace Educational_Medical_platform.Controllers
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             var user = await _userManager.FindByIdAsync(userId);
 
-            var userRoles = await _userManager.GetRolesAsync(user);
+            //var userRoles = await _userManager.GetRolesAsync(user);
 
-            // Check if the user is allowed access to premium tests
-            if (!userRoles.Contains("Admin") && !user.IsSubscribedToPlatform)
-            {
-                return new GeneralResponse
-                {
-                    IsSuccess = false,
-                    Message = "this user can't access premuim tests because he is not subsciped to platform",
-                    Data = userId
-                };
-            }
+            //// Check if the user is allowed access to premium tests
+            //    if (!userRoles.Contains("Admin") && !user.IsSubscribedToPlatform)
+            //    {
+            //        return new GeneralResponse
+            //        {
+            //            IsSuccess = false,
+            //            Message = "this user can't access premuim tests because he is not subsciped to platform",
+            //            Data = userId
+            //        };
+            //    }
 
             try
             {
-                var standardTests = _standardTestRepository.FindAll(includes: ["Category", "SubCategory"]);
+                var standardTestsPaginatedList = _standardTestRepository.FindPaginated(page, pageSize, includes: ["Category", "SubCategory"] , criteria: t => t.CategoryId == id);
 
-                if (standardTests == null || !standardTests.Any())
+                if (standardTestsPaginatedList == null || !standardTestsPaginatedList.Items.Any())
                 {
                     return new GeneralResponse
                     {
@@ -271,7 +271,7 @@ namespace Educational_Medical_platform.Controllers
                     };
                 }
 
-                var standardTestDTOs = standardTests.Select(test => new StandardTestDTO
+                var standardTestDTOs = standardTestsPaginatedList.Items.Select(test => new StandardTestDTO
                 {
                     Id = test.Id,
                     Title = test.Title,
@@ -293,12 +293,97 @@ namespace Educational_Medical_platform.Controllers
 
                 }).ToList();
 
+                return new GeneralResponse()
+                {
+                    IsSuccess = true,
+                    Data = new
+                    {
+                        CurrentPage = standardTestsPaginatedList.CurrentPage,
+                        TotalPages = standardTestsPaginatedList.TotalPages,
+                        TotalItems = standardTestsPaginatedList.TotalItems,
+                        Blogs = standardTestDTOs
+                    },
+                    Message = "Standard Tests retrieved successfully.",
+                };
+
+            }
+            catch (Exception ex)
+            {
                 return new GeneralResponse
                 {
-                    Data = standardTestDTOs,
-                    Message = "Standard Tests retrieved successfully.",
-                    IsSuccess = true
+                    Message = $"An error occurred while retrieving Standard Tests: {ex.Message}",
+                    IsSuccess = false
                 };
+            }
+        }
+
+        [HttpGet("GetStandardTestsbySubCategoryPaginated/int:id")]
+        public async Task<ActionResult<GeneralResponse>> GetStandardTestsbySubCategoryPaginated(int id, int page = 1, int pageSize = 10)
+        {
+            //var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            //var user = await _userManager.FindByIdAsync(userId);
+
+            //var userRoles = await _userManager.GetRolesAsync(user);
+
+            //// Check if the user is allowed access to premium tests
+            //    if (!userRoles.Contains("Admin") && !user.IsSubscribedToPlatform)
+            //    {
+            //        return new GeneralResponse
+            //        {
+            //            IsSuccess = false,
+            //            Message = "this user can't access premuim tests because he is not subsciped to platform",
+            //            Data = userId
+            //        };
+            //    }
+
+            try
+            {
+                var standardTestsPaginatedList = _standardTestRepository.FindPaginated(page, pageSize, includes: ["Category", "SubCategory"] , criteria: t => t.SubCategoryId == id);
+
+                if (standardTestsPaginatedList == null || !standardTestsPaginatedList.Items.Any())
+                {
+                    return new GeneralResponse
+                    {
+                        Message = "No Standard Tests found.",
+                        IsSuccess = false
+                    };
+                }
+
+                var standardTestDTOs = standardTestsPaginatedList.Items.Select(test => new StandardTestDTO
+                {
+                    Id = test.Id,
+                    Title = test.Title,
+                    Fullmark = test.Fullmark,
+                    DurationInMinutes = test.DurationInMinutes,
+                    Price = test.Price,
+
+                    SubCategoryId = test.SubCategoryId,
+                    SubCategoryName = test.SubCategory.Name,
+
+                    CategoryId = test.CategoryId,
+                    CategoryName = test.Category.Name,
+
+                    Type = test.Type,
+                    TypeName = test.Type.GetDisplayName(),
+
+                    Difficulty = test.Difficulty,
+                    DifficultyName = test.Difficulty.GetDisplayName(),
+
+                }).ToList();
+
+                return new GeneralResponse()
+                {
+                    IsSuccess = true,
+                    Data = new
+                    {
+                        CurrentPage = standardTestsPaginatedList.CurrentPage,
+                        TotalPages = standardTestsPaginatedList.TotalPages,
+                        TotalItems = standardTestsPaginatedList.TotalItems,
+                        Blogs = standardTestDTOs
+                    },
+                    Message = "Standard Tests retrieved successfully.",
+                };
+
             }
             catch (Exception ex)
             {
