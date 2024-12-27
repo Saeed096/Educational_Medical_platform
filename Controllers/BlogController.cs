@@ -166,6 +166,47 @@ namespace Educational_Medical_platform.Controllers
             };
         }
 
+        [HttpGet("GetByTitle/{title:alpha}")]
+        public ActionResult<GeneralResponse> GetByTitle(string title)
+        {
+            Blog? blog = _blogRepository.Find(criteria: b => b.Title == title);
+
+            if (blog is null)
+            {
+                return new GeneralResponse()
+                {
+                    IsSuccess = false,
+                    Data = null,
+                    Message = $"No blog found with this title : {title}"
+                };
+            }
+
+            GetBlogsDTO blogDTO = new GetBlogsDTO()
+            {
+                Id = blog.Id,
+                Title = blog.Title,
+
+                CategoryId = blog.CategoryId,
+                SubCategoryId = blog.SubCategoryId,
+                AuthorId = blog.AuthorId,
+
+
+                Intro = blog.Intro,
+                Content = blog.Content,
+                Conclusion = blog.Conclusion,
+
+                Image = blog.Image,
+                ImageURL = blog.ImageURL,
+                LikesNumber = blog.LikesNumber,
+            };
+
+            return new GeneralResponse()
+            {
+                IsSuccess = true,
+                Data = blogDTO,
+            };
+        }
+
         [HttpGet("GetByCategoryIdPaginated/{id:int}")]
         public ActionResult<GeneralResponse> GetByCategoryIdPaginated(int id, int page = 1, int pageSize = 10)
         {

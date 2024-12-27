@@ -480,7 +480,7 @@ namespace Educational_Medical_platform.Controllers
                 {
                     return new GeneralResponse
                     {
-                        Message = "No Standard Test found with this title.",
+                        Message = $"No Standard Test found with this title : {title}",
                         IsSuccess = false
                     };
                 }
