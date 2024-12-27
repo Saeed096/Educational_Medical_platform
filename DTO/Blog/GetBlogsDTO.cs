@@ -21,8 +21,11 @@
         public string Conclusion { get; set; }
 
         public int? SubCategoryId { get; set; }
+        //public string? SubCategoryName { get; set; }
+
 
         public int? CategoryId { get; set; }
+        //public string? Categoryname { get; set; }
 
         //public List<Question>? Questions { get; set; }
 

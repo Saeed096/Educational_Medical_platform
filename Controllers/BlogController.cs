@@ -166,7 +166,7 @@ namespace Educational_Medical_platform.Controllers
             };
         }
 
-        [HttpGet("category/{id:int}")]
+        [HttpGet("GetByCategoryIdPaginated/{id:int}")]
         public ActionResult<GeneralResponse> GetByCategoryIdPaginated(int id, int page = 1, int pageSize = 10)
         {
             var blogsPaginationList = _blogRepository.FindPaginated(page, pageSize, includes: null, b => b.CategoryId == id);
@@ -190,7 +190,6 @@ namespace Educational_Medical_platform.Controllers
                     CategoryId = b.CategoryId,
                     SubCategoryId = b.SubCategoryId,
                     AuthorId = b.AuthorId,
-
 
                     Intro = b.Intro,
                     Content = b.Content,
@@ -226,47 +225,7 @@ namespace Educational_Medical_platform.Controllers
             };
         }
 
-        [HttpGet("Author/{id}")]
-        public ActionResult<GeneralResponse> GetByAuthorId(string id)
-        {
-            List<GetBlogsDTO>? blogsDTOs = _blogRepository.FindAll(includes: null, b => b.AuthorId == id).Select(b => new GetBlogsDTO()
-            {
-                Id = b.Id,
-                Title = b.Title,
-
-                CategoryId = b.CategoryId,
-                SubCategoryId = b.SubCategoryId,
-                AuthorId = b.AuthorId,
-
-
-                Intro = b.Intro,
-                Content = b.Content,
-                Conclusion = b.Conclusion,
-
-                Image = b.Image,
-                ImageURL = b.ImageURL,
-                LikesNumber = b.LikesNumber,
-
-            }).ToList();
-
-            if (blogsDTOs is null || !blogsDTOs.Any())
-            {
-                return new GeneralResponse()
-                {
-                    IsSuccess = false,
-                    Data = null,
-                    Message = $"No blog found for this AuthorID : {id}"
-                };
-            }
-
-            return new GeneralResponse()
-            {
-                IsSuccess = true,
-                Data = blogsDTOs,
-            };
-        }
-
-        [HttpGet("subcategory/{id:int}")]
+        [HttpGet("GetBySubCategoryIdPaginated/{id:int}")]
         public ActionResult<GeneralResponse> GetBySubCategoryIdPaginated(int id, int page = 1, int pageSize = 10)
         {
             var blogsPaginationList = _blogRepository
@@ -324,6 +283,46 @@ namespace Educational_Medical_platform.Controllers
                     Blogs = blogsDTOs
                 },
                 Message = "Blogs retrieved successfully."
+            };
+        }
+
+        [HttpGet("Author/{id}")]
+        public ActionResult<GeneralResponse> GetByAuthorId(string id)
+        {
+            List<GetBlogsDTO>? blogsDTOs = _blogRepository.FindAll(includes: null, b => b.AuthorId == id).Select(b => new GetBlogsDTO()
+            {
+                Id = b.Id,
+                Title = b.Title,
+
+                CategoryId = b.CategoryId,
+                SubCategoryId = b.SubCategoryId,
+                AuthorId = b.AuthorId,
+
+
+                Intro = b.Intro,
+                Content = b.Content,
+                Conclusion = b.Conclusion,
+
+                Image = b.Image,
+                ImageURL = b.ImageURL,
+                LikesNumber = b.LikesNumber,
+
+            }).ToList();
+
+            if (blogsDTOs is null || !blogsDTOs.Any())
+            {
+                return new GeneralResponse()
+                {
+                    IsSuccess = false,
+                    Data = null,
+                    Message = $"No blog found for this AuthorID : {id}"
+                };
+            }
+
+            return new GeneralResponse()
+            {
+                IsSuccess = true,
+                Data = blogsDTOs,
             };
         }
 
