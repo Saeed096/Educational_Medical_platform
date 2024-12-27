@@ -255,6 +255,7 @@ namespace Educational_Medical_platform.Controllers
                 };
             }
         }
+       
         [HttpGet("{id:int}")]
         public ActionResult<GeneralResponse> GetBookById(int id)
         {
@@ -268,6 +269,54 @@ namespace Educational_Medical_platform.Controllers
                     {
                         IsSuccess = false,
                         Message = "Book not found"
+                    };
+                }
+
+                BookDTO bookDTO = new BookDTO
+                {
+                    Id = book.Id,
+                    Title = book.Title,
+                    Description = book.Description,
+                    ThumbnailURL = book.ThumbnailURL,
+                    Url = book.Url,
+                    SubCategoryId = book.SubCategoryId,
+                    CategoryId = book.CategoryId,
+                    CreatedDate = book.PublishDate,
+                    PublisherName = book.PublisherName,
+                    PublisherRole = book.PublisherRole,
+
+                };
+
+                return new GeneralResponse
+                {
+                    IsSuccess = true,
+                    Message = "Book retrieved successfully",
+                    Data = bookDTO
+                };
+            }
+            catch (Exception ex)
+            {
+                return new GeneralResponse
+                {
+                    IsSuccess = false,
+                    Message = $"An error occurred: {ex.Message}"
+                };
+            }
+        }
+
+        [HttpGet("GetBookByTitle/{title:alpha}")]
+        public ActionResult<GeneralResponse> GetBookByTitle(string title)
+        {
+            try
+            {
+                Book? book = _bookRepository.Find(criteria: book => book.Title == title);
+
+                if (book == null)
+                {
+                    return new GeneralResponse
+                    {
+                        IsSuccess = false,
+                        Message = $"No book found with this title : {title}"
                     };
                 }
 
