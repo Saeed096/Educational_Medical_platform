@@ -98,21 +98,21 @@ namespace Educational_Medical_platform.Controllers
         [HttpGet("GetAllPremiumStandardTests")]
         public async Task<ActionResult<GeneralResponse>> GetAllPremiumStandardTests()
         {
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            var user = await _userManager.FindByIdAsync(userId);
+            //var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            //var user = await _userManager.FindByIdAsync(userId);
 
-            var userRoles = await _userManager.GetRolesAsync(user);
+            //var userRoles = await _userManager.GetRolesAsync(user);
 
-            // Check if the user is allowed access to premium tests
-            if (!userRoles.Contains("Admin") && !user.IsSubscribedToPlatform)
-            {
-                return new GeneralResponse
-                {
-                    IsSuccess = false,
-                    Message = "This user can't access premium tests because they are not subscribed to the platform.",
-                    Data = userId
-                };
-            }
+            //// Check if the user is allowed access to premium tests
+            //if (!userRoles.Contains("Admin") && !user.IsSubscribedToPlatform)
+            //{
+            //    return new GeneralResponse
+            //    {
+            //        IsSuccess = false,
+            //        Message = "This user can't access premium tests because they are not subscribed to the platform.",
+            //        Data = userId
+            //    };
+            //}
 
             try
             {
@@ -171,21 +171,21 @@ namespace Educational_Medical_platform.Controllers
         [HttpGet("GetAllStandardTests")]
         public async Task<ActionResult<GeneralResponse>> GetAllStandardTests()
         {
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            var user = await _userManager.FindByIdAsync(userId);
+            //var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            //var user = await _userManager.FindByIdAsync(userId);
 
-            var userRoles = await _userManager.GetRolesAsync(user);
+            //var userRoles = await _userManager.GetRolesAsync(user);
 
-            // Check if the user is allowed access to premium tests
-            if (!userRoles.Contains("Admin") && !user.IsSubscribedToPlatform)
-            {
-                return new GeneralResponse
-                {
-                    IsSuccess = false,
-                    Message = "this user can't access premuim tests because he is not subsciped to platform",
-                    Data = userId
-                };
-            }
+            //// Check if the user is allowed access to premium tests
+            //if (!userRoles.Contains("Admin") && !user.IsSubscribedToPlatform)
+            //{
+            //    return new GeneralResponse
+            //    {
+            //        IsSuccess = false,
+            //        Message = "this user can't access premuim tests because he is not subsciped to platform",
+            //        Data = userId
+            //    };
+            //}
 
             try
             {
@@ -242,8 +242,8 @@ namespace Educational_Medical_platform.Controllers
         [HttpGet("GetStandardTestsbyCategoryPaginated/int:id")]
         public async Task<ActionResult<GeneralResponse>> GetStandardTestsbyCategoryPaginated(int id, int page = 1, int pageSize = 10)
         {
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            var user = await _userManager.FindByIdAsync(userId);
+            //var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            //var user = await _userManager.FindByIdAsync(userId);
 
             //var userRoles = await _userManager.GetRolesAsync(user);
 
@@ -411,25 +411,25 @@ namespace Educational_Medical_platform.Controllers
                     };
                 }
 
-                if (standardTest.Type == TestType.Premium)
-                {
-                    // checking if the logged user is subscriped or not
-                    var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-                    var user = await _userManager.FindByIdAsync(userId);
+                //if (standardTest.Type == TestType.Premium)
+                //{
+                //    // checking if the logged user is subscriped or not
+                //    var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                //    var user = await _userManager.FindByIdAsync(userId);
 
-                    var userRoles = await _userManager.GetRolesAsync(user);
+                //    var userRoles = await _userManager.GetRolesAsync(user);
 
-                    // Check if the user is allowed access to premium tests
-                    if (!userRoles.Contains("Admin") && !user.IsSubscribedToPlatform)
-                    {
-                        return new GeneralResponse
-                        {
-                            IsSuccess = false,
-                            Message = "this user can't access premuim test because he is not subsciped to platform",
-                            Data = userId
-                        };
-                    }
-                }
+                //    // Check if the user is allowed access to premium tests
+                //    if (!userRoles.Contains("Admin") && !user.IsSubscribedToPlatform)
+                //    {
+                //        return new GeneralResponse
+                //        {
+                //            IsSuccess = false,
+                //            Message = "this user can't access premuim test because he is not subsciped to platform",
+                //            Data = userId
+                //        };
+                //    }
+                //}
 
                 var standardTestDTO = new StandardTestDTO
                 {
