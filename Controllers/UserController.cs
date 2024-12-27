@@ -120,7 +120,64 @@ namespace Educational_Medical_platform.Controllers
 
             var confirmationLink = Url.Action("ConfirmEmail", "User", new { userId = applicationUser.Id, token }, Request.Scheme);
 
-            string mailBody = $"<!DOCTYPE html>\r\n<html>\r\n<head>\r\n  <title>Email Confirmation</title>\r\n  <meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\" />\r\n  <style>\r\n    body {{\r\n      background: #f9f9f9;\r\n      margin: 0;\r\n      padding: 0;\r\n    }}\r\n    .container {{\r\n      max-width: 640px;\r\n      margin: 0 auto;\r\n      background: #ffffff;\r\n      box-shadow: 0px 1px 5px rgba(0, 0, 0, 0.1);\r\n      border-radius: 4px;\r\n      overflow: hidden;\r\n    }}\r\n  </style>\r\n</head>\r\n<body>\r\n  <div class=\"container\">\r\n    <div style=\"background-color: #7289da; padding: 57px; text-align: center;\">\r\n      <div style=\"cursor: auto; color: white; font-family: Arial, sans-serif; font-size: 36px; font-weight: 600;\">\r\n        Welcome to MedLearn Hub!\r\n      </div>\r\n    </div>\r\n    \r\n    <div style=\"padding: 40px 70px;\">\r\n      <div style=\"color: #737f8d; font-family: Arial, sans-serif; font-size: 16px; line-height: 24px;\">\r\n        <h2 style=\"font-weight: 500; font-size: 20px; color: #4f545c;\">Hey {applicationUser.UserName},</h2>\r\n        <p>\r\n          Welcome aboard MedLearn Hub! 🚀 Thanks for signing up! We're thrilled to have you join our community.\r\n        </p>\r\n        <p>\r\n          To get started, we just need to confirm your email address to ensure everything runs smoothly.\r\n        </p>\r\n        <p>\r\n          Click the button below to verify your email and unlock all the amazing features MedLearn Hub has to offer:\r\n        </p>\r\n      </div>\r\n      <div style=\"text-align: center; padding: 20px;\">\r\n        <a href=\"{confirmationLink}\" style=\"display: inline-block; background-color: #7289da; color: white; text-decoration: none; padding: 15px 30px; border-radius: 3px;\">Verify Email</a>\r\n      </div>\r\n      <div style=\"color: #737f8d; font-family: Arial, sans-serif; font-size: 16px; line-height: 24px;\">\r\n        <p>If you have any questions or need assistance, feel free to reach out to our support team.</p>\r\n        <p>Emad<br>MedLearn Hub Team</p>\r\n      </div>\r\n    </div>\r\n  </div>\r\n</body>\r\n</html>\r\n";
+            string mailBody = $@"
+                            <!DOCTYPE html>
+                            <html>
+                            <head>
+                              <title>Email Confirmation</title>
+                              <meta http-equiv=""Content-Type"" content=""text/html; charset=UTF-8"" />
+                              <style>
+                                body {{
+                                  background: #f9f9f9;
+                                  margin: 0;
+                                  padding: 0;
+                                }}
+                                .container {{
+                                  max-width: 640px;
+                                  margin: 0 auto;
+                                  background: #ffffff;
+                                  box-shadow: 0px 1px 5px rgba(0, 0, 0, 0.1);
+                                  border-radius: 4px;
+                                  overflow: hidden;
+                                }}
+                              </style>
+                            </head>
+                            <body>
+                              <div class=""container"">
+                                <div style=""background-color: #7289da; padding: 57px; text-align: center;"">
+                                  <div style=""cursor: auto; color: white; font-family: Arial, sans-serif; font-size: 36px; font-weight: 600;"">
+                                    Welcome to Practice 2 Pass!
+                                  </div>
+                                </div>
+    
+                                <div style=""padding: 40px 70px;"">
+                                  <div style=""color: #737f8d; font-family: Arial, sans-serif; font-size: 16px; line-height: 24px;"">
+                                    <h2 style=""font-weight: 500; font-size: 20px; color: #4f545c;"">Hey {applicationUser.FirstName} {applicationUser.LastName},</h2>
+                                    <p>
+                                      Welcome aboard Practice 2 Pass! 🚀 Thanks for signing up! We're thrilled to have you join our community.
+                                    </p>
+                                    <p>
+                                      To get started, we just need to confirm your email address to ensure everything runs smoothly.
+                                    </p>
+                                    <p>
+                                      Click the button below to verify your email and unlock all the amazing features Practice 2 Pass has to offer:
+                                    </p>
+                                  </div>
+                                  <div style=""text-align: center; padding: 20px;"">
+                                    <a href=""{confirmationLink}"" 
+                                       style=""display: inline-block; background-color: #7289da; color: white; text-decoration: none; padding: 15px 30px; border-radius: 3px;"">
+                                      Verify Email
+                                    </a>
+                                  </div>
+                                  <div style=""color: #737f8d; font-family: Arial, sans-serif; font-size: 16px; line-height: 24px;"">
+                                    <p>If you have any questions or need assistance, feel free to reach out to our support team.</p>
+                                    <p>Support Team<br>Practice 2 Pass Team</p>
+                                  </div>
+                                </div>
+                              </div>
+                            </body>
+                            </html>
+                            ";
 
             // Send email confirmation link
             await _emailService.SendEmailAsync(userDTO.Email, "Email Confiramtion", mailBody);
