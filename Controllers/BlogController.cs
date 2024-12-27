@@ -29,7 +29,7 @@ namespace Educational_Medical_platform.Controllers
             UserManager<ApplicationUser> userManager,
             ICategoryRepository categoryRepository,
             ISubCategoryRepository subCategoryRepository,
-            IQuestionRepository questionRepository ,
+            IQuestionRepository questionRepository,
             IAnswerRepository answerRepository)
         {
             _blogRepository = blogRepository;
@@ -91,7 +91,7 @@ namespace Educational_Medical_platform.Controllers
                 return new GeneralResponse()
                 {
                     IsSuccess = true,
-                    Data = new List<GetBlogsDTO>(), 
+                    Data = new List<GetBlogsDTO>(),
                     Message = "There are no blogs available."
                 };
             }
@@ -124,7 +124,6 @@ namespace Educational_Medical_platform.Controllers
                 Message = "Blogs retrieved successfully."
             };
         }
-
 
         [HttpGet("{id:int}")]
         public ActionResult<GeneralResponse> GetById(int id)
@@ -168,27 +167,40 @@ namespace Educational_Medical_platform.Controllers
         }
 
         [HttpGet("category/{id:int}")]
-        public ActionResult<GeneralResponse> GetByCategoryId(int id)
+        public ActionResult<GeneralResponse> GetByCategoryIdPaginated(int id, int page = 1, int pageSize = 10)
         {
-            List<GetBlogsDTO>? blogsDTOs = _blogRepository.FindAll(includes: null, b => b.CategoryId == id).Select(b => new GetBlogsDTO()
+            var blogsPaginationList = _blogRepository.FindPaginated(page, pageSize, includes: null, b => b.CategoryId == id);
+
+            if (blogsPaginationList == null || !blogsPaginationList.Items.Any())
             {
-                Id = b.Id,
-                Title = b.Title,
+                return new GeneralResponse()
+                {
+                    IsSuccess = true,
+                    Data = new List<GetBlogsDTO>(),
+                    Message = "There are no blogs available."
+                };
+            };
 
-                CategoryId = b.CategoryId,
-                SubCategoryId = b.SubCategoryId,
-                AuthorId = b.AuthorId,
+            List<GetBlogsDTO> blogsDTOs = blogsPaginationList.Items
+                .Select(b => new GetBlogsDTO()
+                {
+                    Id = b.Id,
+                    Title = b.Title,
+
+                    CategoryId = b.CategoryId,
+                    SubCategoryId = b.SubCategoryId,
+                    AuthorId = b.AuthorId,
 
 
-                Intro = b.Intro,
-                Content = b.Content,
-                Conclusion = b.Conclusion,
+                    Intro = b.Intro,
+                    Content = b.Content,
+                    Conclusion = b.Conclusion,
 
-                Image = b.Image,
-                ImageURL = b.ImageURL,
-                LikesNumber = b.LikesNumber,
+                    Image = b.Image,
+                    ImageURL = b.ImageURL,
+                    LikesNumber = b.LikesNumber,
 
-            }).ToList();
+                }).ToList();
 
             if (blogsDTOs is null || !blogsDTOs.Any())
             {
@@ -203,7 +215,14 @@ namespace Educational_Medical_platform.Controllers
             return new GeneralResponse()
             {
                 IsSuccess = true,
-                Data = blogsDTOs,
+                Data = new
+                {
+                    CurrentPage = blogsPaginationList.CurrentPage,
+                    TotalPages = blogsPaginationList.TotalPages,
+                    TotalItems = blogsPaginationList.TotalItems,
+                    Blogs = blogsDTOs
+                },
+                Message = "Blogs retrieved successfully."
             };
         }
 
@@ -248,27 +267,41 @@ namespace Educational_Medical_platform.Controllers
         }
 
         [HttpGet("subcategory/{id:int}")]
-        public ActionResult<GeneralResponse> GetBySubCategoryId(int id)
+        public ActionResult<GeneralResponse> GetBySubCategoryIdPaginated(int id, int page = 1, int pageSize = 10)
         {
-            List<GetBlogsDTO>? blogsDTOs = _blogRepository.FindAll(includes: null, b => b.SubCategoryId == id).Select(b => new GetBlogsDTO()
+            var blogsPaginationList = _blogRepository
+                .FindPaginated(page, pageSize, includes: null, b => b.SubCategoryId == id);
+
+            if (blogsPaginationList == null || !blogsPaginationList.Items.Any())
             {
-                Id = b.Id,
-                Title = b.Title,
+                return new GeneralResponse()
+                {
+                    IsSuccess = true,
+                    Data = new List<GetBlogsDTO>(),
+                    Message = "There are no blogs available."
+                };
+            };
 
-                CategoryId = b.CategoryId,
-                SubCategoryId = b.SubCategoryId,
-                AuthorId = b.AuthorId,
+            List<GetBlogsDTO> blogsDTOs = blogsPaginationList.Items
+                .Select(b => new GetBlogsDTO()
+                {
+                    Id = b.Id,
+                    Title = b.Title,
+
+                    CategoryId = b.CategoryId,
+                    SubCategoryId = b.SubCategoryId,
+                    AuthorId = b.AuthorId,
 
 
-                Intro = b.Intro,
-                Content = b.Content,
-                Conclusion = b.Conclusion,
+                    Intro = b.Intro,
+                    Content = b.Content,
+                    Conclusion = b.Conclusion,
 
-                Image = b.Image,
-                ImageURL = b.ImageURL,
-                LikesNumber = b.LikesNumber,
+                    Image = b.Image,
+                    ImageURL = b.ImageURL,
+                    LikesNumber = b.LikesNumber,
 
-            }).ToList();
+                }).ToList();
 
             if (blogsDTOs is null || !blogsDTOs.Any())
             {
@@ -283,7 +316,14 @@ namespace Educational_Medical_platform.Controllers
             return new GeneralResponse()
             {
                 IsSuccess = true,
-                Data = blogsDTOs,
+                Data = new
+                {
+                    CurrentPage = blogsPaginationList.CurrentPage,
+                    TotalPages = blogsPaginationList.TotalPages,
+                    TotalItems = blogsPaginationList.TotalItems,
+                    Blogs = blogsDTOs
+                },
+                Message = "Blogs retrieved successfully."
             };
         }
 
@@ -344,7 +384,7 @@ namespace Educational_Medical_platform.Controllers
             if (createBlogDTO.SubCategoryId != null)
             {
                 // Check if SubCategory exists
-                if (createBlogDTO.SubCategoryId != null && !_subCategoryRepository.Exists(createBlogDTO.SubCategoryId.Value) )
+                if (createBlogDTO.SubCategoryId != null && !_subCategoryRepository.Exists(createBlogDTO.SubCategoryId.Value))
                 {
                     return new GeneralResponse()
                     {
@@ -372,7 +412,7 @@ namespace Educational_Medical_platform.Controllers
 
             Category category = _categoryRepository.GetById(createBlogDTO.CategoryId);
             SubCategory subCategory = _subCategoryRepository.GetById((int)createBlogDTO.SubCategoryId);
-            if(category.Type!=CategoryType.Blogs || subCategory.Type!=SubCategoryType.Blogs)
+            if (category.Type != CategoryType.Blogs || subCategory.Type != SubCategoryType.Blogs)
             {
                 return new GeneralResponse()
                 {
@@ -564,7 +604,7 @@ namespace Educational_Medical_platform.Controllers
             }
 
             // Delete related questions
-            var questions =  _questionRepository.FindAll(criteria: q => q.BlogId == id, includes: new[] { "Answers" }); // Get related questions
+            var questions = _questionRepository.FindAll(criteria: q => q.BlogId == id, includes: new[] { "Answers" }); // Get related questions
 
             if (questions != null && questions.Any())
             {
