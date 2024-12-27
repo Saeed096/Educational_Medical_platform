@@ -469,6 +469,60 @@ namespace Educational_Medical_platform.Controllers
             }
         }
 
+        [HttpGet("GetStandardTestByTitle/{title:alpha}")]
+        public async Task<ActionResult<GeneralResponse>> GetStandardTestByTitle(string title)
+        {
+            try
+            {
+                var standardTest = _standardTestRepository.Find(criteria: t => t.Title == title, includes: ["Category", "SubCategory"]);
+
+                if (standardTest == null)
+                {
+                    return new GeneralResponse
+                    {
+                        Message = "No Standard Test found with this title.",
+                        IsSuccess = false
+                    };
+                }
+
+                var standardTestDTO = new StandardTestDTO
+                {
+                    Id = standardTest.Id,
+                    Title = standardTest.Title,
+                    Fullmark = standardTest.Fullmark,
+                    DurationInMinutes = standardTest.DurationInMinutes,
+                    Price = standardTest.Price,
+
+                    SubCategoryId = standardTest.SubCategoryId,
+                    SubCategoryName = standardTest.SubCategory.Name,
+
+                    CategoryId = standardTest.CategoryId,
+                    CategoryName = standardTest.Category.Name,
+
+                    Difficulty = standardTest.Difficulty,
+                    DifficultyName = standardTest.Difficulty.GetDisplayName(),
+
+                    Type = standardTest.Type,
+                    TypeName = standardTest.Type.GetDisplayName(),
+                };
+
+                return new GeneralResponse
+                {
+                    Data = standardTestDTO,
+                    Message = "Standard Test retrieved successfully.",
+                    IsSuccess = true
+                };
+            }
+            catch (Exception ex)
+            {
+                return new GeneralResponse
+                {
+                    Message = $"An error occurred while retrieving the Standard Test: {ex.Message}",
+                    IsSuccess = false
+                };
+            }
+        }
+
         [HttpPost("AddStandardTest")]
         public ActionResult<GeneralResponse> AddStandardTest([FromBody] AddTestDTO standardTestDTO)
         {
