@@ -191,9 +191,8 @@ namespace Educational_Medical_platform
             //{
                 app.UseSwagger();
                 app.UseSwaggerUI();
-
-
-            //app.UseHttpsRedirection();
+            app.UseHsts();
+            app.UseHttpsRedirection();
             app.UseRouting();
 
             // Enable CORS
