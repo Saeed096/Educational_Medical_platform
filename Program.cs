@@ -186,18 +186,12 @@ namespace Educational_Medical_platform
             });
 
 
-            // Exception handling
-            if (app.Environment.IsDevelopment())
-            {
+            // Configure the HTTP request pipeline.
+            //if (app.Environment.IsDevelopment())
+            //{
                 app.UseSwagger();
                 app.UseSwaggerUI();
-                app.UseDeveloperExceptionPage();
-            }
-            else
-            {
-                app.UseExceptionHandler("/Home/Error");
-                app.UseHsts();
-            }
+
 
             //app.UseHttpsRedirection();
             app.UseRouting();
