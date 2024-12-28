@@ -469,12 +469,14 @@ namespace Educational_Medical_platform.Controllers
             }
         }
 
-        [HttpGet("GetStandardTestByTitle/{title:alpha}")]
+        [HttpGet("GetStandardTestByTitle/{title}")]
         public async Task<ActionResult<GeneralResponse>> GetStandardTestByTitle(string title)
         {
             try
             {
-                var standardTest = _standardTestRepository.Find(criteria: t => t.Title == title, includes: ["Category", "SubCategory"]);
+                title = title.Trim().ToLower();
+
+                var standardTest = _standardTestRepository.Find(criteria: t => t.Title.ToLower() == title, includes: ["Category", "SubCategory"]);
 
                 if (standardTest == null)
                 {

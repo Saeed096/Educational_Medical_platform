@@ -166,10 +166,12 @@ namespace Educational_Medical_platform.Controllers
             };
         }
 
-        [HttpGet("GetByTitle/{title:alpha}")]
+        [HttpGet("GetByTitle/{title}")]
         public ActionResult<GeneralResponse> GetByTitle(string title)
         {
-            Blog? blog = _blogRepository.Find(criteria: b => b.Title == title);
+            title = title.Trim().ToLower();
+
+            Blog? blog = _blogRepository.Find(criteria: b => b.Title.ToLower() == title);
 
             if (blog is null)
             {

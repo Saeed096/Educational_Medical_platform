@@ -304,13 +304,16 @@ namespace Educational_Medical_platform.Controllers
             }
         }
 
-        [HttpGet("GetBookByTitle/{title:alpha}")]
+        [HttpGet("GetBookByTitle/{title}")]
         public ActionResult<GeneralResponse> GetBookByTitle(string title)
         {
             try
             {
-                Book? book = _bookRepository.Find(criteria: book => book.Title == title);
+                title = title.Trim().ToLower(); 
 
+                Book? book = _bookRepository.Find(
+                    criteria: book => book.Title.ToLower() == title
+                );
                 if (book == null)
                 {
                     return new GeneralResponse
