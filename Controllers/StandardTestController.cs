@@ -11,7 +11,7 @@ using System.Security.Claims;
 
 namespace Educational_Medical_platform.Controllers
 {
-    //[Authorize]
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class StandardTestController : ControllerBase

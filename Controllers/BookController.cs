@@ -13,7 +13,7 @@ using Shoghlana.Core.Models;
 
 namespace Educational_Medical_platform.Controllers
 {
-    //[Authorize]
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class BookController : ControllerBase
