@@ -127,8 +127,8 @@ namespace Educational_Medical_platform.Controllers
 
         // Webhook endpoint to receive PayPal notifications
         [HttpPost("ActivateSubscription")]
-        public async Task<ActionResult<GeneralResponse>> ActivateSubscription()
-
+        public async Task<ActionResult<GeneralResponse>> ActivateSubscription()  
+         
         {
             var json = await new StreamReader(HttpContext.Request.Body).ReadToEndAsync();
             var headers = HttpContext.Request.Headers;
@@ -137,8 +137,8 @@ namespace Educational_Medical_platform.Controllers
             if (json is not null)
             {
                 // verify req first 
-                bool isValid = await VerifyEvent(json, headers, _validWebhookEventIds.SubscribtionActivated);
-                if (isValid)
+                bool isValid = await VerifyEvent(json , headers , _validWebhookEventIds.SubscribtionActivated);
+                if(isValid)
                 {
                     var webHookEvent = JsonConvert.DeserializeObject<webhookEvent>(json);
 
@@ -167,13 +167,13 @@ namespace Educational_Medical_platform.Controllers
 
             return new GeneralResponse()
             {
-                IsSuccess = result != null ? result : false,
+                IsSuccess = result != null? result : false,
             };
         }
 
 
         [HttpPost("ApproveOrderCheckout")]
-        public async Task<ActionResult<GeneralResponse>> ApproveOrderCheckout()
+        public async Task <ActionResult<GeneralResponse>> ApproveOrderCheckout()
         {
             var json = await new StreamReader(HttpContext.Request.Body).ReadToEndAsync();
             var headers = HttpContext.Request.Headers;
@@ -192,7 +192,7 @@ namespace Educational_Medical_platform.Controllers
                         // send money to instructor , notify ins to send money to ehab
                         var result = await _client.captureOrderAsync(response.Resource.Id);
 
-                        if (result.IsSuccess)
+                        if(result.IsSuccess)
                         {
                             string subject = "New Course Purchase Notification - Action Required"; // {courseFromDB.Title}
 
@@ -226,7 +226,7 @@ namespace Educational_Medical_platform.Controllers
 
 
                             await _emailService.SendEmailAsync(response.Resource.PurchaseUnits[0].Payee.EmailAddress
-                                , subject, htmlBody);
+                                , subject , htmlBody);
 
                             return new GeneralResponse()
                             {
@@ -278,44 +278,44 @@ namespace Educational_Medical_platform.Controllers
             var userSubscription = _userSubscribtionRipository
                                    .Find(us => us.SubscriptionPlanId == subscriptionId);  // subscriptionPlanId represents subscriptionId
 
-            if (userSubscription is null)
+            if(userSubscription is null)
             {
                 return false;
             }
+         
 
+                // get user update its prop
+                var subscribedUser = await _userManager.FindByIdAsync(userSubscription.UserId);
 
-            // get user update its prop
-            var subscribedUser = await _userManager.FindByIdAsync(userSubscription.UserId);
-
-            if (subscribedUser is null)
+            if(subscribedUser is null)
             { return false; }
 
-            subscribedUser.IsSubscribedToPlatform = true;
-            subscribedUser.SubscriptionMethod = SubscriptionMethod.Paypal;
-            await _userManager.UpdateAsync(subscribedUser);
+                subscribedUser.IsSubscribedToPlatform = true;
+                subscribedUser.SubscriptionMethod = SubscriptionMethod.Paypal;
+                await _userManager.UpdateAsync(subscribedUser);
 
-            userSubscription.Status = Helpers.SubscriptionStatus.ACTIVE;
-            userSubscription.StartDate = DateTime.Now;
-            userSubscription.EndDate = DateTime.Now.AddMonths(12);
+                userSubscription.Status = Helpers.SubscriptionStatus.ACTIVE;
+                userSubscription.StartDate = DateTime.Now;
+                userSubscription.EndDate = DateTime.Now.AddMonths(12);
 
-            _userSubscribtionRipository.Update(userSubscription);
-            await _userSubscribtionRipository.SaveAsync();
+                _userSubscribtionRipository.Update(userSubscription);
+                await _userSubscribtionRipository.SaveAsync();
             return true;
-
+            
         }
 
 
         [HttpPost("cancelSubscription")]
-        public async Task<ActionResult<GeneralResponse>> cancelSubscription(CancelSubscriptionWebhookEvent webhookEvent)
+        public async Task <ActionResult<GeneralResponse>> cancelSubscription(CancelSubscriptionWebhookEvent webhookEvent)
         {
 
 
-            if (webhookEvent.event_type == "BILLING.SUBSCRIPTION.CANCELLED")
-            {
-                UserSubscription? userSubscription = _userSubscribtionRipository
-                                           .Find(us => us.SubscriptionPlanId == webhookEvent.resource.id);
-                if (userSubscription is not null)
+                if (webhookEvent.event_type == "BILLING.SUBSCRIPTION.CANCELLED")
                 {
+                    UserSubscription? userSubscription = _userSubscribtionRipository
+                                               .Find(us => us.SubscriptionPlanId == webhookEvent.resource.id);
+                    if (userSubscription is not null)
+                    {
 
                     // call enddate func 
                     DateTime updatedEnddate = _subscriptionService.getEnddate(userSubscription.EndDate);
@@ -375,32 +375,32 @@ namespace Educational_Medical_platform.Controllers
                         Message = "Subscription has been cancelled successfully"
                     };
                 }
+                    else
+                    {
+                        return new GeneralResponse()
+                        {
+                            IsSuccess = false,
+                            Message = "No user was found for this subscription id"
+                        };
+                    }
+
+
+                }
                 else
                 {
                     return new GeneralResponse()
                     {
                         IsSuccess = false,
-                        Message = "No user was found for this subscription id"
+                        Message = "event summary is not cancelled"
                     };
                 }
 
 
             }
-            else
-            {
-                return new GeneralResponse()
-                {
-                    IsSuccess = false,
-                    Message = "event summary is not cancelled"
-                };
-            }
 
-
-        }
-
-
-
-
+        
+       
+       
         private async Task<bool> VerifyEvent(string json, IHeaderDictionary headerDictionary, string WebhookId)
         {
             var isValidEvent = await _client.VerifyEvent(json, headerDictionary, WebhookId);

@@ -254,8 +254,8 @@ namespace Educational_Medical_platform.PayPal
                         payer_selected = "PAYPAL",
                         payee_preferred = "IMMEDIATE_PAYMENT_REQUIRED"
                     },
-                    return_url = "https://example.com/return",
-                    cancel_url = "https://example.com/cancel"
+                    return_url = "https://practice2pass.netlify.app/",
+                    cancel_url = "https://practice2pass.netlify.app/"
                 }
             };
 
