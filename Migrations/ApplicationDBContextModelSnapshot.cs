@@ -2984,96 +2984,6 @@ namespace Educational_Medical_platform.Migrations
                     b.HasIndex("SubCategoryId");
 
                     b.ToTable("Blogs");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            AuthorId = "2b222b22-2222-2222-2222-222222222222",
-                            CategoryId = 1,
-                            Conclusion = "Understanding human anatomy is essential for medical professionals and enthusiasts alike.",
-                            Content = "This blog covers the basics of human anatomy...",
-                            ImageURL = "/Images/Blogs/blog1.jpg",
-                            Intro = "Anatomy is the branch of biology concerned with the study of the structure of organisms and their parts.",
-                            LikesNumber = 10,
-                            Title = "Introduction to Human Anatomy"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            AuthorId = "2b222b22-2222-2222-2222-222222222222",
-                            CategoryId = 1,
-                            Conclusion = "The study of comparative anatomy is crucial for evolutionary biology and understanding the functional adaptations of organisms.",
-                            Content = "This blog explores comparative anatomy across species...",
-                            ImageURL = "/Images/Blogs/blog1.jpg",
-                            Intro = "Comparative anatomy allows us to understand the similarities and differences between different organisms.",
-                            LikesNumber = 15,
-                            Title = "Advanced Comparative Anatomy"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            AuthorId = "2b222b22-2222-2222-2222-222222222222",
-                            CategoryId = 2,
-                            Conclusion = "A deep understanding of cell physiology is vital for advancements in medical science.",
-                            Content = "Understanding the basics of cell physiology...",
-                            ImageURL = "/Images/Blogs/blog1.jpg",
-                            Intro = "Cell physiology is the study of the functions of cells and their components.",
-                            LikesNumber = 20,
-                            Title = "Fundamentals of Cell Physiology"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            AuthorId = "2b222b22-2222-2222-2222-222222222222",
-                            CategoryId = 1,
-                            Conclusion = "This overview serves as a foundational step towards more detailed studies of specific systems.",
-                            Content = "This blog provides an overview of human anatomy...",
-                            ImageURL = "/Images/Blogs/blog1.jpg",
-                            Intro = "An overview of human anatomy highlights the complexity and organization of the human body.",
-                            LikesNumber = 5,
-                            SubCategoryId = 1,
-                            Title = "Human Anatomy Overview"
-                        },
-                        new
-                        {
-                            Id = 5,
-                            AuthorId = "3c333c33-3333-3333-3333-333333333333",
-                            CategoryId = 2,
-                            Conclusion = "Grasping systemic physiology is crucial for understanding how the body maintains homeostasis.",
-                            Content = "An introductory blog on systemic physiology...",
-                            ImageURL = "/Images/Blogs/blog1.jpg",
-                            Intro = "Systemic physiology studies the functions of various systems within the body.",
-                            LikesNumber = 8,
-                            SubCategoryId = 4,
-                            Title = "Systemic Physiology Basics"
-                        },
-                        new
-                        {
-                            Id = 6,
-                            AuthorId = "3c333c33-3333-3333-3333-333333333333",
-                            CategoryId = 3,
-                            Conclusion = "Understanding these applications is essential for safe and effective patient care.",
-                            Content = "Exploring clinical applications in pharmacology...",
-                            ImageURL = "/Images/Blogs/blog1.jpg",
-                            Intro = "Pharmacology focuses on the interactions between drugs and living organisms.",
-                            LikesNumber = 12,
-                            SubCategoryId = 5,
-                            Title = "Clinical Applications of Pharmacology"
-                        },
-                        new
-                        {
-                            Id = 7,
-                            AuthorId = "3c333c33-3333-3333-3333-333333333333",
-                            CategoryId = 4,
-                            Conclusion = "A solid grasp of pathology is necessary for any healthcare professional.",
-                            Content = "A comprehensive overview of pathology...",
-                            ImageURL = "/Images/Blogs/blog1.jpg",
-                            Intro = "Pathology is the study of disease, its causes, and effects on the body.",
-                            LikesNumber = 7,
-                            SubCategoryId = 7,
-                            Title = "Pathology: An Overview"
-                        });
                 });
 
             modelBuilder.Entity("Educational_Medical_platform.Models.Blog_User_Likes", b =>
@@ -3141,106 +3051,6 @@ namespace Educational_Medical_platform.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Books");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            CategoryId = 5,
-                            Description = "A comprehensive guide for first-year medical students.",
-                            PublishDate = new DateTime(2021, 4, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            PublisherName = "Mohamed Galal",
-                            PublisherRole = "User",
-                            SubCategoryId = 9,
-                            ThumbnailURL = "https://example.com/thumbnails/book1.jpg",
-                            Title = "Introduction to Medical Studies",
-                            Url = "https://example.com/books/intro-medical-studies",
-                            UserId = "2b222b22-2222-2222-2222-222222222222"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            CategoryId = 5,
-                            Description = "In-depth study of human anatomy for advanced medical students.",
-                            PublishDate = new DateTime(2020, 11, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            PublisherName = "Mohamed Galal",
-                            PublisherRole = "User",
-                            SubCategoryId = 9,
-                            ThumbnailURL = "https://example.com/thumbnails/book2.jpg",
-                            Title = "Advanced Human Anatomy",
-                            Url = "https://example.com/books/advanced-anatomy",
-                            UserId = "2b222b22-2222-2222-2222-222222222222"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            CategoryId = 5,
-                            Description = "A practical guide to clinical diagnostic methods.",
-                            PublishDate = new DateTime(2019, 7, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            PublisherName = "Alaa Ahmed",
-                            PublisherRole = "User",
-                            SubCategoryId = 10,
-                            ThumbnailURL = "https://example.com/thumbnails/book3.jpg",
-                            Title = "Clinical Diagnosis Techniques",
-                            Url = "https://example.com/books/clinical-diagnosis",
-                            UserId = "3c333c33-3333-3333-3333-333333333333"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            CategoryId = 6,
-                            Description = "Essential pharmacology concepts for healthcare professionals.",
-                            PublishDate = new DateTime(2022, 3, 5, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            PublisherName = "Alaa Ahmed",
-                            PublisherRole = "User",
-                            SubCategoryId = 11,
-                            ThumbnailURL = "https://example.com/thumbnails/book4.jpg",
-                            Title = "Pharmacology Basics",
-                            Url = "https://example.com/books/pharmacology-basics",
-                            UserId = "3c333c33-3333-3333-3333-333333333333"
-                        },
-                        new
-                        {
-                            Id = 5,
-                            CategoryId = 6,
-                            Description = "Key topics in pathology explained in a clear and concise manner.",
-                            PublishDate = new DateTime(2021, 1, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            PublisherName = "Alaa Ahmed",
-                            PublisherRole = "User",
-                            SubCategoryId = 12,
-                            ThumbnailURL = "https://example.com/thumbnails/book5.jpg",
-                            Title = "Pathology Essentials",
-                            Url = "https://example.com/books/pathology-essentials",
-                            UserId = "3c333c33-3333-3333-3333-333333333333"
-                        },
-                        new
-                        {
-                            Id = 6,
-                            CategoryId = 7,
-                            Description = "Basic microbiology concepts for beginners.",
-                            PublishDate = new DateTime(2020, 6, 22, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            PublisherName = "Ehab Naser",
-                            PublisherRole = "Admin",
-                            SubCategoryId = 13,
-                            ThumbnailURL = "https://example.com/thumbnails/book6.jpg",
-                            Title = "Microbiology Fundamentals",
-                            Url = "https://example.com/books/microbiology-fundamentals",
-                            UserId = "1a111a11-1111-1111-1111-111111111111"
-                        },
-                        new
-                        {
-                            Id = 7,
-                            CategoryId = 7,
-                            Description = "A handbook on modern surgical techniques.",
-                            PublishDate = new DateTime(2023, 8, 13, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            PublisherName = "Ehab Naser",
-                            PublisherRole = "Admin",
-                            SubCategoryId = 13,
-                            ThumbnailURL = "https://example.com/thumbnails/book7.jpg",
-                            Title = "Surgical Procedures Handbook",
-                            Url = "https://example.com/books/surgical-procedures",
-                            UserId = "1a111a11-1111-1111-1111-111111111111"
-                        });
                 });
 
             modelBuilder.Entity("Educational_Medical_platform.Models.Category", b =>
@@ -3424,47 +3234,6 @@ namespace Educational_Medical_platform.Migrations
                     b.HasIndex("SubCategoryId");
 
                     b.ToTable("Courses");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            CategoryId = 1,
-                            DurationInhours = 10f,
-                            InstructorId = "2b222b22-2222-2222-2222-222222222222",
-                            PaypalProductId = "",
-                            Price = 1500m,
-                            Status = 1,
-                            SubCategoryId = 1,
-                            Title = "physiology",
-                            Type = 0
-                        },
-                        new
-                        {
-                            Id = 2,
-                            CategoryId = 2,
-                            DurationInhours = 20f,
-                            InstructorId = "2b222b22-2222-2222-2222-222222222222",
-                            PaypalProductId = "",
-                            Price = 1000m,
-                            Status = 0,
-                            SubCategoryId = 3,
-                            Title = "anatomy",
-                            Type = 1
-                        },
-                        new
-                        {
-                            Id = 3,
-                            CategoryId = 3,
-                            DurationInhours = 30f,
-                            InstructorId = "3c333c33-3333-3333-3333-333333333333",
-                            PaypalProductId = "",
-                            Price = 2500m,
-                            Status = 2,
-                            SubCategoryId = 5,
-                            Title = "histology",
-                            Type = 1
-                        });
                 });
 
             modelBuilder.Entity("Educational_Medical_platform.Models.Objective", b =>
@@ -3487,26 +3256,6 @@ namespace Educational_Medical_platform.Migrations
                     b.HasIndex("CourseId");
 
                     b.ToTable("Objectives");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            CourseId = 1,
-                            Description = "Enhancing medical skills"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            CourseId = 1,
-                            Description = "Enhancing physiology knowledge"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            CourseId = 1,
-                            Description = "increasing job opportunities"
-                        });
                 });
 
             modelBuilder.Entity("Educational_Medical_platform.Models.PlatformData", b =>
@@ -3599,32 +3348,32 @@ namespace Educational_Medical_platform.Migrations
                         new
                         {
                             Id = 1,
-                            CourseId = 1,
-                            Description = "What is the basic unit of life?"
+                            Description = "What is the basic unit of life?",
+                            TestId = 1
                         },
                         new
                         {
                             Id = 2,
-                            CourseId = 1,
-                            Description = "Which organelle is known as the powerhouse of the cell?"
+                            Description = "Which organelle is known as the powerhouse of the cell?",
+                            TestId = 1
                         },
                         new
                         {
                             Id = 3,
-                            CourseId = 2,
-                            Description = "What is the function of ribosomes?"
+                            Description = "What is the function of ribosomes?",
+                            TestId = 1
                         },
                         new
                         {
                             Id = 4,
-                            CourseId = 2,
-                            Description = "What is the role of the cell membrane?"
+                            Description = "What is the role of the cell membrane?",
+                            TestId = 1
                         },
                         new
                         {
                             Id = 5,
-                            CourseId = 2,
-                            Description = "What is osmosis?"
+                            Description = "What is osmosis?",
+                            TestId = 1
                         },
                         new
                         {
@@ -3659,31 +3408,26 @@ namespace Educational_Medical_platform.Migrations
                         new
                         {
                             Id = 11,
-                            BlogId = 1,
                             Description = "What are the key structures of the human body?"
                         },
                         new
                         {
                             Id = 12,
-                            BlogId = 1,
                             Description = "How does the muscular system work?"
                         },
                         new
                         {
                             Id = 13,
-                            BlogId = 2,
                             Description = "What is the importance of studying anatomy?"
                         },
                         new
                         {
                             Id = 14,
-                            BlogId = 2,
                             Description = "What are the different systems of the human body?"
                         },
                         new
                         {
                             Id = 15,
-                            BlogId = 3,
                             Description = "What role does the nervous system play in body functions?"
                         },
                         new
@@ -4263,26 +4007,6 @@ namespace Educational_Medical_platform.Migrations
                     b.HasIndex("CourseId");
 
                     b.ToTable("Requirements");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            CourseId = 1,
-                            Description = "being medical student"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            CourseId = 1,
-                            Description = "having laptop"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            CourseId = 2,
-                            Description = "buying premium package"
-                        });
                 });
 
             modelBuilder.Entity("Educational_Medical_platform.Models.StandardTest", b =>
@@ -4859,32 +4583,6 @@ namespace Educational_Medical_platform.Migrations
                     b.HasIndex("CourseId");
 
                     b.ToTable("Videos");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            CourseId = 1,
-                            Number = 1,
-                            Title = "new video",
-                            videoURL = "https://www.youtube.com/watch?v=4oThHBo2-Gs"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            CourseId = 2,
-                            Number = 1,
-                            Title = "old video",
-                            videoURL = "https://www.youtube.com/watch?v=mgEAimOoyHk"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            CourseId = 3,
-                            Number = 1,
-                            Title = "funny video",
-                            videoURL = "https://www.youtube.com/watch?v=zhCKr62s12w"
-                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -5141,7 +4839,7 @@ namespace Educational_Medical_platform.Migrations
                         {
                             Id = "1a111a11-1111-1111-1111-111111111111",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "be0648e8-b23d-46c2-a0d6-d89a566fe903",
+                            ConcurrencyStamp = "300dd0c4-8158-4690-b8d2-e55214c20e9e",
                             Email = "Ehab_Naser@example.com",
                             EmailConfirmed = true,
                             FirstName = "Ehab",
@@ -5150,7 +4848,7 @@ namespace Educational_Medical_platform.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "EHAB_NASER@EXAMPLE.COM",
                             NormalizedUserName = "EHAB_NASER",
-                            PasswordHash = "AQAAAAIAAYagAAAAEM0XMxy42puR7brjuhXlGRso7hDkEmCNLIHwqPlfmWfM2u0/ncJTZN0Lvhc0LXwA4g==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEHttV3DqoWV4hHUMKu4JERP7lS7Vqc3G7JPMP25CQNHnv58VDZX2PRdaLm5yZx8P4w==",
                             PhoneNumber = "011548726155",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "9f9ef764-d632-42d2-99ee-93v2410d8ae0",
@@ -5161,7 +4859,7 @@ namespace Educational_Medical_platform.Migrations
                         {
                             Id = "2b222b22-2222-2222-2222-222222222222",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "9c7a818a-3246-40b2-a357-94641f799229",
+                            ConcurrencyStamp = "402b359a-b5c7-4ce2-847b-80ccc4b63879",
                             Email = "Abdallah_Saudie@business.example.com",
                             EmailConfirmed = true,
                             FirstName = "Abdallah",
@@ -5170,7 +4868,7 @@ namespace Educational_Medical_platform.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "ABDALLAH_SAUDIE@BUSINESS.EXAMPLE.COM",
                             NormalizedUserName = "ABDALLAH_SAUDIE",
-                            PasswordHash = "AQAAAAIAAYagAAAAEH+ebpdLQAMFCYKrpd4LS3u5quvJfuhEI2i6lF2sCi8/IqXBDLLbxas3948fExh3Tg==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEJtthbABaALVDFS5sRhTMNsG/oif/LXMK7HgQYc8Q8G1PSXxSYjTpTFJkEPpM5x6iQ==",
                             PhoneNumber = "01054871566",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "9f9ed761-d631-42d2-99ee-93v2420d8ae0",
@@ -5181,7 +4879,7 @@ namespace Educational_Medical_platform.Migrations
                         {
                             Id = "3c333c33-3333-3333-3333-333333333333",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "b6678e2c-ee56-4f2e-95fe-454d6ee509c7",
+                            ConcurrencyStamp = "a3727d04-de66-4b1b-9d28-ad8997b9fe03",
                             Email = "Alaa_Test@example.com",
                             EmailConfirmed = true,
                             FirstName = "Alaa",
@@ -5190,7 +4888,7 @@ namespace Educational_Medical_platform.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "ALAA_AHMED@EXAMPLE.COM",
                             NormalizedUserName = "ALAA_AHMED",
-                            PasswordHash = "AQAAAAIAAYagAAAAEKMXGFDkwxiG3GonAB+VEDvtKO2kpaIYkUQPTqllORyGPnMr+ahEvhFPlcP+OA62Xw==",
+                            PasswordHash = "AQAAAAIAAYagAAAAECs4ucO8QIWZbfOBpswu/lg/OjA/RXhbk3qSs2ZWXLeBPD4OQPuoEc3o6QUoAblmdw==",
                             PhoneNumber = "01225193482",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "9f1ed761-a631-42dq-99ee-93z2420d8aeq",
@@ -5288,7 +4986,7 @@ namespace Educational_Medical_platform.Migrations
                     b.HasOne("Shoghlana.Core.Models.ApplicationUser", "Instructor")
                         .WithMany("CoursesCreated")
                         .HasForeignKey("InstructorId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("Educational_Medical_platform.Models.SubCategory", "SubCategory")

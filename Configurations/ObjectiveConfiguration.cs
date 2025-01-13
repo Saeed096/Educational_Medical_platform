@@ -9,27 +9,27 @@ namespace Educational_Medical_platform.Configurations
     {
         public void Configure(EntityTypeBuilder<Objective> builder)
         {
-            builder.HasData(
+//            builder.HasData(
 
-                new Objective
-                {
-                    Id = 1,
-                   Description = "Enhancing medical skills",
-                   CourseId = 1
-                },
-                new Objective
-                {
-                    Id = 2,
-                    Description = "Enhancing physiology knowledge",
-                    CourseId = 1
-                },
-                new Objective
-                {
-                    Id = 3,
-                    Description = "increasing job opportunities",
-                    CourseId = 1
-                }
-);
+//                new Objective
+//                {
+//                    Id = 1,
+//                   Description = "Enhancing medical skills",
+//                   CourseId = 1
+//                },
+//                new Objective
+//                {
+//                    Id = 2,
+//                    Description = "Enhancing physiology knowledge",
+//                    CourseId = 1
+//                },
+//                new Objective
+//                {
+//                    Id = 3,
+//                    Description = "increasing job opportunities",
+//                    CourseId = 1
+//                }
+//);
         }
     }
     }
