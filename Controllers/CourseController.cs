@@ -520,25 +520,25 @@ namespace Educational_Medical_platform.Controllers
             }
 
 
-            var userEnrolledRecord = _userEnrolledCoursesRepository.Find(criteria: uc => uc.StudentId == userId && uc.CourseId == courseId);
+            //var userEnrolledRecord = _userEnrolledCoursesRepository.Find(criteria: uc => uc.StudentId == userId && uc.CourseId == courseId);
 
-            if (userEnrolledRecord == null)
-            {
-                return new GeneralResponse
-                {
-                    IsSuccess = false,
-                    Message = "This user has not requested to enroll in this course"
-                };
-            }
+            //if (userEnrolledRecord == null)
+            //{
+            //    return new GeneralResponse
+            //    {
+            //        IsSuccess = false,
+            //        Message = "This user has not requested to enroll in this course"
+            //    };
+            //}
 
-            if (userEnrolledRecord.Status != EnrollRequestStatus.Approved)
-            {
-                return new GeneralResponse
-                {
-                    IsSuccess = false,
-                    Message = $"This user Request to enroll status is not Approved , it's current status is : {userEnrolledRecord.Status.GetDisplayName()}"
-                };
-            }
+            //if (userEnrolledRecord.Status != EnrollRequestStatus.Approved)
+            //{
+            //    return new GeneralResponse
+            //    {
+            //        IsSuccess = false,
+            //        Message = $"This user Request to enroll status is not Approved , it's current status is : {userEnrolledRecord.Status.GetDisplayName()}"
+            //    };
+            //}
 
             return new GeneralResponse()
             {
@@ -956,7 +956,7 @@ namespace Educational_Medical_platform.Controllers
                 //ThumbnailURL = courseDTO.ThumbnailURL,
                 Requirements = courseDTO.Requirements?.Select(req => new Requirement
                 {
-                    Description = req.Description
+                    Description = req.Description,
                 }).ToList(),
                 Objectives = courseDTO.Objectives?.Select(obj => new Objective
                 {
