@@ -171,7 +171,6 @@ namespace Educational_Medical_platform.Controllers
             };
         }
 
-
         [HttpPost("ApproveOrderCheckout")]
         public async Task<ActionResult<GeneralResponse>> ApproveOrderCheckout()
         {
@@ -197,32 +196,30 @@ namespace Educational_Medical_platform.Controllers
                             string subject = "New Course Purchase Notification - Action Required"; // {courseFromDB.Title}
 
                             string htmlBody = $@"
-<html>
-<head>
-    <link href=""https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"" rel=""stylesheet"">
-</head>
-<body>
-    <div class=""container mt-4 p-4 border rounded shadow-sm"">
-        <h2 class=""text-center text-primary mb-4"">Congratulations! Action Required: Platform Fee Payment</h2>
-        <p>Dear <strong>Instructor</strong>,</p>
-        <p>We are excited to inform you that <strong>{response.Resource.PaymentSource.Paypal.Name.GivenName} {response.Resource.PaymentSource.Paypal.Name.Surname}</strong> has purchased your course <strong>{response.Resource.PurchaseUnits[0].items[0].name}</strong> on our platform.</p>
-        <div class=""alert alert-warning"" role=""alert"">
-            <p><strong>Important:</strong> As per our terms and conditions, you are required to send the platform’s fee of <strong>20%</strong> from the transaction amount. Please note that the student will not be officially enrolled in your course until the platform fee has been received.</p>
-        </div>
-        <div class=""alert alert-danger"" role=""alert"">
-            <p><strong>Urgent Notice:</strong> If the platform fee is not sent within <strong>3 days</strong>, all courses associated with your account will be deleted from the platform.</p>
-        </div>
-        <p class=""text-success"">To avoid any disruption, please ensure the fee is sent promptly.</p>
-        <p>If you have already completed this transaction, please disregard this notice.</p>
-        <hr>
-        <p>Best Regards,</p>
-        <p class=""text-muted"">The Platform Team</p>
-    </div>
-</body>
-</html>
-
-";
-
+                                            <html>
+                                            <head>
+                                                <link href=""https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"" rel=""stylesheet"">
+                                            </head>
+                                            <body>
+                                                <div class=""container mt-4 p-4 border rounded shadow-sm"">
+                                                    <h2 class=""text-center text-primary mb-4"">Congratulations! Action Required: Platform Fee Payment</h2>
+                                                    <p>Dear <strong>Instructor</strong>,</p>
+                                                    <p>We are excited to inform you that <strong>{response.Resource.PaymentSource.Paypal.Name.GivenName} {response.Resource.PaymentSource.Paypal.Name.Surname}</strong> has purchased your course <strong>{response.Resource.PurchaseUnits[0].items[0].name}</strong> on our platform.</p>
+                                                    <div class=""alert alert-warning"" role=""alert"">
+                                                        <p><strong>Important:</strong> As per our terms and conditions, you are required to send the platform’s fee of <strong>20%</strong> from the transaction amount. Please note that the student will not be officially enrolled in your course until the platform fee has been received.</p>
+                                                    </div>
+                                                    <div class=""alert alert-danger"" role=""alert"">
+                                                        <p><strong>Urgent Notice:</strong> If the platform fee is not sent within <strong>3 days</strong>, all courses associated with your account will be deleted from the platform.</p>
+                                                    </div>
+                                                    <p class=""text-success"">To avoid any disruption, please ensure the fee is sent promptly.</p>
+                                                    <p>If you have already completed this transaction, please disregard this notice.</p>
+                                                    <hr>
+                                                    <p>Best Regards,</p>
+                                                    <p class=""text-muted"">The Platform Team</p>
+                                                </div>
+                                            </body>
+                                            </html>
+                                            ";
 
 
                             await _emailService.SendEmailAsync(response.Resource.PurchaseUnits[0].Payee.EmailAddress
@@ -271,6 +268,7 @@ namespace Educational_Medical_platform.Controllers
                 };
             }
         }
+
         // test all cycle of subscription
         private async Task<bool> HandleSubscriptionActivated(webhookEvent webhookEvent)
         {
@@ -303,7 +301,6 @@ namespace Educational_Medical_platform.Controllers
             return true;
 
         }
-
 
         [HttpPost("cancelSubscription")]
         public async Task<ActionResult<GeneralResponse>> cancelSubscription(CancelSubscriptionWebhookEvent webhookEvent)
@@ -398,17 +395,13 @@ namespace Educational_Medical_platform.Controllers
 
         }
 
-
-
-
         private async Task<bool> VerifyEvent(string json, IHeaderDictionary headerDictionary, string WebhookId)
         {
             var isValidEvent = await _client.VerifyEvent(json, headerDictionary, WebhookId);
             return isValidEvent;
         }
 
-
-        [Authorize]
+        //[Authorize]
         [HttpPost("BuyCourse")]
         public async Task<ActionResult<GeneralResponse>> BuyCourse(BuyCourseDTO buyCourseDTO)
         {
