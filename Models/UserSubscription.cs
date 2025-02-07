@@ -12,7 +12,8 @@ namespace Educational_Medical_platform.Models
        
         public DateTime EndDate { get; set; }
 
-        public DateTime CreatedAt { get; set; }
+        public DateTime CreatedAt { get; set; }  
+        public DateTime UpdatedAt { get; set; }
 
         public SubscriptionStatus Status { get; set; }
 

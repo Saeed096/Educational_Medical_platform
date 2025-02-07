@@ -11,7 +11,7 @@ namespace Educational_Medical_platform.Configurations
             // Seed Initial data for SubCategory
             builder.HasData(
 
-                   // Courses
+                // Courses
                 new SubCategory { Id = 1, Name = "Human Anatomy", CategoryId = 1, Type = Helpers.SubCategoryType.Courses },
                 new SubCategory { Id = 2, Name = "Comparative Anatomy", CategoryId = 1, Type = Helpers.SubCategoryType.Courses },
                 new SubCategory { Id = 3, Name = "Cell Physiology", CategoryId = 2, Type = Helpers.SubCategoryType.Courses },

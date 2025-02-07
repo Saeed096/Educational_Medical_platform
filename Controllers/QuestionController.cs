@@ -1,10 +1,14 @@
 ﻿using Educational_Medical_platform.DTO.Answer;
 using Educational_Medical_platform.DTO.Question;
+using Educational_Medical_platform.Helpers;
 using Educational_Medical_platform.Models;
 using Educational_Medical_platform.Repositories.Interfaces;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Shoghlana.Api.Response;
+using Shoghlana.Core.Models;
+using System.Security.Claims;
 
 namespace Educational_Medical_platform.Controllers
 {
@@ -19,13 +23,15 @@ namespace Educational_Medical_platform.Controllers
         private readonly IStandardTestRepository _standardTestRepository;
         private readonly ICourseRepository _courseRepository;
         private readonly IAnswerRepository _answerRepository;
+        private readonly UserManager<ApplicationUser> _userManager;
 
         public QuestionController(IQuestionRepository questionRepository,
             ISubCategoryRepository subCategoryRepository,
             IBlogRepository blogRepository,
             IStandardTestRepository standardTestRepository,
             ICourseRepository courseRepository,
-            IAnswerRepository answerRepository)
+            IAnswerRepository answerRepository , 
+            UserManager<ApplicationUser> userManager)
         {
             _questionRepository = questionRepository;
             _subCategoryRepository = subCategoryRepository;
@@ -33,6 +39,7 @@ namespace Educational_Medical_platform.Controllers
             _standardTestRepository = standardTestRepository;
             _courseRepository = courseRepository;
             _answerRepository = answerRepository;
+            this._userManager = userManager;
         }
 
         //********************************************************************
@@ -77,101 +84,103 @@ namespace Educational_Medical_platform.Controllers
             };
         }
 
-        [HttpGet("{id:int}")]
-        public ActionResult<GeneralResponse> GetById(int id)
-        {
-            Question? question = _questionRepository.Find(criteria: q => q.Id == id, includes: ["Answers"]);
+        //[HttpGet("{id:int}")]
+        //public ActionResult<GeneralResponse> GetById(int id)
+        //{
+        //    Question? question = _questionRepository.Find(criteria: q => q.Id == id, includes: ["Answers"]);
 
-            if (question is null)
-            {
-                return new GeneralResponse()
-                {
-                    IsSuccess = false,
-                    Data = null,
-                    Message = $"No question found with this ID : {id}"
-                };
-            }
+        //    if (question is null)
+        //    {
+        //        return new GeneralResponse()
+        //        {
+        //            IsSuccess = false,
+        //            Data = null,
+        //            Message = $"No question found with this ID : {id}"
+        //        };
+        //    }
 
-            GetQuestionDTO questionDTO = new GetQuestionDTO()
-            {
-                Id = question.Id,
-                BlogId = question.BlogId,
-                CourseId = question.CourseId,
-                SubCategoryId = question.SubCategoryId,
-                TestId = question.TestId,
-                Description = question.Description,
+        //    GetQuestionDTO questionDTO = new GetQuestionDTO()
+        //    {
+        //        Id = question.Id,
+        //        BlogId = question.BlogId,
+        //        CourseId = question.CourseId,
+        //        SubCategoryId = question.SubCategoryId,
+        //        TestId = question.TestId,
+        //        Description = question.Description,
 
-                Answers = question.Answers.Select(answer => new GetAnswerDTO()
-                {
-                    Id = answer.Id,
-                    QuestionId = answer.QuestionId,
-                    Description = answer.Description,
-                    Reason = answer.Reason,
-                    IsCorrect = answer.IsCorrect,
-                }).ToList(),
-            };
+        //        Answers = question.Answers.Select(answer => new GetAnswerDTO()
+        //        {
+        //            Id = answer.Id,
+        //            QuestionId = answer.QuestionId,
+        //            Description = answer.Description,
+        //            Reason = answer.Reason,
+        //            IsCorrect = answer.IsCorrect,
+        //        }).ToList(),
+        //    };
 
-            return new GeneralResponse()
-            {
-                IsSuccess = true,
-                Data = questionDTO,
-            };
-        }
+        //    return new GeneralResponse()
+        //    {
+        //        IsSuccess = true,
+        //        Data = questionDTO,
+        //    };
+        //}
 
-        [HttpGet("subcategory/{id:int}")]
-        public ActionResult<GeneralResponse> GetBySubCategoryId(int id)
-        {
-            if (!_subCategoryRepository.Exists(id))
-            {
-                return new GeneralResponse()
-                {
-                    IsSuccess = false,
-                    Data = null,
-                    Message = $"No subcategory found with this ID : {id}"
-                };
-            }
+        //[HttpGet("subcategory/{id:int}")]
+        //public ActionResult<GeneralResponse> GetBySubCategoryId(int id)
+        //{
+        //    if (!_subCategoryRepository.Exists(id))
+        //    {
+        //        return new GeneralResponse()
+        //        {
+        //            IsSuccess = false,
+        //            Data = null,
+        //            Message = $"No subcategory found with this ID : {id}"
+        //        };
+        //    }
 
-            List<GetQuestionDTO> questionDTOs = _questionRepository.FindAll(criteria: q => q.SubCategoryId == id, includes: ["Answers"]).Select(question => new GetQuestionDTO()
-            {
-                Id = question.Id,
-                BlogId = question.BlogId,
-                CourseId = question.CourseId,
-                SubCategoryId = question.SubCategoryId,
-                TestId = question.TestId,
-                Description = question.Description,
+        //    List<GetQuestionDTO> questionDTOs = _questionRepository.FindAll(criteria: q => q.SubCategoryId == id, includes: ["Answers"]).Select(question => new GetQuestionDTO()
+        //    {
+        //        Id = question.Id,
+        //        BlogId = question.BlogId,
+        //        CourseId = question.CourseId,
+        //        SubCategoryId = question.SubCategoryId,
+        //        TestId = question.TestId,
+        //        Description = question.Description,
 
-                // I think this is better preformance than seeraching every time with questiong ID
-                Answers = question.Answers.Select(answer => new GetAnswerDTO()
-                {
-                    Id = answer.Id,
-                    QuestionId = answer.QuestionId,
-                    Description = answer.Description,
-                    Reason = answer.Reason,
-                    IsCorrect = answer.IsCorrect,
-                }).ToList(),
-            }).ToList();
+        //        // I think this is better preformance than seeraching every time with questiong ID
+        //        Answers = question.Answers.Select(answer => new GetAnswerDTO()
+        //        {
+        //            Id = answer.Id,
+        //            QuestionId = answer.QuestionId,
+        //            Description = answer.Description,
+        //            Reason = answer.Reason,
+        //            IsCorrect = answer.IsCorrect,
+        //        }).ToList(),
+        //    }).ToList();
 
-            if (questionDTOs is null || !questionDTOs.Any())
-            {
-                return new GeneralResponse()
-                {
-                    IsSuccess = false,
-                    Data = null,
-                    Message = $"No questions found with this SubCategory ID : {id}"
-                };
-            }
+        //    if (questionDTOs is null || !questionDTOs.Any())
+        //    {
+        //        return new GeneralResponse()
+        //        {
+        //            IsSuccess = false,
+        //            Data = null,
+        //            Message = $"No questions found with this SubCategory ID : {id}"
+        //        };
+        //    }
 
-            return new GeneralResponse()
-            {
-                IsSuccess = true,
-                Data = questionDTOs,
-            };
-        }
+        //    return new GeneralResponse()
+        //    {
+        //        IsSuccess = true,
+        //        Data = questionDTOs,
+        //    };
+        //}
 
         [HttpGet("test/{id:int}")]
-        public ActionResult<GeneralResponse> GetByTestId(int id)
+        public async Task<ActionResult<GeneralResponse>> GetByTestId(int id)
         {
-            if (!_standardTestRepository.Exists(id))
+            var test = _standardTestRepository.GetById(id);
+
+            if (test is null)
             {
                 return new GeneralResponse()
                 {
@@ -181,26 +190,47 @@ namespace Educational_Medical_platform.Controllers
                 };
             }
 
-            List<GetQuestionDTO> questionDTOs = _questionRepository.FindAll(criteria: q => q.TestId == id, includes: ["Answers"]).Select(question => new GetQuestionDTO()
+
+            if(test.Type == TestType.Premium)
             {
-                Id = question.Id,
-                BlogId = question.BlogId,
-                CourseId = question.CourseId,
-                SubCategoryId = question.SubCategoryId,
-                TestId = question.TestId,
-                Description = question.Description,
+                var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                var user = await _userManager.FindByIdAsync(userId);
 
+                var userRoles = await _userManager.GetRolesAsync(user);
 
-                // I think this is better preformance than seeraching every time with questiong ID
-                Answers = question.Answers.Select(answer => new GetAnswerDTO()
+                // Check if the user is allowed access to premium tests
+                if (!userRoles.Contains("Admin") && !user.IsSubscribedToPlatform)
                 {
-                    Id = answer.Id,
-                    QuestionId = answer.QuestionId,
-                    Description = answer.Description,
-                    Reason = answer.Reason,
-                    IsCorrect = answer.IsCorrect,
-                }).ToList(),
-            }).ToList();
+                    return new GeneralResponse
+                    {
+                        IsSuccess = false,
+                        Message = "this user can't access premuim test questions because he is not subsciped to platform or Admin",
+                        Data = userId
+                    };
+                }
+            }
+
+            List<GetQuestionDTO> questionDTOs = _questionRepository.FindAll(criteria: q => q.TestId == id, includes: ["Answers"])
+                .Select(question => new GetQuestionDTO()
+                {
+                    Id = question.Id,
+                    BlogId = question.BlogId,
+                    CourseId = question.CourseId,
+                    SubCategoryId = question.SubCategoryId,
+                    TestId = question.TestId,
+                    Description = question.Description,
+
+
+                    // I think this is better preformance than seeraching every time with questiong ID
+                    Answers = question.Answers.Select(answer => new GetAnswerDTO()
+                    {
+                        Id = answer.Id,
+                        QuestionId = answer.QuestionId,
+                        Description = answer.Description,
+                        Reason = answer.Reason,
+                        IsCorrect = answer.IsCorrect,
+                    }).ToList(),
+                }).ToList();
 
             if (questionDTOs is null || !questionDTOs.Any())
             {
@@ -560,7 +590,6 @@ namespace Educational_Medical_platform.Controllers
             }
 
         }
-
 
         [HttpPatch("{questionId:int}")]
         public async Task<ActionResult<GeneralResponse>> EditQuestion(AddQuestionDTO questionDTO, int questionId)

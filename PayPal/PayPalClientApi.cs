@@ -84,7 +84,7 @@ namespace Educational_Medical_platform.PayPal
             EnsureHttpClientCreated();
 
             var byteArray = Encoding.ASCII.GetBytes($"{ConfigHelper.ClientId}:{ConfigHelper.ClientSecret}");  // to be studied
-            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(byteArray));   
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(byteArray));
 
             var keyValuePairs = new List<KeyValuePair<string, string>>
             {
@@ -254,8 +254,8 @@ namespace Educational_Medical_platform.PayPal
                         payer_selected = "PAYPAL",
                         payee_preferred = "IMMEDIATE_PAYMENT_REQUIRED"
                     },
-                    return_url = "https://example.com/return",
-                    cancel_url = "https://example.com/cancel"
+                    return_url = "https://practice2pass.netlify.app/",
+                    cancel_url = "https://practice2pass.netlify.app/"
                 }
             };
 
@@ -271,6 +271,7 @@ namespace Educational_Medical_platform.PayPal
                 var userSubscription = new UserSubscription
                 {
                     CreatedAt = DateTime.Now,
+                    UpdatedAt = DateTime.Now,
                     StartDate = subscriptionResponse.start_time,
                     EndDate = DateTime.Now.AddMonths(12),
 
@@ -562,17 +563,29 @@ namespace Educational_Medical_platform.PayPal
                 };
             }
 
-           var userEnrolledCourseFromDb = _userEnrolledCoursesRepository
-                                          .Find(u => u.CourseId == buyCourseDTO.CourseId && u.StudentId == buyCourseDTO.UserId);
+            var userEnrolledCourseFromDb = _userEnrolledCoursesRepository
+                                           .Find(u => u.CourseId == buyCourseDTO.CourseId && u.StudentId == buyCourseDTO.UserId);
 
             if (userEnrolledCourseFromDb != null)
             {
                 return new GeneralResponse()
                 {
                     IsSuccess = false,
-                    Message = "This user has already bought this course before"
+                    Message = "This user has already Purchased this course before"
                 };
             }
+
+            // TODO : Do I need to check on the status here ? 
+
+            //if (userEnrolledCourseFromDb.Status == EnrollRequestStatus.)
+            //{
+            //    return new GeneralResponse()
+            //    {
+            //        IsSuccess = false,
+            //        Message = "This user has already Purchased this course before"
+            //    };
+            //}
+
             //---------------------------------------------------------------
 
             var createCourseProductResponse = await EnsureCourseProductCreated(courseFromDB);
@@ -634,13 +647,13 @@ namespace Educational_Medical_platform.PayPal
             // create paypal prod then update your SQL
             //if(!string.IsNullOrEmpty(courseFromDB.Preview))
             //{
-                var newProduct = new CreateProductRequest
-                {
-                    name = $"{courseFromDB.Title}",
-                    description = $"{courseFromDB.Preview?? "NA"}",
-                    type = "DIGITAL",
-                    category = "ACADEMIC_SOFTWARE"
-                };
+            var newProduct = new CreateProductRequest
+            {
+                name = $"{courseFromDB.Title}",
+                description = $"{courseFromDB.Preview ?? "NA"}",
+                type = "DIGITAL",
+                category = "ACADEMIC_SOFTWARE"
+            };
             //}
             //else
             //{
@@ -651,7 +664,7 @@ namespace Educational_Medical_platform.PayPal
             //        category = "ACADEMIC_SOFTWARE"
             //    };
             //}
-            
+
 
             var jsonContent = JsonConvert.SerializeObject(newProduct);
             var httpContent = new StringContent(jsonContent, Encoding.UTF8, "application/json");
@@ -708,7 +721,7 @@ namespace Educational_Medical_platform.PayPal
                                 }
                             }
                         },
-                        
+
                          payee = new Models.Responses.Payee
                         {
                             // should validate here that this mail is valid for payal????
@@ -729,7 +742,7 @@ namespace Educational_Medical_platform.PayPal
                          }
                     }
                 },
-               
+
             };
 
             var jsonContent = JsonConvert.SerializeObject(createOrderRequest);
@@ -761,7 +774,7 @@ namespace Educational_Medical_platform.PayPal
 
         // ================================================================================================
 
-        public async Task<bool> VerifyEvent(string json, IHeaderDictionary headerDictionary , string WebhookId)
+        public async Task<bool> VerifyEvent(string json, IHeaderDictionary headerDictionary, string WebhookId)
         {
             // !!IMPORTANT!!
             // Without this direct JSON serialization, PayPal WILL ALWAYS return verification_status = "FAILURE".
@@ -794,13 +807,13 @@ namespace Educational_Medical_platform.PayPal
 
         public async Task<GeneralResponse> captureOrderAsync(string orderId)
         {
-            var request = new HttpRequestMessage(HttpMethod.Post , $"{ConfigHelper.BaseUrl}/v2/checkout/orders/{orderId}/capture");
+            var request = new HttpRequestMessage(HttpMethod.Post, $"{ConfigHelper.BaseUrl}/v2/checkout/orders/{orderId}/capture");
             request.Headers.Add("Accept", "application/json");
             request.Headers.Add("Authorization", $"Bearer {_accessToken}");
             request.Content = new StringContent("", Encoding.UTF8, "application/json"); // Empty JSON body with correct Content-Type
             var response = await _client.SendAsync(request);
 
-            if(response.IsSuccessStatusCode)
+            if (response.IsSuccessStatusCode)
             {
                 return new GeneralResponse()
                 {

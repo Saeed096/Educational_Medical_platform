@@ -30,10 +30,10 @@ namespace Educational_Medical_platform.DTO.Course
         [Required(ErrorMessage = "SubCategoryId is required")]
         public int SubCategoryId { get; set; }
 
-        [FromForm]
+        //[FromForm]
         public List<AddCourseRequirmentDTO>? Requirements { get; set; }
 
-        [FromForm]
+        //[FromForm]
         public List<AddCourseObjectiveDTO>? Objectives { get; set; }
     }
 }

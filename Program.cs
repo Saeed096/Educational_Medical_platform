@@ -5,12 +5,12 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Shoghlana.Core.Models;
 using Shoghlana.EF;
 using System.Text;
-
 
 namespace Educational_Medical_platform
 {
@@ -21,131 +21,29 @@ namespace Educational_Medical_platform
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
+            ConfigureServices(builder);
 
-            builder.Services.AddControllers();
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-            builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
+            var app = builder.Build();
 
-            builder.Services.AddCors(options =>
-            {
-                options.AddPolicy("DefaultPolicy", policy =>
-                {
-                    policy.WithOrigins("http://localhost:3000", "http://localhost:5173") // Add multiple origins
-                    .AllowAnyMethod()
-                    .AllowAnyHeader();
-                });
-            });
+            // Configure the HTTP request pipeline.
+            ConfigureMiddleware(app);
 
-            builder.Services.AddDbContext<ApplicationDBContext>(options =>
-            {
-                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnectionString"));
-            });
+            app.Run();
+        }
 
-
-            #region Registering Services
-            builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("MailSettings"));
-            builder.Services.Configure<ValidWebhookEventIds>(builder.Configuration.GetSection("ValidWebhookEventIds"));
-
-            builder.Services.AddScoped<IEmailService, EmailService>();
-            builder.Services.AddScoped<IBlogRepository, BlogRepository>(); 
-            builder.Services.AddScoped<IBookRepository,BookRepository>();
-            builder.Services.AddScoped<ISubCategoryRepository, SubCategoryRepository>();
-            builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
-            builder.Services.AddScoped<IBlog_User_LikesRepository, Blog_User_LikeRepository>();
-            builder.Services.AddScoped<IQuestionRepository, QuestionRepository>();
-            builder.Services.AddScoped<IAnswerRepository, AnswerRepository>();
-            builder.Services.AddScoped<IStandardTestRepository, StandardTestRepository>();
-
-            builder.Services.AddScoped<ICourseRepository, CourseRepository>();
-            builder.Services.AddScoped<ICourseRequirementsRepository, CourseRequirementsRepository>();
-            builder.Services.AddScoped<ICourseObjectiveRepository, CourseObjectiveRepository>();
-            builder.Services.AddScoped<IVideoRepository, VideoRepository>();
-            builder.Services.AddScoped<IUserEnrolledCoursesRepository, UserEnrolledCoursesRepository>();
-            builder.Services.AddScoped<IApplicationUserRepository, ApplicationUserRepository>();
-
-            builder.Services.AddScoped<IUserSubscribtionRipository, UserSubscribtionRipository>();
-            builder.Services.AddScoped<IPlatformRepository, PlatformRepository>();
-            builder.Services.AddScoped<IUserLocalSubscribtionRepository, UserLocalSubscribtionRepository>();
-
-            #endregion
-
-            //************************************************************************
-
-            #region JWT
-
-
-            // Registering Identiny
-            builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
-            {
-                // you can remove some validations for easier testing
-                //options.Password.RequireNonAlphanumeric = false;
-                //options.Password.RequireLowercase = false;
-                //options.Password.RequireUppercase = false;
-                //options.Password.RequireDigit = false;
-                //options.SignIn.RequireConfirmedAccount = true;        // maybe later
-
-                options.SignIn.RequireConfirmedEmail = true; // You can adjust this based on your requirements
-
-            })
-            .AddEntityFrameworkStores<ApplicationDBContext>()
-            .AddDefaultTokenProviders(); // This line registers the default token providers
-
-            //ibrahim:this line for forget password configrations for ==>link time epirtations
-            //builder.Services.Configure<DataProtectionTokenProviderOptions>(options => options.TokenLifespan = TimeSpan.FromHours(10));
-
-            builder.Services.AddAuthentication(options =>
-            {
-                // adjusting the authorize attr to look for JWT Bearer tokens not schema
-                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-
-                // in case of failer(challenge) => see the JWT default behaviour which is returing UnAuthorized res
-                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-
-                // see the other schemas and change them with the JWT default schema
-                options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-            }).AddJwtBearer(options =>
-            {
-                // the token must be saved not written
-                options.SaveToken = true;
-
-                // validate the token itself
-                options.TokenValidationParameters = new TokenValidationParameters()
-                {
-                    // check that the issuer is this wep API
-                    ValidateIssuer = true,
-                    ValidIssuer = builder.Configuration["JWT:ValidIss"],
-
-                    // check that the audience is target React App
-                    ValidateAudience = true,
-                    ValidAudience = builder.Configuration["JWT:ValidAud"],// note : don't write any sapces
-
-                    // check the signature resulting from : key + payload 
-                    IssuerSigningKey =
-                    new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:SecretKey"])),
-                };
-            });
-
-
-            /// <summary>
-            /// disapling checking for authorize by default because of the [Api Controller] attribute
-            /// if the model state was Invalid => the default was not to enter the action nad return directly Badrequest with arr of Errors
-            /// So I disaple this default so it enters the action and returns my customized response
-            /// </summary>
+        private static void ConfigureServices(WebApplicationBuilder builder)
+        {
+            // Add controllers
             builder.Services.AddControllers()
                 .ConfigureApiBehaviorOptions(options =>
                 {
                     options.SuppressModelStateInvalidFilter = true;
                 });
 
-            //-----------------------------------------------------
-
-            /// <summary>
-            /// swager configuration to deal with register and login tokens
-            /// <summary>
+            // Enable Swagger
+            builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen(swagger =>
             {
-                //This is to generate the Default UI of Swagger Documentation
                 swagger.SwaggerDoc("v1", new OpenApiInfo
                 {
                     Version = "v1",
@@ -153,7 +51,7 @@ namespace Educational_Medical_platform
                     Description = "MedLearn Hub"
                 });
 
-                // To Enable authorization using Swagger (JWT)
+                // Add security definition for JWT
                 swagger.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()
                 {
                     Name = "Authorization",
@@ -161,50 +59,132 @@ namespace Educational_Medical_platform
                     Scheme = "Bearer",
                     BearerFormat = "JWT",
                     In = ParameterLocation.Header,
-                    Description = "Enter 'Bearer' [space] and then your valid token in the text input below.\r\n\r\nExample: \"Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6 IkpXVCJ9\"",
+                    Description = "Enter 'Bearer' [space] and then your valid token in the text input below.\r\n\r\nExample: \"Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9\"",
                 });
+
                 swagger.AddSecurityRequirement(new OpenApiSecurityRequirement
-                  {
-                      {
-                      new OpenApiSecurityScheme
-                      {
-                  Reference = new OpenApiReference
-                  {
-                      Type = ReferenceType.SecurityScheme,
-                      Id = "Bearer"
-                      }
-                  },
-                      new string[] {}
-                      }
-                  });
+                {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "Bearer"
+                            }
+                        },
+                        Array.Empty<string>()
+                    }
+                });
             });
 
-            builder.Services.Configure<DataProtectionTokenProviderOptions>(options =>
-                options.TokenLifespan = TimeSpan.FromHours(3)); // Example: 3 hours
+            // Configure CORS
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("DefaultPolicy", policy =>
+                {
+                    policy.AllowAnyOrigin()
+                        .AllowAnyMethod()
+                        .AllowAnyHeader();
+                });
+            });
 
+            // Configure Entity Framework and Database Context
+            builder.Services.AddDbContext<ApplicationDBContext>(options =>
+            {
+                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnectionString"));
+            });
 
-            #endregion
+            // Configure Identity
+            builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
+            {
+                options.SignIn.RequireConfirmedEmail = true;
+            })
+            .AddEntityFrameworkStores<ApplicationDBContext>()
+            .AddDefaultTokenProviders();
 
+            // Configure JWT Authentication
+            builder.Services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(options =>
+            {
+                options.SaveToken = true;
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateIssuerSigningKey = true,
+                    ValidIssuer = builder.Configuration["JWT:ValidIssuers:0"], // Use a specific issuer
+                    ValidAudiences = builder.Configuration.GetSection("JWT:ValidAudiences").Get<string[]>(), // Get array of audiences
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:SecretKey"]))
+                };
+            });
+
+            // Configure Mail Settings
+            builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("MailSettings"));
+            builder.Services.Configure<ValidWebhookEventIds>(builder.Configuration.GetSection("ValidWebhookEventIds"));
+
+            // Register Application Services and Repositories
+            RegisterServices(builder);
+
+            // Configure File Upload Limits
             builder.WebHost.ConfigureKestrel(options =>
             {
-                // Set the maximum request body size to 2 GB
-                options.Limits.MaxRequestBodySize = 2L * 1024 * 1024 * 1024; // 2 GB in bytes
+                options.Limits.MaxRequestBodySize = 2L * 1024 * 1024 * 1024; // 2 GB
             });
 
-            // Configure form options to handle large file uploads
             builder.Services.Configure<FormOptions>(options =>
             {
-                options.MultipartBodyLengthLimit = 2L * 1024 * 1024 * 1024; // 2 GB in bytes
+                options.MultipartBodyLengthLimit = 2L * 1024 * 1024 * 1024; // 2 GB
             });
 
             builder.Services.Configure<IISServerOptions>(options =>
             {
-                options.MaxRequestBodySize = 2L * 1024 * 1024 * 1024; // 2 GB in bytes
+                options.MaxRequestBodySize = 2L * 1024 * 1024 * 1024; // 2 GB
+            });
+        }
+
+        private static void RegisterServices(WebApplicationBuilder builder)
+        {
+            builder.Services.AddScoped<IEmailService, EmailService>();
+            builder.Services.AddScoped<IBlogRepository, BlogRepository>();
+            builder.Services.AddScoped<IBookRepository, BookRepository>();
+            builder.Services.AddScoped<ISubCategoryRepository, SubCategoryRepository>();
+            builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+            builder.Services.AddScoped<IBlog_User_LikesRepository, Blog_User_LikeRepository>();
+            builder.Services.AddScoped<IQuestionRepository, QuestionRepository>();
+            builder.Services.AddScoped<IAnswerRepository, AnswerRepository>();
+            builder.Services.AddScoped<IStandardTestRepository, StandardTestRepository>();
+            builder.Services.AddScoped<ICourseRepository, CourseRepository>();
+            builder.Services.AddScoped<ICourseRequirementsRepository, CourseRequirementsRepository>();
+            builder.Services.AddScoped<ICourseObjectiveRepository, CourseObjectiveRepository>();
+            builder.Services.AddScoped<IVideoRepository, VideoRepository>();
+            builder.Services.AddScoped<IUserEnrolledCoursesRepository, UserEnrolledCoursesRepository>();
+            builder.Services.AddScoped<IApplicationUserRepository, ApplicationUserRepository>();
+            builder.Services.AddScoped<IUserSubscribtionRipository, UserSubscribtionRipository>();
+            builder.Services.AddScoped<IPlatformRepository, PlatformRepository>();
+            builder.Services.AddScoped<IUserLocalSubscribtionRepository, UserLocalSubscribtionRepository>();
+            builder.Services.AddScoped<ISubscriptionService, SubscriptionService>();
+        }
+
+        private static void ConfigureMiddleware(WebApplication app)
+        {
+            app.UseExceptionHandler(errorApp =>
+            {
+                errorApp.Run(async context =>
+                {
+                    context.Response.ContentType = "application/json";
+                    await context.Response.WriteAsJsonAsync(new
+                    {
+                        error = "An unexpected error occurred.",
+                        statusCode = context.Response.StatusCode
+                    });
+                });
             });
 
-
-            //*************************************************************************
-            var app = builder.Build();
 
             // Configure the HTTP request pipeline.
             //if (app.Environment.IsDevelopment())
@@ -213,17 +193,21 @@ namespace Educational_Medical_platform
                 app.UseSwaggerUI();
 
 
+            //app.UseHttpsRedirection();
+            app.UseRouting();
+
+            // Enable CORS
             app.UseCors("DefaultPolicy");
 
-            app.UseAuthentication(); // Ensure this is called before authorization
-
+            // Authentication and Authorization
+            app.UseAuthentication();
             app.UseAuthorization();
 
-            app.UseStaticFiles(); // Serves files from wwwroot
+            // Serve static files
+            app.UseStaticFiles();
 
+            // Map controllers
             app.MapControllers();
-
-            app.Run();
         }
     }
 }

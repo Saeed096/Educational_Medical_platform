@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Educational_Medical_platform.Migrations
 {
     /// <inheritdoc />
-    public partial class init : Migration
+    public partial class Init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -228,6 +228,7 @@ namespace Educational_Medical_platform.Migrations
                     StartDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     EndDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Status = table.Column<int>(type: "int", nullable: false),
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     SubscriptionPlanId = table.Column<string>(type: "nvarchar(max)", nullable: false)
@@ -366,8 +367,7 @@ namespace Educational_Medical_platform.Migrations
                         name: "FK_Courses_AspNetUsers_InstructorId",
                         column: x => x.InstructorId,
                         principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Courses_Categories_CategoryId",
                         column: x => x.CategoryId,
@@ -601,9 +601,9 @@ namespace Educational_Medical_platform.Migrations
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "FirstName", "ImageUrl", "IsSubscribedToPlatform", "LastName", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "SubscriptionMethod", "TwoFactorEnabled", "UserName" },
                 values: new object[,]
                 {
-                    { "1a111a11-1111-1111-1111-111111111111", 0, "cffb14a3-4614-48c2-b6a5-3f755019f233", "Ehab_Naser@example.com", true, "Ehab", null, false, "Naser", false, null, "EHAB_NASER@EXAMPLE.COM", "EHAB_NASER", "AQAAAAIAAYagAAAAEBsxX7ZE7gD1it/Cm/JzVVh4zG9e2jH/xWy8Gje2OqpO8Jtb5TPbLgCVrJoC8F7htA==", "011548726155", false, "9f9ef764-d632-42d2-99ee-93v2410d8ae0", null, false, "Ehab_Naser" },
-                    { "2b222b22-2222-2222-2222-222222222222", 0, "8155b9e3-9ea4-4771-bee2-b868e8677373", "Abdallah_Saudie@business.example.com", true, "Abdallah", null, false, "Saudie", false, null, "ABDALLAH_SAUDIE@BUSINESS.EXAMPLE.COM", "ABDALLAH_SAUDIE", "AQAAAAIAAYagAAAAEASqXeM56z9WBKczXoC3Nwux+7V6rYYellXGFO1vrasSz8bTh/2SuVNFOJ8x0VnVHQ==", "01054871566", false, "9f9ed761-d631-42d2-99ee-93v2420d8ae0", null, false, "Abdallah_Saudie" },
-                    { "3c333c33-3333-3333-3333-333333333333", 0, "89e9ea2f-d88f-4fcf-b20d-ecb876028af5", "Alaa_Test@example.com", true, "Alaa", null, false, "Ahmed", false, null, "ALAA_AHMED@EXAMPLE.COM", "ALAA_AHMED", "AQAAAAIAAYagAAAAEBh16Wrw5SjkLFEAUxlEFKO/MKIhLBX4PattvOipJ7MECv62suvuaIesmc5l+9ifcA==", "01225193482", false, "9f1ed761-a631-42dq-99ee-93z2420d8aeq", null, false, "Alaa_Ahmed" }
+                    { "1a111a11-1111-1111-1111-111111111111", 0, "300dd0c4-8158-4690-b8d2-e55214c20e9e", "Ehab_Naser@example.com", true, "Ehab", null, false, "Naser", false, null, "EHAB_NASER@EXAMPLE.COM", "EHAB_NASER", "AQAAAAIAAYagAAAAEHttV3DqoWV4hHUMKu4JERP7lS7Vqc3G7JPMP25CQNHnv58VDZX2PRdaLm5yZx8P4w==", "011548726155", false, "9f9ef764-d632-42d2-99ee-93v2410d8ae0", null, false, "Ehab_Naser" },
+                    { "2b222b22-2222-2222-2222-222222222222", 0, "402b359a-b5c7-4ce2-847b-80ccc4b63879", "Abdallah_Saudie@business.example.com", true, "Abdallah", null, false, "Saudie", false, null, "ABDALLAH_SAUDIE@BUSINESS.EXAMPLE.COM", "ABDALLAH_SAUDIE", "AQAAAAIAAYagAAAAEJtthbABaALVDFS5sRhTMNsG/oif/LXMK7HgQYc8Q8G1PSXxSYjTpTFJkEPpM5x6iQ==", "01054871566", false, "9f9ed761-d631-42d2-99ee-93v2420d8ae0", null, false, "Abdallah_Saudie" },
+                    { "3c333c33-3333-3333-3333-333333333333", 0, "a3727d04-de66-4b1b-9d28-ad8997b9fe03", "Alaa_Test@example.com", true, "Alaa", null, false, "Ahmed", false, null, "ALAA_AHMED@EXAMPLE.COM", "ALAA_AHMED", "AQAAAAIAAYagAAAAECs4ucO8QIWZbfOBpswu/lg/OjA/RXhbk3qSs2ZWXLeBPD4OQPuoEc3o6QUoAblmdw==", "01225193482", false, "9f1ed761-a631-42dq-99ee-93z2420d8aeq", null, false, "Alaa_Ahmed" }
                 });
 
             migrationBuilder.InsertData(
@@ -631,9 +631,43 @@ namespace Educational_Medical_platform.Migrations
                 });
 
             migrationBuilder.InsertData(
+                table: "Questions",
+                columns: new[] { "Id", "BlogId", "CourseId", "Description", "SubCategoryId", "TestId" },
+                values: new object[,]
+                {
+                    { 11, null, null, "What are the key structures of the human body?", null, null },
+                    { 12, null, null, "How does the muscular system work?", null, null },
+                    { 13, null, null, "What is the importance of studying anatomy?", null, null },
+                    { 14, null, null, "What are the different systems of the human body?", null, null },
+                    { 15, null, null, "What role does the nervous system play in body functions?", null, null }
+                });
+
+            migrationBuilder.InsertData(
                 table: "platformData",
                 columns: new[] { "Id", "PlanDescription", "PlanFixedPricePerMonth", "PlanId", "PlanName", "PlanSetupFee", "PlanTaxesPercentage", "ProductDescribtion", "ProductId", "ProductName" },
                 values: new object[] { 1, null, 20m, null, null, 2m, 10m, null, null, null });
+
+            migrationBuilder.InsertData(
+                table: "Answers",
+                columns: new[] { "Id", "Description", "IsCorrect", "QuestionId", "Reason" },
+                values: new object[,]
+                {
+                    { 31, "Organs and systems", true, 11, "These are the correct components when discussing body structures." },
+                    { 32, "Cells only", false, 11, "Cells are part of organs and systems, not the only component." },
+                    { 33, "Muscles only", false, 11, "Muscles are just one type of tissue, which is part of organs and systems." },
+                    { 34, "By contracting and relaxing", true, 12, "Muscles work by contracting and relaxing to produce movement." },
+                    { 35, "By sending signals", false, 12, "While signaling is important, it does not describe how muscles function directly." },
+                    { 36, "By absorbing nutrients", false, 12, "Muscles do not absorb nutrients; this is a function of the digestive system." },
+                    { 37, "To understand the human body", true, 13, "Anatomy is studied to understand the structure and function of the body." },
+                    { 38, "To pass exams", false, 13, "While exams may test knowledge, they are not the purpose of studying anatomy." },
+                    { 39, "To perform surgeries", false, 13, "While anatomy knowledge is important for surgeries, it is not the sole purpose of the study." },
+                    { 40, "Nervous, muscular, skeletal", true, 14, "These are major body systems." },
+                    { 41, "Respiratory, circulatory", false, 14, "While important, they do not encompass all major systems." },
+                    { 42, "Digestive, excretory", false, 14, "These systems are essential but are not all-inclusive of body systems." },
+                    { 43, "Controls body functions", true, 15, "The nervous system regulates bodily functions." },
+                    { 44, "Transports nutrients", false, 15, "Nutrient transport is handled by the circulatory system." },
+                    { 45, "Provides energy", false, 15, "Energy provision is not a primary role of the nervous system." }
+                });
 
             migrationBuilder.InsertData(
                 table: "AspNetUserRoles",
@@ -643,16 +677,6 @@ namespace Educational_Medical_platform.Migrations
                     { "952625cb-623b-4f8e-a426-c9e14ffe41bc", "1a111a11-1111-1111-1111-111111111111" },
                     { "ea3206f7-8571-4e45-b209-e593236f3420", "2b222b22-2222-2222-2222-222222222222" },
                     { "ea3206f7-8571-4e45-b209-e593236f3420", "3c333c33-3333-3333-3333-333333333333" }
-                });
-
-            migrationBuilder.InsertData(
-                table: "Blogs",
-                columns: new[] { "Id", "AuthorId", "CategoryId", "Conclusion", "Content", "ImageURL", "Intro", "LikesNumber", "SubCategoryId", "Title" },
-                values: new object[,]
-                {
-                    { 1, "2b222b22-2222-2222-2222-222222222222", 1, "Understanding human anatomy is essential for medical professionals and enthusiasts alike.", "This blog covers the basics of human anatomy...", "/Images/Blogs/blog1.jpg", "Anatomy is the branch of biology concerned with the study of the structure of organisms and their parts.", 10, null, "Introduction to Human Anatomy" },
-                    { 2, "2b222b22-2222-2222-2222-222222222222", 1, "The study of comparative anatomy is crucial for evolutionary biology and understanding the functional adaptations of organisms.", "This blog explores comparative anatomy across species...", "/Images/Blogs/blog1.jpg", "Comparative anatomy allows us to understand the similarities and differences between different organisms.", 15, null, "Advanced Comparative Anatomy" },
-                    { 3, "2b222b22-2222-2222-2222-222222222222", 2, "A deep understanding of cell physiology is vital for advancements in medical science.", "Understanding the basics of cell physiology...", "/Images/Blogs/blog1.jpg", "Cell physiology is the study of the functions of cells and their components.", 20, null, "Fundamentals of Cell Physiology" }
                 });
 
             migrationBuilder.InsertData(
@@ -705,41 +729,6 @@ namespace Educational_Medical_platform.Migrations
                 });
 
             migrationBuilder.InsertData(
-                table: "Blogs",
-                columns: new[] { "Id", "AuthorId", "CategoryId", "Conclusion", "Content", "ImageURL", "Intro", "LikesNumber", "SubCategoryId", "Title" },
-                values: new object[,]
-                {
-                    { 4, "2b222b22-2222-2222-2222-222222222222", 1, "This overview serves as a foundational step towards more detailed studies of specific systems.", "This blog provides an overview of human anatomy...", "/Images/Blogs/blog1.jpg", "An overview of human anatomy highlights the complexity and organization of the human body.", 5, 1, "Human Anatomy Overview" },
-                    { 5, "3c333c33-3333-3333-3333-333333333333", 2, "Grasping systemic physiology is crucial for understanding how the body maintains homeostasis.", "An introductory blog on systemic physiology...", "/Images/Blogs/blog1.jpg", "Systemic physiology studies the functions of various systems within the body.", 8, 4, "Systemic Physiology Basics" },
-                    { 6, "3c333c33-3333-3333-3333-333333333333", 3, "Understanding these applications is essential for safe and effective patient care.", "Exploring clinical applications in pharmacology...", "/Images/Blogs/blog1.jpg", "Pharmacology focuses on the interactions between drugs and living organisms.", 12, 5, "Clinical Applications of Pharmacology" },
-                    { 7, "3c333c33-3333-3333-3333-333333333333", 4, "A solid grasp of pathology is necessary for any healthcare professional.", "A comprehensive overview of pathology...", "/Images/Blogs/blog1.jpg", "Pathology is the study of disease, its causes, and effects on the body.", 7, 7, "Pathology: An Overview" }
-                });
-
-            migrationBuilder.InsertData(
-                table: "Books",
-                columns: new[] { "Id", "CategoryId", "Description", "PublishDate", "PublisherName", "PublisherRole", "SubCategoryId", "ThumbnailURL", "Title", "Url", "UserId" },
-                values: new object[,]
-                {
-                    { 1, 5, "A comprehensive guide for first-year medical students.", new DateTime(2021, 4, 15, 0, 0, 0, 0, DateTimeKind.Unspecified), "Mohamed Galal", "User", 9, "https://example.com/thumbnails/book1.jpg", "Introduction to Medical Studies", "https://example.com/books/intro-medical-studies", "2b222b22-2222-2222-2222-222222222222" },
-                    { 2, 5, "In-depth study of human anatomy for advanced medical students.", new DateTime(2020, 11, 20, 0, 0, 0, 0, DateTimeKind.Unspecified), "Mohamed Galal", "User", 9, "https://example.com/thumbnails/book2.jpg", "Advanced Human Anatomy", "https://example.com/books/advanced-anatomy", "2b222b22-2222-2222-2222-222222222222" },
-                    { 3, 5, "A practical guide to clinical diagnostic methods.", new DateTime(2019, 7, 10, 0, 0, 0, 0, DateTimeKind.Unspecified), "Alaa Ahmed", "User", 10, "https://example.com/thumbnails/book3.jpg", "Clinical Diagnosis Techniques", "https://example.com/books/clinical-diagnosis", "3c333c33-3333-3333-3333-333333333333" },
-                    { 4, 6, "Essential pharmacology concepts for healthcare professionals.", new DateTime(2022, 3, 5, 0, 0, 0, 0, DateTimeKind.Unspecified), "Alaa Ahmed", "User", 11, "https://example.com/thumbnails/book4.jpg", "Pharmacology Basics", "https://example.com/books/pharmacology-basics", "3c333c33-3333-3333-3333-333333333333" },
-                    { 5, 6, "Key topics in pathology explained in a clear and concise manner.", new DateTime(2021, 1, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), "Alaa Ahmed", "User", 12, "https://example.com/thumbnails/book5.jpg", "Pathology Essentials", "https://example.com/books/pathology-essentials", "3c333c33-3333-3333-3333-333333333333" },
-                    { 6, 7, "Basic microbiology concepts for beginners.", new DateTime(2020, 6, 22, 0, 0, 0, 0, DateTimeKind.Unspecified), "Ehab Naser", "Admin", 13, "https://example.com/thumbnails/book6.jpg", "Microbiology Fundamentals", "https://example.com/books/microbiology-fundamentals", "1a111a11-1111-1111-1111-111111111111" },
-                    { 7, 7, "A handbook on modern surgical techniques.", new DateTime(2023, 8, 13, 0, 0, 0, 0, DateTimeKind.Unspecified), "Ehab Naser", "Admin", 13, "https://example.com/thumbnails/book7.jpg", "Surgical Procedures Handbook", "https://example.com/books/surgical-procedures", "1a111a11-1111-1111-1111-111111111111" }
-                });
-
-            migrationBuilder.InsertData(
-                table: "Courses",
-                columns: new[] { "Id", "CategoryId", "DurationInhours", "InstructorId", "PaypalProductId", "Preview", "Price", "RejectedReason", "Status", "SubCategoryId", "ThumbnailURL", "Title", "Type" },
-                values: new object[,]
-                {
-                    { 1, 1, 10f, "2b222b22-2222-2222-2222-222222222222", "", null, 1500m, null, 1, 1, null, "physiology", 0 },
-                    { 2, 2, 20f, "2b222b22-2222-2222-2222-222222222222", "", null, 1000m, null, 0, 3, null, "anatomy", 1 },
-                    { 3, 3, 30f, "3c333c33-3333-3333-3333-333333333333", "", null, 2500m, null, 2, 5, null, "histology", 1 }
-                });
-
-            migrationBuilder.InsertData(
                 table: "Questions",
                 columns: new[] { "Id", "BlogId", "CourseId", "Description", "SubCategoryId", "TestId" },
                 values: new object[,]
@@ -748,12 +737,7 @@ namespace Educational_Medical_platform.Migrations
                     { 7, null, null, "How does the body absorb nutrients?", 1, null },
                     { 8, null, null, "What are the main components of the digestive system?", 2, null },
                     { 9, null, null, "What is the role of enzymes in digestion?", 2, null },
-                    { 10, null, null, "What is the process of peristalsis?", 3, null },
-                    { 11, 1, null, "What are the key structures of the human body?", null, null },
-                    { 12, 1, null, "How does the muscular system work?", null, null },
-                    { 13, 2, null, "What is the importance of studying anatomy?", null, null },
-                    { 14, 2, null, "What are the different systems of the human body?", null, null },
-                    { 15, 3, null, "What role does the nervous system play in body functions?", null, null }
+                    { 10, null, null, "What is the process of peristalsis?", 3, null }
                 });
 
             migrationBuilder.InsertData(
@@ -789,32 +773,7 @@ namespace Educational_Medical_platform.Migrations
                     { 27, "They break down food", false, 9, "While enzymes help in breaking down food, they do not do so independently." },
                     { 28, "The wave-like motion that moves food", true, 10, "Peristalsis is the wave-like motion that moves food through the digestive tract." },
                     { 29, "The absorption of nutrients", false, 10, "Nutrient absorption occurs after food is moved through the digestive tract." },
-                    { 30, "The secretion of enzymes", false, 10, "Enzyme secretion assists in digestion but is not the motion that moves food." },
-                    { 31, "Organs and systems", true, 11, "These are the correct components when discussing body structures." },
-                    { 32, "Cells only", false, 11, "Cells are part of organs and systems, not the only component." },
-                    { 33, "Muscles only", false, 11, "Muscles are just one type of tissue, which is part of organs and systems." },
-                    { 34, "By contracting and relaxing", true, 12, "Muscles work by contracting and relaxing to produce movement." },
-                    { 35, "By sending signals", false, 12, "While signaling is important, it does not describe how muscles function directly." },
-                    { 36, "By absorbing nutrients", false, 12, "Muscles do not absorb nutrients; this is a function of the digestive system." },
-                    { 37, "To understand the human body", true, 13, "Anatomy is studied to understand the structure and function of the body." },
-                    { 38, "To pass exams", false, 13, "While exams may test knowledge, they are not the purpose of studying anatomy." },
-                    { 39, "To perform surgeries", false, 13, "While anatomy knowledge is important for surgeries, it is not the sole purpose of the study." },
-                    { 40, "Nervous, muscular, skeletal", true, 14, "These are major body systems." },
-                    { 41, "Respiratory, circulatory", false, 14, "While important, they do not encompass all major systems." },
-                    { 42, "Digestive, excretory", false, 14, "These systems are essential but are not all-inclusive of body systems." },
-                    { 43, "Controls body functions", true, 15, "The nervous system regulates bodily functions." },
-                    { 44, "Transports nutrients", false, 15, "Nutrient transport is handled by the circulatory system." },
-                    { 45, "Provides energy", false, 15, "Energy provision is not a primary role of the nervous system." }
-                });
-
-            migrationBuilder.InsertData(
-                table: "Objectives",
-                columns: new[] { "Id", "CourseId", "Description" },
-                values: new object[,]
-                {
-                    { 1, 1, "Enhancing medical skills" },
-                    { 2, 1, "Enhancing physiology knowledge" },
-                    { 3, 1, "increasing job opportunities" }
+                    { 30, "The secretion of enzymes", false, 10, "Enzyme secretion assists in digestion but is not the motion that moves food." }
                 });
 
             migrationBuilder.InsertData(
@@ -822,11 +781,11 @@ namespace Educational_Medical_platform.Migrations
                 columns: new[] { "Id", "BlogId", "CourseId", "Description", "SubCategoryId", "TestId" },
                 values: new object[,]
                 {
-                    { 1, null, 1, "What is the basic unit of life?", null, null },
-                    { 2, null, 1, "Which organelle is known as the powerhouse of the cell?", null, null },
-                    { 3, null, 2, "What is the function of ribosomes?", null, null },
-                    { 4, null, 2, "What is the role of the cell membrane?", null, null },
-                    { 5, null, 2, "What is osmosis?", null, null },
+                    { 1, null, null, "What is the basic unit of life?", null, 1 },
+                    { 2, null, null, "Which organelle is known as the powerhouse of the cell?", null, 1 },
+                    { 3, null, null, "What is the function of ribosomes?", null, 1 },
+                    { 4, null, null, "What is the role of the cell membrane?", null, 1 },
+                    { 5, null, null, "What is osmosis?", null, 1 },
                     { 16, null, null, "What is the primary function of red blood cells?", null, 1 },
                     { 17, null, null, "How does the immune system protect the body?", null, 1 },
                     { 18, null, null, "What are the stages of the cell cycle?", null, 2 },
@@ -907,26 +866,6 @@ namespace Educational_Medical_platform.Migrations
                     { 94, null, null, "A physical therapist is providing supervised exercise to a patient who has been restricted to extended bed rest. After 2 weeks of intervention, which of the following measures would BEST reflect cardiopulmonary system improvement?", 36, 7 },
                     { 95, null, null, "A physical therapist is administering a graded exercise test. Which of the following patient responses is an ABSOLUTE indication for terminating the exercise test?", 36, 7 },
                     { 96, null, null, "A patient who had a myocardial infarction 5 days ago is referred for a low-level treadmill test. The patient reports having had several episodes of mild angina at rest, after meals, and during the night since being hospitalized. Which of the following actions is MOST appropriate for the physical therapist?", 36, 7 }
-                });
-
-            migrationBuilder.InsertData(
-                table: "Requirements",
-                columns: new[] { "Id", "CourseId", "Description" },
-                values: new object[,]
-                {
-                    { 1, 1, "being medical student" },
-                    { 2, 1, "having laptop" },
-                    { 3, 2, "buying premium package" }
-                });
-
-            migrationBuilder.InsertData(
-                table: "Videos",
-                columns: new[] { "Id", "CourseId", "Description", "Number", "Title", "videoURL" },
-                values: new object[,]
-                {
-                    { 1, 1, null, 1, "new video", "https://www.youtube.com/watch?v=4oThHBo2-Gs" },
-                    { 2, 2, null, 1, "old video", "https://www.youtube.com/watch?v=mgEAimOoyHk" },
-                    { 3, 3, null, 1, "funny video", "https://www.youtube.com/watch?v=zhCKr62s12w" }
                 });
 
             migrationBuilder.InsertData(

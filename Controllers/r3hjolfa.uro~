@@ -1,8 +1,6 @@
-﻿using Educational_Medical_platform.DTO.Blog;
-using Educational_Medical_platform.DTO.BookDTO;
+﻿using Educational_Medical_platform.DTO.BookDTO;
 using Educational_Medical_platform.Helpers;
 using Educational_Medical_platform.Models;
-using Educational_Medical_platform.Repositories.Implementations;
 using Educational_Medical_platform.Repositories.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -13,7 +11,7 @@ using Shoghlana.Core.Models;
 
 namespace Educational_Medical_platform.Controllers
 {
-    [Authorize]
+    //[Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class BookController : ControllerBase
@@ -148,114 +146,6 @@ namespace Educational_Medical_platform.Controllers
             }
         }
 
-        [HttpGet("GetBooksByCategoryPaginated/{id:int}")]
-        public ActionResult<GeneralResponse> GetBooksByCategoryPaginated(int id , int page = 1, int pageSize = 10)
-        {
-            try
-            {
-                var booksPaginatedList = _bookRepository.FindPaginated(page: page, pageSize: pageSize , criteria: book => book.CategoryId == id);
-
-                if (booksPaginatedList == null || !booksPaginatedList.Items.Any())
-                {
-                    return new GeneralResponse
-                    {
-                        IsSuccess = true,
-                        Data = new List<BookDTO>(),
-                        Message = "There are no books available in this category"
-                    };
-                }
-
-                var bookDTOs = booksPaginatedList.Items.Select(book => new BookDTO()
-                {
-                    Id = book.Id,
-                    Title = book.Title,
-                    Description = book.Description,
-                    ThumbnailURL = book.ThumbnailURL,
-                    Url = book.Url,
-                    SubCategoryId = book.SubCategoryId,
-                    CategoryId = book.CategoryId,
-                    CreatedDate = book.PublishDate,
-                    PublisherName = book.PublisherName,
-                    PublisherRole = book.PublisherRole,
-                }).ToList();
-
-
-                return new GeneralResponse
-                {
-                    IsSuccess = true,
-                    Data = new PaginatedListDTO<BookDTO>
-                    {
-                        CurrentPage = booksPaginatedList.CurrentPage,
-                        Items = bookDTOs,
-                        TotalItems = booksPaginatedList.TotalItems,
-                        TotalPages = booksPaginatedList.TotalPages,
-                    },
-                };
-            }
-            catch (Exception ex)
-            {
-                return new GeneralResponse
-                {
-                    IsSuccess = false,
-                    Message = $"An error occurred: {ex.Message}"
-                };
-            }
-        }
-
-        [HttpGet("GetBooksBySubCategoryPaginated/{id:int}")]
-        public ActionResult<GeneralResponse> GetBooksBySubCategoryPaginated(int id, int page = 1, int pageSize = 10)
-        {
-            try
-            {
-                var booksPaginatedList = _bookRepository.FindPaginated(page: page, pageSize: pageSize, criteria: book => book.SubCategoryId == id);
-
-                if (booksPaginatedList == null || !booksPaginatedList.Items.Any())
-                {
-                    return new GeneralResponse
-                    {
-                        IsSuccess = true,
-                        Data = new List<BookDTO>(),
-                        Message = "There are no books available in this subcategory"
-                    };
-                }
-
-                var bookDTOs = booksPaginatedList.Items.Select(book => new BookDTO()
-                {
-                    Id = book.Id,
-                    Title = book.Title,
-                    Description = book.Description,
-                    ThumbnailURL = book.ThumbnailURL,
-                    Url = book.Url,
-                    SubCategoryId = book.SubCategoryId,
-                    CategoryId = book.CategoryId,
-                    CreatedDate = book.PublishDate,
-                    PublisherName = book.PublisherName,
-                    PublisherRole = book.PublisherRole,
-                }).ToList();
-
-
-                return new GeneralResponse
-                {
-                    IsSuccess = true,
-                    Data = new PaginatedListDTO<BookDTO>
-                    {
-                        CurrentPage = booksPaginatedList.CurrentPage,
-                        Items = bookDTOs,
-                        TotalItems = booksPaginatedList.TotalItems,
-                        TotalPages = booksPaginatedList.TotalPages,
-                    },
-                };
-            }
-            catch (Exception ex)
-            {
-                return new GeneralResponse
-                {
-                    IsSuccess = false,
-                    Message = $"An error occurred: {ex.Message}"
-                };
-            }
-        }
-       
         [HttpGet("{id:int}")]
         public ActionResult<GeneralResponse> GetBookById(int id)
         {
@@ -269,57 +159,6 @@ namespace Educational_Medical_platform.Controllers
                     {
                         IsSuccess = false,
                         Message = "Book not found"
-                    };
-                }
-
-                BookDTO bookDTO = new BookDTO
-                {
-                    Id = book.Id,
-                    Title = book.Title,
-                    Description = book.Description,
-                    ThumbnailURL = book.ThumbnailURL,
-                    Url = book.Url,
-                    SubCategoryId = book.SubCategoryId,
-                    CategoryId = book.CategoryId,
-                    CreatedDate = book.PublishDate,
-                    PublisherName = book.PublisherName,
-                    PublisherRole = book.PublisherRole,
-
-                };
-
-                return new GeneralResponse
-                {
-                    IsSuccess = true,
-                    Message = "Book retrieved successfully",
-                    Data = bookDTO
-                };
-            }
-            catch (Exception ex)
-            {
-                return new GeneralResponse
-                {
-                    IsSuccess = false,
-                    Message = $"An error occurred: {ex.Message}"
-                };
-            }
-        }
-
-        [HttpGet("GetBookByTitle/{title}")]
-        public ActionResult<GeneralResponse> GetBookByTitle(string title)
-        {
-            try
-            {
-                title = title.Trim().ToLower(); 
-
-                Book? book = _bookRepository.Find(
-                    criteria: book => book.Title.ToLower() == title
-                );
-                if (book == null)
-                {
-                    return new GeneralResponse
-                    {
-                        IsSuccess = false,
-                        Message = $"No book found with this title : {title}"
                     };
                 }
 

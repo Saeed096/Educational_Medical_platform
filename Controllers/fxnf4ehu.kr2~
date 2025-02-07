@@ -302,7 +302,7 @@ namespace Educational_Medical_platform.Controllers
                     {
                         IsSuccess = false,
                         Data = null,
-                        Message = "This user email is not confirmed",
+                        Message = "This user email is not confirmed",   
                         Status = 105
                     };
                 }
@@ -321,15 +321,8 @@ namespace Educational_Medical_platform.Controllers
                     {
                         new Claim(ClaimTypes.Name, userFromDB.UserName ?? "Not Available"),
                         new Claim(ClaimTypes.NameIdentifier, userFromDB.Id),
-                        //new Claim("aud", _configuration["JWT:ValidAudiences"])  // Ensure audience claim is present
+                        new Claim("aud", _configuration["JWT:ValidAudiences"])  // Ensure audience claim is present
                     };
-
-                    // Loop through the valid audiences array and add them as separate claims
-                    var validAudiences = _configuration.GetSection("JWT:ValidAudiences").Get<string[]>();
-                    foreach (var audience in validAudiences)
-                    {
-                        myClaims.Add(new Claim("aud", audience));  // Add each audience to the claims
-                    }
 
                     // Claim roles
                     IList<string> roles = await _userManager.GetRolesAsync(userFromDB);
@@ -345,13 +338,22 @@ namespace Educational_Medical_platform.Controllers
                     SigningCredentials signingCredentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
                     // JWT payload
+                    //JwtSecurityToken jwtSecurityToken = new JwtSecurityToken
+                    //(
+                    //    issuer: _configuration["JWT:ValidIssuers"],
+                    //    audience: _configuration["JWT:ValidAudiences"],
+                    //    expires: DateTime.UtcNow.AddHours(1),
+                    //    claims: myClaims,
+                    //    signingCredentials: signingCredentials
+                    //);
+
                     JwtSecurityToken jwtSecurityToken = new JwtSecurityToken
                     (
-                        issuer: _configuration["JWT:ValidIssuers:0"], // Use the first issuer
-                        audience: validAudiences[0], // Use the first valid audience (or pick dynamically)
-                        expires: DateTime.UtcNow.AddMinutes(int.Parse(_configuration["JWT:TokenExpiryInMinutes"])),
-                        claims: myClaims,
-                        signingCredentials: signingCredentials
+                        issuer: _configuration["JWT:ValidIssuers"],       // This is the issuer from appsettings
+                        audience: _configuration["JWT:ValidAudiences"],   // This is the audience from appsettings
+                        expires: DateTime.UtcNow.AddMinutes(int.Parse(_configuration["JWT:TokenExpiryInMinutes"])),  // Expiration time (from appsettings)
+                        claims: myClaims,  // Claims you created earlier
+                        signingCredentials: signingCredentials  // The signing credentials
                     );
 
                     // Prepare user data to return

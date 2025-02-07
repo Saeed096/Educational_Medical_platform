@@ -13,45 +13,45 @@ namespace Educational_Medical_platform.Configurations
                 new Question
                 {
                     Id = 1,
-                    CourseId = 1,
+                    //CourseId = 1,
                     Description = "What is the basic unit of life?",
-                    TestId = null,
+                    TestId = 1,
                     SubCategoryId = null,
                     BlogId = null
                 },
                 new Question
                 {
                     Id = 2,
-                    CourseId = 1,
+                    //CourseId = 1,
                     Description = "Which organelle is known as the powerhouse of the cell?",
-                    TestId = null,
+                    TestId = 1,
                     SubCategoryId = null,
                     BlogId = null
                 },
                 new Question
                 {
                     Id = 3,
-                    CourseId = 2,
+                    //CourseId = 2,
                     Description = "What is the function of ribosomes?",
-                    TestId = null,
+                    TestId = 1,
                     SubCategoryId = null,
                     BlogId = null
                 },
                 new Question
                 {
                     Id = 4,
-                    CourseId = 2,
+                    //CourseId = 2,
                     Description = "What is the role of the cell membrane?",
-                    TestId = null,
+                    TestId = 1,
                     SubCategoryId = null,
                     BlogId = null
                 },
                 new Question
                 {
                     Id = 5,
-                    CourseId = 2,
+                    //CourseId = 2,
                     Description = "What is osmosis?",
-                    TestId = null,
+                    TestId = 1,
                     SubCategoryId = null,
                     BlogId = null
                 },
@@ -107,7 +107,7 @@ namespace Educational_Medical_platform.Configurations
                 new Question
                 {
                     Id = 11,
-                    BlogId = 1,
+                    //BlogId = 1,
                     Description = "What are the key structures of the human body?",
                     TestId = null,
                     CourseId = null,
@@ -116,7 +116,7 @@ namespace Educational_Medical_platform.Configurations
                 new Question
                 {
                     Id = 12,
-                    BlogId = 1,
+                    //BlogId = 1,
                     Description = "How does the muscular system work?",
                     TestId = null,
                     CourseId = null,
@@ -125,7 +125,7 @@ namespace Educational_Medical_platform.Configurations
                 new Question
                 {
                     Id = 13,
-                    BlogId = 2,
+                    //BlogId = 2,
                     Description = "What is the importance of studying anatomy?",
                     TestId = null,
                     CourseId = null,
@@ -134,7 +134,7 @@ namespace Educational_Medical_platform.Configurations
                 new Question
                 {
                     Id = 14,
-                    BlogId = 2,
+                    //BlogId = 2,
                     Description = "What are the different systems of the human body?",
                     TestId = null,
                     CourseId = null,
@@ -143,7 +143,7 @@ namespace Educational_Medical_platform.Configurations
                 new Question
                 {
                     Id = 15,
-                    BlogId = 3,
+                    //BlogId = 3,
                     Description = "What role does the nervous system play in body functions?",
                     TestId = null,
                     CourseId = null,

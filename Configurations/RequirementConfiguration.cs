@@ -9,27 +9,27 @@ namespace Educational_Medical_platform.Configurations
     {
         public void Configure(EntityTypeBuilder<Requirement> builder)
         {
-            builder.HasData(
+//            builder.HasData(
 
-                new Models.Requirement
-                {
-                    Id = 1,
-                    Description = "being medical student",
-                    CourseId = 1
-                },
-                new Models.Requirement
-                {
-                    Id = 2,
-                    Description = "having laptop",
-                    CourseId = 1
-                },
-                new Models.Requirement
-                {
-                    Id = 3,
-                    Description = "buying premium package",
-                    CourseId = 2
-                }
-);
+//                new Models.Requirement
+//                {
+//                    Id = 1,
+//                    Description = "being medical student",
+//                    CourseId = 1
+//                },
+//                new Models.Requirement
+//                {
+//                    Id = 2,
+//                    Description = "having laptop",
+//                    CourseId = 1
+//                },
+//                new Models.Requirement
+//                {
+//                    Id = 3,
+//                    Description = "buying premium package",
+//                    CourseId = 2
+//                }
+//);
         }
     }
 }

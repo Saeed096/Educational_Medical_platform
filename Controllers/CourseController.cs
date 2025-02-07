@@ -450,28 +450,6 @@ namespace Educational_Medical_platform.Controllers
 
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-            var userEnrolledRecord = _userEnrolledCoursesRepository.Find(criteria: uc => uc.StudentId == userId && uc.CourseId == courseId);
-
-            if(userEnrolledRecord == null)
-            {
-                return new GeneralResponse
-                {
-                    IsSuccess = false,
-                    Message = "This user has not requested to enroll in this course"
-                };
-            }
-
-
-            if (userEnrolledRecord.Status != EnrollRequestStatus.Approved)
-            {
-                return new GeneralResponse
-                {
-                    IsSuccess = false,
-                    Message = $"This user Request to enroll status is not Approved , it's current status is : {userEnrolledRecord.Status.GetDisplayName()}"
-                };
-            }
-
-
             GetCourseDTO courseDTO = new GetCourseDTO()
             {
                 Id = course.Id,
@@ -501,35 +479,66 @@ namespace Educational_Medical_platform.Controllers
                 ThumbnailURL = course.ThumbnailURL ?? "NA",
 
                 Requirements = course.Requirements != null && course.Requirements.Any()
-                    ? course.Requirements.Select(req => new GetCourseRequirmentsDTO()
-                    {
-                        Id = req.Id,
-                        CourseId = req.CourseId,
-                        Description = req.Description,
-                    }).ToList()
-                    : new List<GetCourseRequirmentsDTO>(),
+                      ? course.Requirements.Select(req => new GetCourseRequirmentsDTO()
+                      {
+                          Id = req.Id,
+                          CourseId = req.CourseId,
+                          Description = req.Description,
+                      }).ToList()
+                      : new List<GetCourseRequirmentsDTO>(),
 
                 Objectives = course.Objectives != null && course.Objectives.Any()
-                    ? course.Objectives.Select(req => new GetCourseObjectiveDTO()
-                    {
-                        Id = req.Id,
-                        CourseId = req.CourseId,
-                        Description = req.Description,
-                    }).ToList()
-                    : new List<GetCourseObjectiveDTO>(),
+                      ? course.Objectives.Select(req => new GetCourseObjectiveDTO()
+                      {
+                          Id = req.Id,
+                          CourseId = req.CourseId,
+                          Description = req.Description,
+                      }).ToList()
+                      : new List<GetCourseObjectiveDTO>(),
 
                 Videos = course.Videos != null && course.Videos.Any()
-                    ? course.Videos.Select(video => new GetVideoDTO()
-                    {
-                        Id = video.Id,
-                        CourseId = video.CourseId,
-                        Description = video.Description,
-                        Number = video.Number,
-                        Title = video.Title,
-                        videoURL = video.videoURL
-                    }).ToList()
-                    : new List<GetVideoDTO>(),
+                      ? course.Videos.Select(video => new GetVideoDTO()
+                      {
+                          Id = video.Id,
+                          CourseId = video.CourseId,
+                          Description = video.Description,
+                          Number = video.Number,
+                          Title = video.Title,
+                          videoURL = video.videoURL
+                      }).ToList()
+                      : new List<GetVideoDTO>(),
             };
+
+            if (userId == course.InstructorId)
+            {
+                return new GeneralResponse()
+                {
+                    IsSuccess = true,
+                    Message = "Course retrieved with it's requirments , Objectives and Videos successfully.",
+                    Data = courseDTO
+                };
+            }
+
+
+            //var userEnrolledRecord = _userEnrolledCoursesRepository.Find(criteria: uc => uc.StudentId == userId && uc.CourseId == courseId);
+
+            //if (userEnrolledRecord == null)
+            //{
+            //    return new GeneralResponse
+            //    {
+            //        IsSuccess = false,
+            //        Message = "This user has not requested to enroll in this course"
+            //    };
+            //}
+
+            //if (userEnrolledRecord.Status != EnrollRequestStatus.Approved)
+            //{
+            //    return new GeneralResponse
+            //    {
+            //        IsSuccess = false,
+            //        Message = $"This user Request to enroll status is not Approved , it's current status is : {userEnrolledRecord.Status.GetDisplayName()}"
+            //    };
+            //}
 
             return new GeneralResponse()
             {
@@ -648,7 +657,8 @@ namespace Educational_Medical_platform.Controllers
                 };
             }
 
-            List<User_Enrolled_Courses> User_Enrolled_Courses = _userEnrolledCoursesRepository.FindAll(criteria: uc => uc.StudentId == studentId).ToList();
+            List<User_Enrolled_Courses> User_Enrolled_Courses = _userEnrolledCoursesRepository
+                            .FindAll(criteria: uc => uc.StudentId == studentId).ToList();
 
             if (User_Enrolled_Courses == null || !User_Enrolled_Courses.Any())
             {
@@ -664,7 +674,7 @@ namespace Educational_Medical_platform.Controllers
 
             foreach (var User_Enrolled_Course in User_Enrolled_Courses)
             {
-                var course = _courseRepository.Find(c => c.Id == User_Enrolled_Course.CourseId, ["Instructor"]);
+                var course = _courseRepository.Find(c => c.Id == User_Enrolled_Course.CourseId, ["Instructor", "Requirements", "Objectives"]);
 
 
                 var subCategory = _subCategoryRepository.Find(s => s.Id == course.SubCategoryId, ["Category"]);
@@ -946,7 +956,7 @@ namespace Educational_Medical_platform.Controllers
                 //ThumbnailURL = courseDTO.ThumbnailURL,
                 Requirements = courseDTO.Requirements?.Select(req => new Requirement
                 {
-                    Description = req.Description
+                    Description = req.Description,
                 }).ToList(),
                 Objectives = courseDTO.Objectives?.Select(obj => new Objective
                 {
