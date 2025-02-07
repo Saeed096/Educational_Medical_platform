@@ -12,7 +12,7 @@ using Shoghlana.EF;
 namespace Educational_Medical_platform.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    [Migration("20250113164010_Init")]
+    [Migration("20250207182018_Init")]
     partial class Init
     {
         /// <inheritdoc />
@@ -4842,7 +4842,7 @@ namespace Educational_Medical_platform.Migrations
                         {
                             Id = "1a111a11-1111-1111-1111-111111111111",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "300dd0c4-8158-4690-b8d2-e55214c20e9e",
+                            ConcurrencyStamp = "ebcb1a1c-45ca-4ff4-ba8f-f7f47b85f19f",
                             Email = "Ehab_Naser@example.com",
                             EmailConfirmed = true,
                             FirstName = "Ehab",
@@ -4851,7 +4851,7 @@ namespace Educational_Medical_platform.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "EHAB_NASER@EXAMPLE.COM",
                             NormalizedUserName = "EHAB_NASER",
-                            PasswordHash = "AQAAAAIAAYagAAAAEHttV3DqoWV4hHUMKu4JERP7lS7Vqc3G7JPMP25CQNHnv58VDZX2PRdaLm5yZx8P4w==",
+                            PasswordHash = "AQAAAAIAAYagAAAAED/oED4znWc1s0xzPq0AEmFqS6SBZ7W2klaL329xdeQE6xw1RBS7dcR40o0yMtPe2g==",
                             PhoneNumber = "011548726155",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "9f9ef764-d632-42d2-99ee-93v2410d8ae0",
@@ -4862,7 +4862,7 @@ namespace Educational_Medical_platform.Migrations
                         {
                             Id = "2b222b22-2222-2222-2222-222222222222",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "402b359a-b5c7-4ce2-847b-80ccc4b63879",
+                            ConcurrencyStamp = "2ce0fe41-9d73-4ada-9195-8bdf5a9e7f5d",
                             Email = "Abdallah_Saudie@business.example.com",
                             EmailConfirmed = true,
                             FirstName = "Abdallah",
@@ -4871,7 +4871,7 @@ namespace Educational_Medical_platform.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "ABDALLAH_SAUDIE@BUSINESS.EXAMPLE.COM",
                             NormalizedUserName = "ABDALLAH_SAUDIE",
-                            PasswordHash = "AQAAAAIAAYagAAAAEJtthbABaALVDFS5sRhTMNsG/oif/LXMK7HgQYc8Q8G1PSXxSYjTpTFJkEPpM5x6iQ==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEGSNtpie8i2BRsenMTnCDYdQ7VnOgr9rxDnGmbUg1YWpNDpoGWNE46OmpUzIRdK8cw==",
                             PhoneNumber = "01054871566",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "9f9ed761-d631-42d2-99ee-93v2420d8ae0",
@@ -4880,9 +4880,89 @@ namespace Educational_Medical_platform.Migrations
                         },
                         new
                         {
+                            Id = "2b22343b22-2222h-2222-2222-222435342222",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "ee310ae7-7021-47b8-a6be-dc438773f6b3",
+                            Email = "Saeed_Saudie@personal.example.com",
+                            EmailConfirmed = true,
+                            FirstName = "Saeed",
+                            IsSubscribedToPlatform = false,
+                            LastName = "Saudie",
+                            LockoutEnabled = false,
+                            NormalizedEmail = "SAEED_SAUDIE@PERSONAL.EXAMPLE.COM",
+                            NormalizedUserName = "SAEED_SAUDIE",
+                            PasswordHash = "AQAAAAIAAYagAAAAENO2fM8do4wRiJGTvocQvIy6/rUZyqB0Mn3yd6z6G0tLjJVhH9374VpLKGMe+Lrukw==",
+                            PhoneNumber = "01054871577",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "9f9eD741-d631-42d2-99ee-93v2420d8a23432",
+                            TwoFactorEnabled = false,
+                            UserName = "Saeed_Saudie"
+                        },
+                        new
+                        {
+                            Id = "2b223432b22-2222h-2222-2222-2224353421234123",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "b8c1ddf5-3acd-412c-9502-a47f082e14f2",
+                            Email = "Omar_Saudie@personal.example.com",
+                            EmailConfirmed = true,
+                            FirstName = "Omar",
+                            IsSubscribedToPlatform = false,
+                            LastName = "Saudie",
+                            LockoutEnabled = false,
+                            NormalizedEmail = "OMAR_SAUDIE@PERSONAL.EXAMPLE.COM",
+                            NormalizedUserName = "OMAR_SAUDIE",
+                            PasswordHash = "AQAAAAIAAYagAAAAEAOr+3NFc9wKrxtyo0iW+o1Qytt906evFR1T/5az4vWe+J+n63/xZOjND1P/VLR+tw==",
+                            PhoneNumber = "01054844512",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "9f9eD741-d631-42d2-995e-93v2420d8a2335",
+                            TwoFactorEnabled = false,
+                            UserName = "Omar_Saudie"
+                        },
+                        new
+                        {
+                            Id = "2b22343b22-2222h-2222-2222-2225425235",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "8d14682b-e21f-4e70-ba68-7e1b66bc3c80",
+                            Email = "Yasser_Saudie@business.example.com",
+                            EmailConfirmed = true,
+                            FirstName = "Yassser",
+                            IsSubscribedToPlatform = false,
+                            LastName = "Saudie",
+                            LockoutEnabled = false,
+                            NormalizedEmail = "YASSER_SAUDIE@BUSINESS.EXAMPLE.COM",
+                            NormalizedUserName = "YASSER_SAUDIE",
+                            PasswordHash = "AQAAAAIAAYagAAAAEFhGH9uP5dDhQRd04v0lWWJ4X6KC2PWbAMxUYgT6YAjAWdRmd/LJ/ShlgOFzcxWJMA==",
+                            PhoneNumber = "010548715000",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "9f9eD741-d631-42d2-99ee-93v2420d8a20000",
+                            TwoFactorEnabled = false,
+                            UserName = "Yasser_Saudie"
+                        },
+                        new
+                        {
+                            Id = "2b223432b22-2222h-2222-2222-2224353125214532",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "c62bf19d-0114-4cfd-8451-f844134fe484",
+                            Email = "Raghad_Saudie@business.example.com",
+                            EmailConfirmed = true,
+                            FirstName = "Raghad",
+                            IsSubscribedToPlatform = false,
+                            LastName = "Saudie",
+                            LockoutEnabled = false,
+                            NormalizedEmail = "RAGHAD_SAUDIE@BUSINESS.EXAMPLE.COM",
+                            NormalizedUserName = "RAGHAD_SAUDIE",
+                            PasswordHash = "AQAAAAIAAYagAAAAENbJ+GowVsuoJncUkjIXts0H/GzJQyw3fWiuyq9r+NGhjQr3Un+ZYeUMhmc0kuM2Uw==",
+                            PhoneNumber = "010548443455435",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "9f9eD741-d631-42d2-995e-93v2420d8a5555",
+                            TwoFactorEnabled = false,
+                            UserName = "Raghad_Saudie"
+                        },
+                        new
+                        {
                             Id = "3c333c33-3333-3333-3333-333333333333",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "a3727d04-de66-4b1b-9d28-ad8997b9fe03",
+                            ConcurrencyStamp = "5b979d51-d351-493a-b54d-4e413af36621",
                             Email = "Alaa_Test@example.com",
                             EmailConfirmed = true,
                             FirstName = "Alaa",
@@ -4891,7 +4971,7 @@ namespace Educational_Medical_platform.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "ALAA_AHMED@EXAMPLE.COM",
                             NormalizedUserName = "ALAA_AHMED",
-                            PasswordHash = "AQAAAAIAAYagAAAAECs4ucO8QIWZbfOBpswu/lg/OjA/RXhbk3qSs2ZWXLeBPD4OQPuoEc3o6QUoAblmdw==",
+                            PasswordHash = "AQAAAAIAAYagAAAAECDDGQ1AQf70JPcFir7AZlLjfa9c8XMON4/GN9Jspi+ZWmSlHnC1Uy+sgne8y1jL5Q==",
                             PhoneNumber = "01225193482",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "9f1ed761-a631-42dq-99ee-93z2420d8aeq",
